@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 120 120" role="img" aria-label="PrigeeX">
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="#071D49"/>
+  <path d="M96 8 L112 24 L24 112 L8 96 Z" fill="#1670E8" opacity="0.82"/>
+  <path d="M8 24 L24 8 L112 96 L96 112 Z" fill="#1670E8"/>
+</svg>

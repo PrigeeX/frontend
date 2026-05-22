@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="fb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B2A6B"/>
+      <stop offset="100%" stop-color="#03102E"/>
+    </linearGradient>
+    <linearGradient id="fxf" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#7CC2FF"/>
+      <stop offset="20%" stop-color="#2F8AF0"/>
+      <stop offset="45%" stop-color="#1670E8"/>
+      <stop offset="75%" stop-color="#0B3FA8"/>
+      <stop offset="100%" stop-color="#020828"/>
+    </linearGradient>
+    <linearGradient id="fxb" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#3A8CE0"/>
+      <stop offset="45%" stop-color="#1058C8"/>
+      <stop offset="100%" stop-color="#010516"/>
+    </linearGradient>
+    <linearGradient id="fe1" x1="24" y1="8" x2="112" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F4FBFF" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#65B8FF" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#020828" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="120" height="120" rx="24" fill="url(#fb)"/>
+  <path d="M96 8 L112 24 L24 112 L8 96 Z" fill="url(#fxb)"/>
+  <path d="M8 24 L24 8 L112 96 L96 112 Z" fill="url(#fxf)"/>
+  <path d="M24 8 L112 96 L109.88 98.12 L21.88 10.12 Z" fill="url(#fe1)"/>
+</svg>

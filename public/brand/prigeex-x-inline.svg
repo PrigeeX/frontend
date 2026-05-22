@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="ixbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B2A6B"/>
+      <stop offset="100%" stop-color="#03102E"/>
+    </linearGradient>
+    <radialGradient id="ixbgg" cx="0.5" cy="0.28" r="0.65">
+      <stop offset="0%" stop-color="#1670E8" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#1670E8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ixxf" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#7CC2FF"/>
+      <stop offset="20%" stop-color="#2F8AF0"/>
+      <stop offset="45%" stop-color="#1670E8"/>
+      <stop offset="75%" stop-color="#0B3FA8"/>
+      <stop offset="100%" stop-color="#020828"/>
+    </linearGradient>
+    <linearGradient id="ixxb" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#3A8CE0"/>
+      <stop offset="35%" stop-color="#1058C8"/>
+      <stop offset="70%" stop-color="#062B84"/>
+      <stop offset="100%" stop-color="#010516"/>
+    </linearGradient>
+    <linearGradient id="ixe1" x1="24" y1="8" x2="112" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F4FBFF" stop-opacity="1"/>
+      <stop offset="18%" stop-color="#BEE3FF" stop-opacity="0.85"/>
+      <stop offset="45%" stop-color="#65B8FF" stop-opacity="0.45"/>
+      <stop offset="80%" stop-color="#1670E8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#020828" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="ixe2" x1="96" y1="8" x2="8" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EAF6FF" stop-opacity="0.95"/>
+      <stop offset="18%" stop-color="#A8D8FF" stop-opacity="0.75"/>
+      <stop offset="45%" stop-color="#4FA2F3" stop-opacity="0.35"/>
+      <stop offset="80%" stop-color="#1670E8" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#020828" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#ixbg)" stroke="#1A3470" stroke-width="1"/>
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#ixbgg)"/>
+  <path d="M96 8 L112 24 L24 112 L8 96 Z" fill="url(#ixxb)"/>
+  <path d="M96 8 L8 96 L10.12 98.12 L98.12 10.12 Z" fill="url(#ixe2)"/>
+  <path d="M8 24 L24 8 L112 96 L96 112 Z" fill="url(#ixxf)"/>
+  <path d="M24 8 L112 96 L109.88 98.12 L21.88 10.12 Z" fill="url(#ixe1)"/>
+</svg>

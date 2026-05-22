@@ -1,0 +1,226 @@
+/* =====================================================================
+   PrigeeX · Theme
+   Institutional aviation-fintech design system.
+   Source of truth for landing + every app surface.
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap');
+
+:root{
+  /* ── Color ─────────────────────────────────────────────────────── */
+  --matte:#06070a;          /* page / dark sections */
+  --matte-2:#0c0d12;        /* cards & surfaces */
+  --matte-3:#11131a;        /* surface hover */
+  --paper:#efe9dd;          /* contrast section (manifest) */
+  --paper-ink:#1c1a14;      /* text on paper */
+
+  --ink:#f3efe6;
+  --ink-soft:rgba(243,239,230,.66);
+  --ink-dim:rgba(243,239,230,.40);
+
+  --hairline:rgba(243,239,230,.14);
+  --hairline-strong:rgba(243,239,230,.22);
+
+  --warm:#e8c089;           /* instrument warmth , the only chromatic accent */
+  --warm-soft:rgba(232,192,137,.18);
+  --warm-hot:#f0d4a2;       /* warm CTA hover */
+
+  --good:#7bd3a3;
+  --warn:#f0b34a;
+  --bad:#e2725b;
+
+  --glass:rgba(20,20,22,.46);
+  --glass-paper:rgba(250,249,247,.78);
+
+  /* ── Type ──────────────────────────────────────────────────────── */
+  --f-display:"Instrument Serif","Times New Roman",serif;
+  --f-sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* ── Spacing & radius ──────────────────────────────────────────── */
+  --container:1240px;
+  --sec-y:140px;
+  --r-sm:8px;
+  --r-md:14px;
+  --r-lg:18px;
+  --r-pill:999px;
+}
+
+/* ── Base ────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+body{
+  background:var(--matte);
+  color:var(--ink);
+  font-family:var(--f-sans);
+  font-weight:400;
+  letter-spacing:-.005em;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+a{color:inherit}
+::selection{background:var(--warm);color:#1a160c}
+
+/* ── Layout helpers ─────────────────────────────────────────────── */
+.container{max-width:var(--container);margin:0 auto;padding:0 32px}
+.mono{font-family:var(--f-mono)}
+.serif{font-family:var(--f-display)}
+.text-warm{color:var(--warm)}
+.text-soft{color:var(--ink-soft)}
+.text-dim{color:var(--ink-dim)}
+.tabular{font-variant-numeric:tabular-nums}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 22px;
+  font-size:13.5px;font-weight:500;
+  font-family:inherit;
+  border-radius:var(--r-pill);
+  text-decoration:none;border:0;cursor:pointer;
+  transition:transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+}
+.btn svg{width:12px;height:12px}
+.btn--primary{
+  background:var(--ink);color:#0e0f12;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 14px 30px -8px rgba(0,0,0,.6);
+}
+.btn--primary:hover{background:#fff;transform:translateY(-1px)}
+.btn--ghost{
+  background:rgba(20,20,22,.32);color:var(--ink);
+  border:.5px solid var(--hairline-strong);
+  backdrop-filter:blur(14px);
+}
+.btn--ghost:hover{background:rgba(40,40,44,.5);border-color:rgba(243,239,230,.32)}
+.btn--warm{
+  background:var(--warm);color:#221b0a;
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 14px 30px -8px rgba(232,192,137,.4);
+}
+.btn--warm:hover{background:var(--warm-hot);transform:translateY(-1px)}
+
+/* ── Pills / status labels ──────────────────────────────────────── */
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 12px;
+  border:.5px solid var(--hairline);border-radius:var(--r-pill);
+  background:rgba(0,0,0,.28);
+  font-family:var(--f-mono);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.pill .dot{width:5px;height:5px;border-radius:50%;background:var(--warm);box-shadow:0 0 8px var(--warm)}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:6px 14px 6px 10px;
+  background:rgba(20,20,22,.5);
+  border:.5px solid var(--hairline-strong);
+  border-radius:var(--r-pill);
+  backdrop-filter:blur(14px);
+  font-family:var(--f-mono);
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.eyebrow .pulse{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--warm);
+  box-shadow:0 0 8px var(--warm);
+  animation:pgx-pulse 2.4s ease-out infinite;
+}
+@keyframes pgx-pulse{
+  0%{box-shadow:0 0 0 0 rgba(232,192,137,.55)}
+  70%{box-shadow:0 0 0 12px rgba(232,192,137,0)}
+  100%{box-shadow:0 0 0 0 rgba(232,192,137,0)}
+}
+
+/* ── Nav (floating pill) ────────────────────────────────────────── */
+.nav-pill{
+  display:flex;align-items:center;gap:4px;
+  padding:6px 6px 6px 18px;
+  background:var(--glass);
+  border:.5px solid var(--hairline-strong);
+  border-radius:var(--r-pill);
+  backdrop-filter:blur(22px) saturate(140%);
+  -webkit-backdrop-filter:blur(22px) saturate(140%);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 20px 50px -20px rgba(0,0,0,.6);
+}
+
+/* ── Section heads ──────────────────────────────────────────────── */
+.sec-head{
+  display:grid;grid-template-columns:140px 1fr;gap:36px;align-items:baseline;
+  margin-bottom:60px;
+}
+.sec-num{
+  font-family:var(--f-mono);
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--warm);
+  padding-top:14px;border-top:.5px solid var(--warm-soft);
+}
+.sec-title{
+  font-family:var(--f-display);font-weight:400;
+  font-size:clamp(40px,5.4vw,72px);
+  line-height:1.02;letter-spacing:-.015em;
+  text-wrap:balance;
+}
+.sec-title em{color:var(--warm);font-style:italic}
+
+/* ── Surfaces ───────────────────────────────────────────────────── */
+.surface{background:var(--matte-2);border-radius:var(--r-lg)}
+.hairline-grid{
+  display:grid;gap:1px;
+  background:var(--hairline);
+  border:.5px solid var(--hairline);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+}
+.hairline-grid > *{background:var(--matte-2);transition:background .25s ease}
+.hairline-grid > *:hover{background:var(--matte-3)}
+
+/* ── Backdrops ──────────────────────────────────────────────────── */
+.bg-grid{
+  background-image:
+    linear-gradient(rgba(232,192,137,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,192,137,.045) 1px, transparent 1px);
+  background-size:88px 88px;
+  background-position:center;
+}
+.bg-grid--fine{
+  background-image:
+    linear-gradient(rgba(232,192,137,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,192,137,.035) 1px, transparent 1px);
+  background-size:44px 44px;
+}
+
+/* ── Dividers ───────────────────────────────────────────────────── */
+.divider-warm{
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(232,192,137,.32), transparent);
+}
+.divider-hairline{
+  height:1px;background:var(--hairline);
+}
+
+/* ── Reveal on scroll ───────────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .8s ease, transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* ── Telemetry value (numeric callout) ──────────────────────────── */
+.tel-val{
+  font-family:var(--f-display);font-size:34px;line-height:1.05;
+  letter-spacing:-.01em;color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+.tel-val .unit{
+  font-family:var(--f-mono);font-size:13px;
+  color:var(--ink-soft);margin-left:4px;vertical-align:.18em;
+}
+.tel-label{
+  font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────── */
+@media (max-width:960px){
+  .sec-head{grid-template-columns:1fr;gap:14px}
+}
