@@ -3,7 +3,7 @@ import { Reveal } from "./Reveal";
 
 export const Manifest = () => (
   <section className="manifest" id="mission">
-    <div className="section-dark container" style={{ position: "relative" }}>
+    <div className="container" style={{ position: "relative" }}>
       <Reveal as="div" className="sec-head">
         <div className="sec-num">01, Manifest</div>
         <h2 className="sec-title">

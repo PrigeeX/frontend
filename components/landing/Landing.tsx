@@ -16,7 +16,7 @@ export const Landing = () => (
     <Nav />
     <Hero />
     <Manifest />
-    <RulerTick label="Flight Plan" />
+    {/* <RulerTick label="Flight Plan" className="ruler--below" /> */}
     <FlightPlan />
     <RulerTick label="Engineered for" />
     <Engineering />

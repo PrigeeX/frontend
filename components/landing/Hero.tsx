@@ -48,10 +48,10 @@ export const Hero = () => {
         </div>
 
         <div className="hero__inner">
-          <div className="eyebrow">
+          {/* <div className="eyebrow">
             <i className="pulse" />
             An institutional venue, boarding now
-          </div>
+          </div> */}
 
           <h1 className="headline">
             Liquidity,

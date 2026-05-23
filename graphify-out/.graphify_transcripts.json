@@ -1,0 +1,2 @@
+  warning: could not transcribe /home/kaushal/prigeex/frontend/public/assets/aviation.mp4: Video transcription requires faster-whisper. Run: pip install 'graphifyy[video]'
+[]

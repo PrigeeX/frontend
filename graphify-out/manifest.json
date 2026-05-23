@@ -1,0 +1,232 @@
+{
+  "/home/kaushal/prigeex/frontend/next.config.ts": {
+    "mtime": 1779450067.6676571,
+    "ast_hash": "daad32b4de0b92afe04301ebf0a6cc76",
+    "semantic_hash": "daad32b4de0b92afe04301ebf0a6cc76"
+  },
+  "/home/kaushal/prigeex/frontend/eslint.config.mjs": {
+    "mtime": 1779450070.6097913,
+    "ast_hash": "3d993bdc95148aa959c27d6b792fc15b",
+    "semantic_hash": "3d993bdc95148aa959c27d6b792fc15b"
+  },
+  "/home/kaushal/prigeex/frontend/tsconfig.json": {
+    "mtime": 1779450066.5086043,
+    "ast_hash": "a8566f2f8d603f62f4a2747eddfb69a4",
+    "semantic_hash": "a8566f2f8d603f62f4a2747eddfb69a4"
+  },
+  "/home/kaushal/prigeex/frontend/next-env.d.ts": {
+    "mtime": 1779509812.9636638,
+    "ast_hash": "d0f8375ae1199dc7acd3977fc33b78b8",
+    "semantic_hash": "d0f8375ae1199dc7acd3977fc33b78b8"
+  },
+  "/home/kaushal/prigeex/frontend/package.json": {
+    "mtime": 1779457672.3702953,
+    "ast_hash": "b9d805f0d0f29eb7c10b7216a9993b84",
+    "semantic_hash": "b9d805f0d0f29eb7c10b7216a9993b84"
+  },
+  "/home/kaushal/prigeex/frontend/postcss.config.mjs": {
+    "mtime": 1779450068.344688,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "/home/kaushal/prigeex/frontend/.claude/settings.local.json": {
+    "mtime": 1779511749.2422163,
+    "ast_hash": "fffdf3375c5c4a6ed180e443d830e581",
+    "semantic_hash": "fffdf3375c5c4a6ed180e443d830e581"
+  },
+  "/home/kaushal/prigeex/frontend/components/rewards.tsx": {
+    "mtime": 1779457177.1142976,
+    "ast_hash": "8c7af91649ab52a09a2ff231c2906e12",
+    "semantic_hash": "8c7af91649ab52a09a2ff231c2906e12"
+  },
+  "/home/kaushal/prigeex/frontend/components/stake.tsx": {
+    "mtime": 1779457177.1184247,
+    "ast_hash": "4497d62b13f1ebb805af67625b408dc6",
+    "semantic_hash": "4497d62b13f1ebb805af67625b408dc6"
+  },
+  "/home/kaushal/prigeex/frontend/components/icons.tsx": {
+    "mtime": 1779450678.859599,
+    "ast_hash": "c2f62a288f7344ee7d7bc64d24722056",
+    "semantic_hash": "c2f62a288f7344ee7d7bc64d24722056"
+  },
+  "/home/kaushal/prigeex/frontend/components/swap.tsx": {
+    "mtime": 1779457177.1094244,
+    "ast_hash": "d7950621d7fe21c20db0e4483e3cb806",
+    "semantic_hash": "d7950621d7fe21c20db0e4483e3cb806"
+  },
+  "/home/kaushal/prigeex/frontend/components/toast.tsx": {
+    "mtime": 1779450678.8605072,
+    "ast_hash": "5a010d94a52913694dd47f762a066e61",
+    "semantic_hash": "5a010d94a52913694dd47f762a066e61"
+  },
+  "/home/kaushal/prigeex/frontend/components/Nav.tsx": {
+    "mtime": 1779457706.0795584,
+    "ast_hash": "c43eaf5fcf47554b8c275afe155f7110",
+    "semantic_hash": "c43eaf5fcf47554b8c275afe155f7110"
+  },
+  "/home/kaushal/prigeex/frontend/components/wallet.tsx": {
+    "mtime": 1779450678.8617907,
+    "ast_hash": "29b0c72cb8b1b98154a0589a80df50e7",
+    "semantic_hash": "29b0c72cb8b1b98154a0589a80df50e7"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Hero.tsx": {
+    "mtime": 1779510531.6447833,
+    "ast_hash": "191cdec862837c92ae3e78622b63c511",
+    "semantic_hash": "191cdec862837c92ae3e78622b63c511"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Boarding.tsx": {
+    "mtime": 1779450822.0345755,
+    "ast_hash": "244d99d714289533630f40ace3f560b8",
+    "semantic_hash": "244d99d714289533630f40ace3f560b8"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Reveal.tsx": {
+    "mtime": 1779450701.1469333,
+    "ast_hash": "564667cff6da482a3f64d1a894c6cd89",
+    "semantic_hash": "564667cff6da482a3f64d1a894c6cd89"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Landing.tsx": {
+    "mtime": 1779450832.9140837,
+    "ast_hash": "f68a3b1e1d93e40a2618558bfee67fcf",
+    "semantic_hash": "f68a3b1e1d93e40a2618558bfee67fcf"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Footer.tsx": {
+    "mtime": 1779450829.83894,
+    "ast_hash": "9ca69f4ed03819fe24cae0d7b3396489",
+    "semantic_hash": "9ca69f4ed03819fe24cae0d7b3396489"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/FlightPlan.tsx": {
+    "mtime": 1779450808.8879614,
+    "ast_hash": "106173c007ea6348e8a4ea8e0a35c9fe",
+    "semantic_hash": "106173c007ea6348e8a4ea8e0a35c9fe"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/RulerTick.tsx": {
+    "mtime": 1779450800.835585,
+    "ast_hash": "e0c4d4bd34f50cab7de5b3a791ebc654",
+    "semantic_hash": "e0c4d4bd34f50cab7de5b3a791ebc654"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Manifest.tsx": {
+    "mtime": 1779450799.5075233,
+    "ast_hash": "04db558d7e424a39eb3515258489a706",
+    "semantic_hash": "04db558d7e424a39eb3515258489a706"
+  },
+  "/home/kaushal/prigeex/frontend/components/landing/Engineering.tsx": {
+    "mtime": 1779450817.3343558,
+    "ast_hash": "25ee4fb2db1addd48b379fce6c3176a5",
+    "semantic_hash": "25ee4fb2db1addd48b379fce6c3176a5"
+  },
+  "/home/kaushal/prigeex/frontend/app/layout.tsx": {
+    "mtime": 1779510270.718641,
+    "ast_hash": "e49c603113802cb3a6e425974a8cef8c",
+    "semantic_hash": "e49c603113802cb3a6e425974a8cef8c"
+  },
+  "/home/kaushal/prigeex/frontend/app/page.tsx": {
+    "mtime": 1779450833.823126,
+    "ast_hash": "9e4af0e3e606c1ad9af95d39a35ad103",
+    "semantic_hash": "9e4af0e3e606c1ad9af95d39a35ad103"
+  },
+  "/home/kaushal/prigeex/frontend/app/providers.tsx": {
+    "mtime": 1779450506.4418726,
+    "ast_hash": "a1a7c53562f19064e717e91181d47303",
+    "semantic_hash": "a1a7c53562f19064e717e91181d47303"
+  },
+  "/home/kaushal/prigeex/frontend/app/perpetuals/page.tsx": {
+    "mtime": 1779457242.042102,
+    "ast_hash": "bb055f32260a0d7df0525b439b1f4202",
+    "semantic_hash": "bb055f32260a0d7df0525b439b1f4202"
+  },
+  "/home/kaushal/prigeex/frontend/app/swap/page.tsx": {
+    "mtime": 1779457227.8747938,
+    "ast_hash": "f6a9202b3c27a3219131fa7e4807e035",
+    "semantic_hash": "f6a9202b3c27a3219131fa7e4807e035"
+  },
+  "/home/kaushal/prigeex/frontend/app/rewards/page.tsx": {
+    "mtime": 1779457232.763899,
+    "ast_hash": "fcc21c737c97cdd375d4db9bf4eeb59c",
+    "semantic_hash": "fcc21c737c97cdd375d4db9bf4eeb59c"
+  },
+  "/home/kaushal/prigeex/frontend/app/stake/page.tsx": {
+    "mtime": 1779457229.940838,
+    "ast_hash": "8e00e47c48b866222c84fd1ec90082d7",
+    "semantic_hash": "8e00e47c48b866222c84fd1ec90082d7"
+  },
+  "/home/kaushal/prigeex/frontend/lib/wagmi.ts": {
+    "mtime": 1779510919.446706,
+    "ast_hash": "c716048ea204b9570cb7fdfc954b4ca2",
+    "semantic_hash": "c716048ea204b9570cb7fdfc954b4ca2"
+  },
+  "/home/kaushal/prigeex/frontend/lib/format.ts": {
+    "mtime": 1779510919.446706,
+    "ast_hash": "3bf9830cde46496fc1e51b74f3ae6a36",
+    "semantic_hash": "3bf9830cde46496fc1e51b74f3ae6a36"
+  },
+  "/home/kaushal/prigeex/frontend/lib/contracts.ts": {
+    "mtime": 1779510919.4465878,
+    "ast_hash": "18003c292a50a906d253dc00cd31467f",
+    "semantic_hash": "18003c292a50a906d253dc00cd31467f"
+  },
+  "/home/kaushal/prigeex/frontend/AGENTS.md": {
+    "mtime": 1779457290.7242386,
+    "ast_hash": "e7c899cca1212f8ecf5e9f92cc3e9db9",
+    "semantic_hash": "e7c899cca1212f8ecf5e9f92cc3e9db9"
+  },
+  "/home/kaushal/prigeex/frontend/CLAUDE.md": {
+    "mtime": 1779457315.7658672,
+    "ast_hash": "969c86978f86494cc5b73cb080956f78",
+    "semantic_hash": "969c86978f86494cc5b73cb080956f78"
+  },
+  "/home/kaushal/prigeex/frontend/THEME.md": {
+    "mtime": 1779457737.1912293,
+    "ast_hash": "77b7547756f5ba320cc78110fb594307",
+    "semantic_hash": "77b7547756f5ba320cc78110fb594307"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prompt.md": {
+    "mtime": 1779450412.4538999,
+    "ast_hash": "d2d0ed109698f2f826f7183ebb69f449",
+    "semantic_hash": "d2d0ed109698f2f826f7183ebb69f449"
+  },
+  "/home/kaushal/prigeex/frontend/public/file.svg": {
+    "mtime": 1779450412.4564962,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71"
+  },
+  "/home/kaushal/prigeex/frontend/public/prigeex-logo.svg": {
+    "mtime": 1779450412.4545143,
+    "ast_hash": "3575bbff20f98b566a6399b7d77ccff4",
+    "semantic_hash": "3575bbff20f98b566a6399b7d77ccff4"
+  },
+  "/home/kaushal/prigeex/frontend/public/image.png": {
+    "mtime": 1779450449.6882393,
+    "ast_hash": "a7c20de8745221a05a5bbd4ab06f7d6d",
+    "semantic_hash": "a7c20de8745221a05a5bbd4ab06f7d6d"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prigeex-favicon.svg": {
+    "mtime": 1779450412.4519105,
+    "ast_hash": "7f18b5f111d03ee337512bb8d7e40ef4",
+    "semantic_hash": "7f18b5f111d03ee337512bb8d7e40ef4"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prigeex-logo.svg": {
+    "mtime": 1779450412.4526,
+    "ast_hash": "cd3310926538fbd67eedbba7337a9226",
+    "semantic_hash": "cd3310926538fbd67eedbba7337a9226"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prigeex-mark-solid.svg": {
+    "mtime": 1779450412.4527645,
+    "ast_hash": "b4bcb51b9a1da94ac52424c9621f3526",
+    "semantic_hash": "b4bcb51b9a1da94ac52424c9621f3526"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prigeex-x-inline.svg": {
+    "mtime": 1779450412.453741,
+    "ast_hash": "ee560c2cad13e5e8cf49d7817073343a",
+    "semantic_hash": "ee560c2cad13e5e8cf49d7817073343a"
+  },
+  "/home/kaushal/prigeex/frontend/public/brand/prigeex-wordmark.svg": {
+    "mtime": 1779450412.453254,
+    "ast_hash": "904e17dc19a2a70bc02f4664c2da5890",
+    "semantic_hash": "904e17dc19a2a70bc02f4664c2da5890"
+  },
+  "/home/kaushal/prigeex/frontend/public/assets/aviation.mp4": {
+    "mtime": 1779450412.449514,
+    "ast_hash": "3f799f775a5c43a6e9aa79c6cb6f21f9",
+    "semantic_hash": "3f799f775a5c43a6e9aa79c6cb6f21f9"
+  }
+}

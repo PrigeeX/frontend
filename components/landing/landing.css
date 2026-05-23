@@ -6,9 +6,9 @@
    ===================================================================== */
 
 .landing-root {
-  --dot-size: 4.6px;
-  --dot-radius: 38%;
-  --grain: .06;
+  --dot-size: 2.6px;
+  --dot-radius: 67%;
+  --grain: .20;
 }
 
 /* ── HERO ──────────────────────────────────────────────────────── */
@@ -123,6 +123,7 @@ h1.headline em { font-style: italic; color: var(--warm); font-weight: 400; }
   position: relative; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(232,192,137,.30), transparent);
   margin: 0;
+  z-index: 1;
 }
 .ruler::before, .ruler::after {
   content: ""; position: absolute; top: -2px; width: 5px; height: 5px; border-radius: 50%;
@@ -134,6 +135,14 @@ h1.headline em { font-style: italic; color: var(--warm); font-weight: 400; }
   position: absolute; top: -7px; left: 50%; transform: translateX(-50%);
   font-family: var(--f-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
   color: var(--warm); background: var(--matte); padding: 0 12px;
+}
+.ruler--below .ruler__tick {
+  top: 10px;
+  background: transparent;
+  padding: 0;
+}
+.ruler--below::before, .ruler--below::after {
+  display: none;
 }
 
 /* ── FLIGHT PLAN ───────────────────────────────────────────────── */

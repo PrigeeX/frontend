@@ -1,0 +1,5731 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "hyperedge_dapp_page_trio",
+        "label": "dApp page trio: Swap, Stake, Rewards share useWallet + useToast + Icon pattern",
+        "nodes": [
+          "components_swap_swappage",
+          "components_stake_stakepage",
+          "components_rewards_rewardspage",
+          "components_wallet_usewallet",
+          "components_toast_usetoast"
+        ],
+        "relation": "participate_in",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "components/swap.tsx"
+      },
+      {
+        "id": "hyperedge_landing_page_assembly",
+        "label": "Landing page composition: Landing assembles Nav, Hero, FlightPlan, Boarding, Footer via RulerTick dividers",
+        "nodes": [
+          "landing_landing_landing",
+          "components_nav_nav",
+          "landing_hero_hero",
+          "landing_flightplan_flightplan",
+          "landing_boarding_boarding",
+          "landing_footer_footer",
+          "landing_rulertick_rulertick"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "components/landing/Landing.tsx"
+      },
+      {
+        "id": "hyperedge_context_provider_stack",
+        "label": "App-level context provider stack: ToastProvider wraps WalletProvider which wraps page components",
+        "nodes": [
+          "components_toast_toastprovider",
+          "components_wallet_walletprovider",
+          "concept_context_provider_pattern"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "components/wallet.tsx"
+      },
+      {
+        "id": "hyper_dapp_pages_nav_shell",
+        "label": "dApp pages share Nav + app-shell layout pattern",
+        "nodes": [
+          "app_swap_page_swap",
+          "app_stake_page_stake",
+          "app_rewards_page_rewards",
+          "app_perpetuals_page_perpetuals"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "app/swap/page.tsx"
+      },
+      {
+        "id": "hyper_wagmi_provider_contracts",
+        "label": "Wagmi config, provider stack, and contracts together enable on-chain interactions",
+        "nodes": [
+          "lib_wagmi_wagmiconfig",
+          "app_providers_providers",
+          "lib_contracts_pgx_address"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "app/providers.tsx"
+      },
+      {
+        "id": "hyper_docs_design_rules",
+        "label": "AGENTS.md, THEME.md, and CLAUDE.md together define the contributor rule set for design and copy",
+        "nodes": [
+          "agents_md_agentsmd",
+          "theme_md_thememd",
+          "claude_md_claudemd"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 0.95,
+        "source_file": "AGENTS.md"
+      },
+      {
+        "id": "prigeex_brand_system",
+        "label": "PrigeeX brand identity system - all SVG and raster assets sharing the signature crossing-X motif, deep navy palette (#0B2A6B/#03102E), and brand blue (#1670E8), forming a coherent multi-format brand system covering favicon, inline mark, square logo, solid mark, wordmark lockup, and PNG export.",
+        "nodes": [
+          "brand_prigeex_favicon",
+          "brand_prigeex_logo",
+          "brand_prigeex_mark_solid",
+          "brand_prigeex_x_inline",
+          "brand_prigeex_wordmark",
+          "public_prigeex_logo",
+          "public_image"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.95,
+        "source_file": "public/brand/prigeex-wordmark.svg"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "next.config.ts",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L1",
+      "id": "next_config_ts",
+      "community": 12,
+      "norm_label": "next.config.ts"
+    },
+    {
+      "label": "nextConfig",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L3",
+      "id": "frontend_next_config_nextconfig",
+      "community": 12,
+      "norm_label": "nextconfig"
+    },
+    {
+      "label": "eslint.config.mjs",
+      "file_type": "code",
+      "source_file": "eslint.config.mjs",
+      "source_location": "L1",
+      "id": "eslint_config_mjs",
+      "community": 11,
+      "norm_label": "eslint.config.mjs"
+    },
+    {
+      "label": "eslintConfig",
+      "file_type": "code",
+      "source_file": "eslint.config.mjs",
+      "source_location": "L5",
+      "id": "frontend_eslint_config_eslintconfig",
+      "community": 11,
+      "norm_label": "eslintconfig"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L1",
+      "id": "tsconfig_json",
+      "community": 4,
+      "norm_label": "tsconfig.json"
+    },
+    {
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "id": "frontend_tsconfig_compileroptions",
+      "community": 4,
+      "norm_label": "compileroptions"
+    },
+    {
+      "label": "target",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "id": "frontend_tsconfig_compileroptions_target",
+      "community": 4,
+      "norm_label": "target"
+    },
+    {
+      "label": "lib",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "id": "frontend_tsconfig_compileroptions_lib",
+      "community": 4,
+      "norm_label": "lib"
+    },
+    {
+      "label": "allowJs",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "id": "frontend_tsconfig_compileroptions_allowjs",
+      "community": 4,
+      "norm_label": "allowjs"
+    },
+    {
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "id": "frontend_tsconfig_compileroptions_skiplibcheck",
+      "community": 4,
+      "norm_label": "skiplibcheck"
+    },
+    {
+      "label": "strict",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "id": "frontend_tsconfig_compileroptions_strict",
+      "community": 4,
+      "norm_label": "strict"
+    },
+    {
+      "label": "noEmit",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "id": "frontend_tsconfig_compileroptions_noemit",
+      "community": 4,
+      "norm_label": "noemit"
+    },
+    {
+      "label": "esModuleInterop",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "id": "frontend_tsconfig_compileroptions_esmoduleinterop",
+      "community": 4,
+      "norm_label": "esmoduleinterop"
+    },
+    {
+      "label": "module",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "id": "frontend_tsconfig_compileroptions_module",
+      "community": 4,
+      "norm_label": "module"
+    },
+    {
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "id": "frontend_tsconfig_compileroptions_moduleresolution",
+      "community": 4,
+      "norm_label": "moduleresolution"
+    },
+    {
+      "label": "resolveJsonModule",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "id": "frontend_tsconfig_compileroptions_resolvejsonmodule",
+      "community": 4,
+      "norm_label": "resolvejsonmodule"
+    },
+    {
+      "label": "isolatedModules",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "id": "frontend_tsconfig_compileroptions_isolatedmodules",
+      "community": 4,
+      "norm_label": "isolatedmodules"
+    },
+    {
+      "label": "jsx",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "id": "frontend_tsconfig_compileroptions_jsx",
+      "community": 4,
+      "norm_label": "jsx"
+    },
+    {
+      "label": "incremental",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "id": "frontend_tsconfig_compileroptions_incremental",
+      "community": 4,
+      "norm_label": "incremental"
+    },
+    {
+      "label": "plugins",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "id": "frontend_tsconfig_compileroptions_plugins",
+      "community": 4,
+      "norm_label": "plugins"
+    },
+    {
+      "label": "paths",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L21",
+      "id": "frontend_tsconfig_compileroptions_paths",
+      "community": 4,
+      "norm_label": "paths"
+    },
+    {
+      "label": "@/*",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L22",
+      "id": "frontend_tsconfig_paths",
+      "community": 4,
+      "norm_label": "@/*"
+    },
+    {
+      "label": "include",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L25",
+      "id": "frontend_tsconfig_include",
+      "community": 4,
+      "norm_label": "include"
+    },
+    {
+      "label": "exclude",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L33",
+      "id": "frontend_tsconfig_exclude",
+      "community": 4,
+      "norm_label": "exclude"
+    },
+    {
+      "label": "next-env.d.ts",
+      "file_type": "code",
+      "source_file": "next-env.d.ts",
+      "source_location": "L1",
+      "id": "next_env_d_ts",
+      "community": 14,
+      "norm_label": "next-env.d.ts"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "id": "package_json",
+      "community": 3,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "id": "frontend_package_name",
+      "community": 3,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "id": "frontend_package_version",
+      "community": 3,
+      "norm_label": "version"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "id": "frontend_package_private",
+      "community": 3,
+      "norm_label": "private"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "id": "frontend_package_scripts",
+      "community": 3,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "id": "frontend_package_scripts_dev",
+      "community": 3,
+      "norm_label": "dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "id": "frontend_package_scripts_build",
+      "community": 3,
+      "norm_label": "build"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "id": "frontend_package_scripts_start",
+      "community": 3,
+      "norm_label": "start"
+    },
+    {
+      "label": "lint",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "id": "frontend_package_scripts_lint",
+      "community": 3,
+      "norm_label": "lint"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "id": "frontend_package_dependencies",
+      "community": 3,
+      "norm_label": "dependencies"
+    },
+    {
+      "label": "@rainbow-me/rainbowkit",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "id": "frontend_package_dependencies_rainbow_me_rainbowkit",
+      "community": 3,
+      "norm_label": "@rainbow-me/rainbowkit"
+    },
+    {
+      "label": "@tanstack/react-query",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "id": "frontend_package_dependencies_tanstack_react_query",
+      "community": 3,
+      "norm_label": "@tanstack/react-query"
+    },
+    {
+      "label": "next",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "id": "frontend_package_dependencies_next",
+      "community": 3,
+      "norm_label": "next"
+    },
+    {
+      "label": "react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "id": "frontend_package_dependencies_react",
+      "community": 3,
+      "norm_label": "react"
+    },
+    {
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "id": "frontend_package_dependencies_react_dom",
+      "community": 3,
+      "norm_label": "react-dom"
+    },
+    {
+      "label": "viem",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "id": "frontend_package_dependencies_viem",
+      "community": 3,
+      "norm_label": "viem"
+    },
+    {
+      "label": "wagmi",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "id": "frontend_package_dependencies_wagmi",
+      "community": 3,
+      "norm_label": "wagmi"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "id": "frontend_package_devdependencies",
+      "community": 7,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "@tailwindcss/postcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "id": "frontend_package_devdependencies_tailwindcss_postcss",
+      "community": 7,
+      "norm_label": "@tailwindcss/postcss"
+    },
+    {
+      "label": "@types/node",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "id": "frontend_package_devdependencies_types_node",
+      "community": 7,
+      "norm_label": "@types/node"
+    },
+    {
+      "label": "@types/react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "id": "frontend_package_devdependencies_types_react",
+      "community": 7,
+      "norm_label": "@types/react"
+    },
+    {
+      "label": "@types/react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "id": "frontend_package_devdependencies_types_react_dom",
+      "community": 7,
+      "norm_label": "@types/react-dom"
+    },
+    {
+      "label": "eslint",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L25",
+      "id": "frontend_package_devdependencies_eslint",
+      "community": 7,
+      "norm_label": "eslint"
+    },
+    {
+      "label": "eslint-config-next",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "id": "frontend_package_devdependencies_eslint_config_next",
+      "community": 7,
+      "norm_label": "eslint-config-next"
+    },
+    {
+      "label": "tailwindcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L27",
+      "id": "frontend_package_devdependencies_tailwindcss",
+      "community": 7,
+      "norm_label": "tailwindcss"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "id": "frontend_package_devdependencies_typescript",
+      "community": 7,
+      "norm_label": "typescript"
+    },
+    {
+      "label": "overrides",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L30",
+      "id": "frontend_package_overrides",
+      "community": 3,
+      "norm_label": "overrides"
+    },
+    {
+      "label": "uuid",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L31",
+      "id": "frontend_package_overrides_uuid",
+      "community": 3,
+      "norm_label": "uuid"
+    },
+    {
+      "label": "postcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L32",
+      "id": "frontend_package_overrides_postcss",
+      "community": 3,
+      "norm_label": "postcss"
+    },
+    {
+      "label": "ws",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L33",
+      "id": "frontend_package_overrides_ws",
+      "community": 3,
+      "norm_label": "ws"
+    },
+    {
+      "label": "postcss.config.mjs",
+      "file_type": "code",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L1",
+      "id": "postcss_config_mjs",
+      "community": 13,
+      "norm_label": "postcss.config.mjs"
+    },
+    {
+      "label": "config",
+      "file_type": "code",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L1",
+      "id": "frontend_postcss_config_config",
+      "community": 13,
+      "norm_label": "config"
+    },
+    {
+      "label": "settings.local.json",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L1",
+      "id": "claude_settings_local_json",
+      "community": 10,
+      "norm_label": "settings.local.json"
+    },
+    {
+      "label": "permissions",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "id": "claude_settings_local_permissions",
+      "community": 10,
+      "norm_label": "permissions"
+    },
+    {
+      "label": "allow",
+      "file_type": "code",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "id": "claude_settings_local_permissions_allow",
+      "community": 10,
+      "norm_label": "allow"
+    },
+    {
+      "label": "rewards.tsx",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L1",
+      "id": "components_rewards_tsx",
+      "community": 0,
+      "norm_label": "rewards.tsx"
+    },
+    {
+      "label": "IllustrativeStream",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L20",
+      "id": "components_rewards_illustrativestream",
+      "community": 0,
+      "norm_label": "illustrativestream"
+    },
+    {
+      "label": "ILLUSTRATIVE_STREAMS",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L30",
+      "id": "components_rewards_illustrative_streams",
+      "community": 0,
+      "norm_label": "illustrative_streams"
+    },
+    {
+      "label": "REWARD_HISTORY",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L60",
+      "id": "components_rewards_reward_history",
+      "community": 0,
+      "norm_label": "reward_history"
+    },
+    {
+      "label": "StreamId",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L69",
+      "id": "components_rewards_streamid",
+      "community": 0,
+      "norm_label": "streamid"
+    },
+    {
+      "label": "RewardsPage()",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L71",
+      "id": "components_rewards_rewardspage",
+      "community": 0,
+      "norm_label": "rewardspage()"
+    },
+    {
+      "label": "StreamRow()",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L448",
+      "id": "components_rewards_streamrow",
+      "community": 0,
+      "norm_label": "streamrow()"
+    },
+    {
+      "label": "TierCard()",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L561",
+      "id": "components_rewards_tiercard",
+      "community": 0,
+      "norm_label": "tiercard()"
+    },
+    {
+      "label": "EarningsChart()",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L639",
+      "id": "components_rewards_earningschart",
+      "community": 0,
+      "norm_label": "earningschart()"
+    },
+    {
+      "label": "TipRow()",
+      "file_type": "code",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L668",
+      "id": "components_rewards_tiprow",
+      "community": 0,
+      "norm_label": "tiprow()"
+    },
+    {
+      "label": "stake.tsx",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L1",
+      "id": "components_stake_tsx",
+      "community": 6,
+      "norm_label": "stake.tsx"
+    },
+    {
+      "label": "SummaryCard()",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L21",
+      "id": "components_stake_summarycard",
+      "community": 6,
+      "norm_label": "summarycard()"
+    },
+    {
+      "label": "InlineStat()",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L58",
+      "id": "components_stake_inlinestat",
+      "community": 6,
+      "norm_label": "inlinestat()"
+    },
+    {
+      "label": "EmissionsChart()",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L70",
+      "id": "components_stake_emissionschart",
+      "community": 6,
+      "norm_label": "emissionschart()"
+    },
+    {
+      "label": "Mode",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L92",
+      "id": "components_stake_mode",
+      "community": 6,
+      "norm_label": "mode"
+    },
+    {
+      "label": "StakePage()",
+      "file_type": "code",
+      "source_file": "components/stake.tsx",
+      "source_location": "L94",
+      "id": "components_stake_stakepage",
+      "community": 0,
+      "norm_label": "stakepage()"
+    },
+    {
+      "label": "icons.tsx",
+      "file_type": "code",
+      "source_file": "components/icons.tsx",
+      "source_location": "L1",
+      "id": "components_icons_tsx",
+      "community": 0,
+      "norm_label": "icons.tsx"
+    },
+    {
+      "label": "IconProps",
+      "file_type": "code",
+      "source_file": "components/icons.tsx",
+      "source_location": "L3",
+      "id": "components_icons_iconprops",
+      "community": 0,
+      "norm_label": "iconprops"
+    },
+    {
+      "label": "Icon",
+      "file_type": "code",
+      "source_file": "components/icons.tsx",
+      "source_location": "L5",
+      "id": "components_icons_icon",
+      "community": 0,
+      "norm_label": "icon"
+    },
+    {
+      "label": "TokenGlyph()",
+      "file_type": "code",
+      "source_file": "components/icons.tsx",
+      "source_location": "L127",
+      "id": "components_icons_tokenglyph",
+      "community": 0,
+      "norm_label": "tokenglyph()"
+    },
+    {
+      "label": "TokenIcon()",
+      "file_type": "code",
+      "source_file": "components/icons.tsx",
+      "source_location": "L242",
+      "id": "components_icons_tokenicon",
+      "community": 0,
+      "norm_label": "tokenicon()"
+    },
+    {
+      "label": "swap.tsx",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L1",
+      "id": "components_swap_tsx",
+      "community": 0,
+      "norm_label": "swap.tsx"
+    },
+    {
+      "label": "MOCK_BALANCES",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L11",
+      "id": "components_swap_mock_balances",
+      "community": 0,
+      "norm_label": "mock_balances"
+    },
+    {
+      "label": "TokenInput()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L22",
+      "id": "components_swap_tokeninput",
+      "community": 0,
+      "norm_label": "tokeninput()"
+    },
+    {
+      "label": "TokenPicker()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L101",
+      "id": "components_swap_tokenpicker",
+      "community": 0,
+      "norm_label": "tokenpicker()"
+    },
+    {
+      "label": "RouteNode()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L174",
+      "id": "components_swap_routenode",
+      "community": 0,
+      "norm_label": "routenode()"
+    },
+    {
+      "label": "RouteArrow()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L181",
+      "id": "components_swap_routearrow",
+      "community": 0,
+      "norm_label": "routearrow()"
+    },
+    {
+      "label": "Route()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L201",
+      "id": "components_swap_route",
+      "community": 0,
+      "norm_label": "route()"
+    },
+    {
+      "label": "RecentSwaps()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L229",
+      "id": "components_swap_recentswaps",
+      "community": 0,
+      "norm_label": "recentswaps()"
+    },
+    {
+      "label": "TxModal()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L268",
+      "id": "components_swap_txmodal",
+      "community": 0,
+      "norm_label": "txmodal()"
+    },
+    {
+      "label": "SwapPage()",
+      "file_type": "code",
+      "source_file": "components/swap.tsx",
+      "source_location": "L384",
+      "id": "components_swap_swappage",
+      "community": 0,
+      "norm_label": "swappage()"
+    },
+    {
+      "label": "toast.tsx",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L1",
+      "id": "components_toast_tsx",
+      "community": 0,
+      "norm_label": "toast.tsx"
+    },
+    {
+      "label": "Toast",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L6",
+      "id": "components_toast_toast",
+      "community": 0,
+      "norm_label": "toast"
+    },
+    {
+      "label": "ToastInput",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L7",
+      "id": "components_toast_toastinput",
+      "community": 0,
+      "norm_label": "toastinput"
+    },
+    {
+      "label": "ToastCtx",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L9",
+      "id": "components_toast_toastctx",
+      "community": 0,
+      "norm_label": "toastctx"
+    },
+    {
+      "label": "useToast()",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L10",
+      "id": "components_toast_usetoast",
+      "community": 0,
+      "norm_label": "usetoast()"
+    },
+    {
+      "label": "ToastProvider()",
+      "file_type": "code",
+      "source_file": "components/toast.tsx",
+      "source_location": "L16",
+      "id": "components_toast_toastprovider",
+      "community": 0,
+      "norm_label": "toastprovider()"
+    },
+    {
+      "label": "Nav.tsx",
+      "file_type": "code",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L1",
+      "id": "components_nav_tsx",
+      "community": 5,
+      "norm_label": "nav.tsx"
+    },
+    {
+      "label": "NavLink",
+      "file_type": "code",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L7",
+      "id": "components_nav_navlink",
+      "community": 5,
+      "norm_label": "navlink"
+    },
+    {
+      "label": "LINKS",
+      "file_type": "code",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L9",
+      "id": "components_nav_links",
+      "community": 5,
+      "norm_label": "links"
+    },
+    {
+      "label": "Nav()",
+      "file_type": "code",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L16",
+      "id": "components_nav_nav",
+      "community": 5,
+      "norm_label": "nav()"
+    },
+    {
+      "label": "wallet.tsx",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L1",
+      "id": "components_wallet_tsx",
+      "community": 0,
+      "norm_label": "wallet.tsx"
+    },
+    {
+      "label": "WalletCtxValue",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L11",
+      "id": "components_wallet_walletctxvalue",
+      "community": 0,
+      "norm_label": "walletctxvalue"
+    },
+    {
+      "label": "WalletCtx",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L21",
+      "id": "components_wallet_walletctx",
+      "community": 0,
+      "norm_label": "walletctx"
+    },
+    {
+      "label": "useWallet()",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L23",
+      "id": "components_wallet_usewallet",
+      "community": 0,
+      "norm_label": "usewallet()"
+    },
+    {
+      "label": "CONNECTOR_LABELS",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L29",
+      "id": "components_wallet_connector_labels",
+      "community": 0,
+      "norm_label": "connector_labels"
+    },
+    {
+      "label": "labelFor()",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L37",
+      "id": "components_wallet_labelfor",
+      "community": 0,
+      "norm_label": "labelfor()"
+    },
+    {
+      "label": "WalletGlyph()",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L43",
+      "id": "components_wallet_walletglyph",
+      "community": 0,
+      "norm_label": "walletglyph()"
+    },
+    {
+      "label": "WalletProvider()",
+      "file_type": "code",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L61",
+      "id": "components_wallet_walletprovider",
+      "community": 0,
+      "norm_label": "walletprovider()"
+    },
+    {
+      "label": "Hero.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Hero.tsx",
+      "source_location": "L1",
+      "id": "components_landing_hero_tsx",
+      "community": 2,
+      "norm_label": "hero.tsx"
+    },
+    {
+      "label": "Hero()",
+      "file_type": "code",
+      "source_file": "components/landing/Hero.tsx",
+      "source_location": "L5",
+      "id": "landing_hero_hero",
+      "community": 2,
+      "norm_label": "hero()"
+    },
+    {
+      "label": "Boarding.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "L1",
+      "id": "components_landing_boarding_tsx",
+      "community": 2,
+      "norm_label": "boarding.tsx"
+    },
+    {
+      "label": "Boarding()",
+      "file_type": "code",
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "L5",
+      "id": "landing_boarding_boarding",
+      "community": 2,
+      "norm_label": "boarding()"
+    },
+    {
+      "label": "Reveal.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Reveal.tsx",
+      "source_location": "L1",
+      "id": "components_landing_reveal_tsx",
+      "community": 2,
+      "norm_label": "reveal.tsx"
+    },
+    {
+      "label": "Reveal()",
+      "file_type": "code",
+      "source_file": "components/landing/Reveal.tsx",
+      "source_location": "L5",
+      "id": "landing_reveal_reveal",
+      "community": 2,
+      "norm_label": "reveal()"
+    },
+    {
+      "label": "Landing.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L1",
+      "id": "components_landing_landing_tsx",
+      "community": 2,
+      "norm_label": "landing.tsx"
+    },
+    {
+      "label": "Landing()",
+      "file_type": "code",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L14",
+      "id": "landing_landing_landing",
+      "community": 2,
+      "norm_label": "landing()"
+    },
+    {
+      "label": "Footer.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Footer.tsx",
+      "source_location": "L1",
+      "id": "components_landing_footer_tsx",
+      "community": 2,
+      "norm_label": "footer.tsx"
+    },
+    {
+      "label": "Footer()",
+      "file_type": "code",
+      "source_file": "components/landing/Footer.tsx",
+      "source_location": "L4",
+      "id": "landing_footer_footer",
+      "community": 2,
+      "norm_label": "footer()"
+    },
+    {
+      "label": "FlightPlan.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L1",
+      "id": "components_landing_flightplan_tsx",
+      "community": 2,
+      "norm_label": "flightplan.tsx"
+    },
+    {
+      "label": "Phase",
+      "file_type": "code",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L4",
+      "id": "landing_flightplan_phase",
+      "community": 2,
+      "norm_label": "phase"
+    },
+    {
+      "label": "PHASES",
+      "file_type": "code",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L13",
+      "id": "landing_flightplan_phases",
+      "community": 2,
+      "norm_label": "phases"
+    },
+    {
+      "label": "FlightPlan()",
+      "file_type": "code",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L40",
+      "id": "landing_flightplan_flightplan",
+      "community": 2,
+      "norm_label": "flightplan()"
+    },
+    {
+      "label": "RulerTick.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/RulerTick.tsx",
+      "source_location": "L1",
+      "id": "components_landing_rulertick_tsx",
+      "community": 2,
+      "norm_label": "rulertick.tsx"
+    },
+    {
+      "label": "RulerTick()",
+      "file_type": "code",
+      "source_file": "components/landing/RulerTick.tsx",
+      "source_location": "L3",
+      "id": "landing_rulertick_rulertick",
+      "community": 2,
+      "norm_label": "rulertick()"
+    },
+    {
+      "label": "Manifest.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": "L1",
+      "id": "components_landing_manifest_tsx",
+      "community": 2,
+      "norm_label": "manifest.tsx"
+    },
+    {
+      "label": "Manifest()",
+      "file_type": "code",
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": "L4",
+      "id": "landing_manifest_manifest",
+      "community": 2,
+      "norm_label": "manifest()"
+    },
+    {
+      "label": "Engineering.tsx",
+      "file_type": "code",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L1",
+      "id": "components_landing_engineering_tsx",
+      "community": 2,
+      "norm_label": "engineering.tsx"
+    },
+    {
+      "label": "PILLARS",
+      "file_type": "code",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L4",
+      "id": "landing_engineering_pillars",
+      "community": 2,
+      "norm_label": "pillars"
+    },
+    {
+      "label": "Engineering()",
+      "file_type": "code",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L37",
+      "id": "landing_engineering_engineering",
+      "community": 2,
+      "norm_label": "engineering()"
+    },
+    {
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "source_location": "L1",
+      "id": "app_layout_tsx",
+      "community": 1,
+      "norm_label": "layout.tsx"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "source_location": "L5",
+      "id": "app_layout_metadata",
+      "community": 1,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "viewport",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "source_location": "L27",
+      "id": "app_layout_viewport",
+      "community": 1,
+      "norm_label": "viewport"
+    },
+    {
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "source_location": "L33",
+      "id": "app_layout_rootlayout",
+      "community": 1,
+      "norm_label": "rootlayout()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "app/page.tsx",
+      "source_location": "L1",
+      "id": "app_page_tsx",
+      "community": 2,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "app/page.tsx",
+      "source_location": "L3",
+      "id": "app_page_home",
+      "community": 2,
+      "norm_label": "home()"
+    },
+    {
+      "label": "providers.tsx",
+      "file_type": "code",
+      "source_file": "app/providers.tsx",
+      "source_location": "L1",
+      "id": "app_providers_tsx",
+      "community": 1,
+      "norm_label": "providers.tsx"
+    },
+    {
+      "label": "Providers()",
+      "file_type": "code",
+      "source_file": "app/providers.tsx",
+      "source_location": "L10",
+      "id": "app_providers_providers",
+      "community": 1,
+      "norm_label": "providers()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L1",
+      "id": "app_perpetuals_page_tsx",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L3",
+      "id": "perpetuals_page_metadata",
+      "community": 5,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "Perpetuals()",
+      "file_type": "code",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L7",
+      "id": "perpetuals_page_perpetuals",
+      "community": 5,
+      "norm_label": "perpetuals()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L1",
+      "id": "app_swap_page_tsx",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L4",
+      "id": "swap_page_metadata",
+      "community": 5,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "Swap()",
+      "file_type": "code",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L8",
+      "id": "swap_page_swap",
+      "community": 5,
+      "norm_label": "swap()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L1",
+      "id": "app_rewards_page_tsx",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L4",
+      "id": "rewards_page_metadata",
+      "community": 5,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "Rewards()",
+      "file_type": "code",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L8",
+      "id": "rewards_page_rewards",
+      "community": 5,
+      "norm_label": "rewards()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L1",
+      "id": "app_stake_page_tsx",
+      "community": 5,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "metadata",
+      "file_type": "code",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L4",
+      "id": "stake_page_metadata",
+      "community": 5,
+      "norm_label": "metadata"
+    },
+    {
+      "label": "Stake()",
+      "file_type": "code",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L8",
+      "id": "stake_page_stake",
+      "community": 5,
+      "norm_label": "stake()"
+    },
+    {
+      "label": "wagmi.ts",
+      "file_type": "code",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "L1",
+      "id": "lib_wagmi_ts",
+      "community": 1,
+      "norm_label": "wagmi.ts"
+    },
+    {
+      "label": "wagmiConfig",
+      "file_type": "code",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "L10",
+      "id": "lib_wagmi_wagmiconfig",
+      "community": 1,
+      "norm_label": "wagmiconfig"
+    },
+    {
+      "label": "Register",
+      "file_type": "code",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "L31",
+      "id": "lib_wagmi_register",
+      "community": 1,
+      "norm_label": "register"
+    },
+    {
+      "label": "format.ts",
+      "file_type": "code",
+      "source_file": "lib/format.ts",
+      "source_location": "L1",
+      "id": "lib_format_ts",
+      "community": 0,
+      "norm_label": "format.ts"
+    },
+    {
+      "label": "shortAddr()",
+      "file_type": "code",
+      "source_file": "lib/format.ts",
+      "source_location": "L1",
+      "id": "lib_format_shortaddr",
+      "community": 0,
+      "norm_label": "shortaddr()"
+    },
+    {
+      "label": "fmtNum()",
+      "file_type": "code",
+      "source_file": "lib/format.ts",
+      "source_location": "L4",
+      "id": "lib_format_fmtnum",
+      "community": 0,
+      "norm_label": "fmtnum()"
+    },
+    {
+      "label": "fmtUsd()",
+      "file_type": "code",
+      "source_file": "lib/format.ts",
+      "source_location": "L13",
+      "id": "lib_format_fmtusd",
+      "community": 0,
+      "norm_label": "fmtusd()"
+    },
+    {
+      "label": "contracts.ts",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L1",
+      "id": "lib_contracts_ts",
+      "community": 6,
+      "norm_label": "contracts.ts"
+    },
+    {
+      "label": "PGX_ADDRESS",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L3",
+      "id": "lib_contracts_pgx_address",
+      "community": 6,
+      "norm_label": "pgx_address"
+    },
+    {
+      "label": "STAKING_ADDRESS",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L4",
+      "id": "lib_contracts_staking_address",
+      "community": 6,
+      "norm_label": "staking_address"
+    },
+    {
+      "label": "erc20Abi",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L7",
+      "id": "lib_contracts_erc20abi",
+      "community": 6,
+      "norm_label": "erc20abi"
+    },
+    {
+      "label": "stakingAbi",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L51",
+      "id": "lib_contracts_stakingabi",
+      "community": 6,
+      "norm_label": "stakingabi"
+    },
+    {
+      "label": "CHAIN",
+      "file_type": "code",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L5",
+      "id": "lib_contracts_chain",
+      "community": 1,
+      "norm_label": "chain"
+    },
+    {
+      "label": "next.config.ts",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "frontend_next_config",
+      "community": 9,
+      "norm_label": "next.config.ts"
+    },
+    {
+      "label": "eslint.config.mjs",
+      "file_type": "code",
+      "source_file": "eslint.config.mjs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "frontend_eslint_config",
+      "community": 9,
+      "norm_label": "eslint.config.mjs"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "frontend_tsconfig",
+      "community": 9,
+      "norm_label": "tsconfig.json"
+    },
+    {
+      "label": "package.json (prigeex-frontend)",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "frontend_package_json",
+      "community": 9,
+      "norm_label": "package.json (prigeex-frontend)"
+    },
+    {
+      "label": "postcss.config.mjs",
+      "file_type": "code",
+      "source_file": "postcss.config.mjs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "frontend_postcss_config",
+      "community": 9,
+      "norm_label": "postcss.config.mjs"
+    },
+    {
+      "label": "Scroll-triggered Reveal pattern (IntersectionObserver)",
+      "file_type": "rationale",
+      "source_file": "components/landing/Reveal.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_scroll_reveal_pattern",
+      "community": 2,
+      "norm_label": "scroll-triggered reveal pattern (intersectionobserver)"
+    },
+    {
+      "label": "Wagmi on-chain contract integration pattern (Sepolia testnet)",
+      "file_type": "rationale",
+      "source_file": "components/stake.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_wagmi_contract_integration",
+      "community": 0,
+      "norm_label": "wagmi on-chain contract integration pattern (sepolia testnet)"
+    },
+    {
+      "label": "Illustrative/mock data pattern for unreleased features",
+      "file_type": "rationale",
+      "source_file": "components/rewards.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_illustrative_data_pattern",
+      "community": 0,
+      "norm_label": "illustrative/mock data pattern for unreleased features"
+    },
+    {
+      "label": "React Context Provider pattern for cross-component state",
+      "file_type": "rationale",
+      "source_file": "components/wallet.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_context_provider_pattern",
+      "community": 0,
+      "norm_label": "react context provider pattern for cross-component state"
+    },
+    {
+      "label": "Perpetuals page",
+      "file_type": "code",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "app_perpetuals_page_perpetuals",
+      "community": 1,
+      "norm_label": "perpetuals page"
+    },
+    {
+      "label": "Swap page",
+      "file_type": "code",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "app_swap_page_swap",
+      "community": 1,
+      "norm_label": "swap page"
+    },
+    {
+      "label": "Rewards page",
+      "file_type": "code",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "app_rewards_page_rewards",
+      "community": 6,
+      "norm_label": "rewards page"
+    },
+    {
+      "label": "Stake page",
+      "file_type": "code",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "app_stake_page_stake",
+      "community": 6,
+      "norm_label": "stake page"
+    },
+    {
+      "label": "sepoliaRpc",
+      "file_type": "code",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "lib_wagmi_sepoliarpc",
+      "community": 1,
+      "norm_label": "sepoliarpc"
+    },
+    {
+      "label": "WC_PROJECT_ID",
+      "file_type": "code",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "line 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "lib_wagmi_wc_project_id",
+      "community": 1,
+      "norm_label": "wc_project_id"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "agents_md_agentsmd",
+      "community": 1,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claude_md_claudemd",
+      "community": 1,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "THEME.md",
+      "file_type": "document",
+      "source_file": "THEME.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "theme_md_thememd",
+      "community": 1,
+      "norm_label": "theme.md"
+    },
+    {
+      "label": "Brand prompt (prompt.md)",
+      "file_type": "document",
+      "source_file": "public/brand/prompt.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prompt_md_brandpromptmd",
+      "community": 1,
+      "norm_label": "brand prompt (prompt.md)"
+    },
+    {
+      "label": "Institutional venue positioning",
+      "file_type": "concept",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_institutional_venue",
+      "community": 1,
+      "norm_label": "institutional venue positioning"
+    },
+    {
+      "label": "Sepolia testnet target",
+      "file_type": "concept",
+      "source_file": "lib/wagmi.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_sepolia_testnet",
+      "community": 1,
+      "norm_label": "sepolia testnet target"
+    },
+    {
+      "label": "PGX Token",
+      "file_type": "concept",
+      "source_file": "lib/contracts.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_pgx_token",
+      "community": 6,
+      "norm_label": "pgx token"
+    },
+    {
+      "label": "Staking Contract",
+      "file_type": "concept",
+      "source_file": "lib/contracts.ts",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_staking_contract",
+      "community": 6,
+      "norm_label": "staking contract"
+    },
+    {
+      "label": "Design system (theme.css)",
+      "file_type": "concept",
+      "source_file": "THEME.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_design_system",
+      "community": 1,
+      "norm_label": "design system (theme.css)"
+    },
+    {
+      "label": "Broad landing copy rule",
+      "file_type": "rationale",
+      "source_file": "AGENTS.md",
+      "source_location": "line 25",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_broad_copy_rule",
+      "community": 2,
+      "norm_label": "broad landing copy rule"
+    },
+    {
+      "label": "No em dash rule",
+      "file_type": "rationale",
+      "source_file": "AGENTS.md",
+      "source_location": "line 32",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_no_em_dash_rule",
+      "community": 1,
+      "norm_label": "no em dash rule"
+    },
+    {
+      "label": "No fabricated telemetry rule",
+      "file_type": "rationale",
+      "source_file": "AGENTS.md",
+      "source_location": "line 27",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_no_fake_telemetry",
+      "community": 1,
+      "norm_label": "no fabricated telemetry rule"
+    },
+    {
+      "label": "Prism logo (PrigeeX brand mark)",
+      "file_type": "concept",
+      "source_file": "public/brand/prompt.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_prism_logo",
+      "community": 1,
+      "norm_label": "prism logo (prigeex brand mark)"
+    },
+    {
+      "label": "Wagmi + ReactQuery provider stack",
+      "file_type": "concept",
+      "source_file": "app/providers.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_wagmi_provider_stack",
+      "community": 1,
+      "norm_label": "wagmi + reactquery provider stack"
+    },
+    {
+      "label": "App shell (layout wrapper)",
+      "file_type": "concept",
+      "source_file": "app/layout.tsx",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "concept_app_shell",
+      "community": 1,
+      "norm_label": "app shell (layout wrapper)"
+    },
+    {
+      "label": "Generic file icon SVG - a small 16x16 document/file glyph in gray (#666), used as a generic UI file-type indicator (e.g. in file pickers or directory listings). Not a brand asset.",
+      "file_type": "image",
+      "source_file": "public/file.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_file",
+      "community": 15,
+      "norm_label": "generic file icon svg - a small 16x16 document/file glyph in gray (#666), used as a generic ui file-type indicator (e.g. in file pickers or directory listings). not a brand asset."
+    },
+    {
+      "label": "PrigeeX app icon / logo mark (512x512, viewBox 120x120) - rounded-rectangle container with deep navy-to-near-black gradient background (#0B2A6B to #03102E), a radial blue glow overlay, and two crossing diagonal band shapes forming an 'X' motif rendered with multi-stop blue gradients (light sky-blue at top fading to near-black at bottom). Serves as the primary square logo asset in the public root, likely used as the app icon or OG image source.",
+      "file_type": "image",
+      "source_file": "public/prigeex-logo.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_prigeex_logo",
+      "community": 8,
+      "norm_label": "prigeex app icon / logo mark (512x512, viewbox 120x120) - rounded-rectangle container with deep navy-to-near-black gradient background (#0b2a6b to #03102e), a radial blue glow overlay, and two crossing diagonal band shapes forming an 'x' motif rendered with multi-stop blue gradients (light sky-blue at top fading to near-black at bottom). serves as the primary square logo asset in the public root, likely used as the app icon or og image source."
+    },
+    {
+      "label": "PrigeeX brand mark as a rasterized PNG - shows the characteristic crossing-X diagonal band motif on a dark navy rounded-rectangle background, rendered in blue gradients. This is the PNG export/fallback of the PrigeeX logo mark, used where SVG is not appropriate (e.g. social previews, app manifests, or legacy contexts).",
+      "file_type": "image",
+      "source_file": "public/image.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "public_image",
+      "community": 8,
+      "norm_label": "prigeex brand mark as a rasterized png - shows the characteristic crossing-x diagonal band motif on a dark navy rounded-rectangle background, rendered in blue gradients. this is the png export/fallback of the prigeex logo mark, used where svg is not appropriate (e.g. social previews, app manifests, or legacy contexts)."
+    },
+    {
+      "label": "PrigeeX favicon SVG (256x256, viewBox 120x120) - compact version of the X-mark logo optimized for small sizes: rounded-rectangle with navy gradient background, two crossing diagonal bands in blue gradients, and a single highlight edge stroke. Used as the browser tab favicon and small-format icon.",
+      "file_type": "image",
+      "source_file": "public/brand/prigeex-favicon.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prigeex_favicon",
+      "community": 8,
+      "norm_label": "prigeex favicon svg (256x256, viewbox 120x120) - compact version of the x-mark logo optimized for small sizes: rounded-rectangle with navy gradient background, two crossing diagonal bands in blue gradients, and a single highlight edge stroke. used as the browser tab favicon and small-format icon."
+    },
+    {
+      "label": "PrigeeX primary logo SVG (1024x1024, viewBox 120x120) - the full-resolution brand mark with rounded rectangle, deep navy-to-black gradient fill, radial blue glow, and the signature crossing-X diagonal band motif with multi-stop blue gradients and edge highlight paths. Canonical high-resolution logo for use in marketing, press kits, and large-format display.",
+      "file_type": "image",
+      "source_file": "public/brand/prigeex-logo.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prigeex_logo",
+      "community": 8,
+      "norm_label": "prigeex primary logo svg (1024x1024, viewbox 120x120) - the full-resolution brand mark with rounded rectangle, deep navy-to-black gradient fill, radial blue glow, and the signature crossing-x diagonal band motif with multi-stop blue gradients and edge highlight paths. canonical high-resolution logo for use in marketing, press kits, and large-format display."
+    },
+    {
+      "label": "PrigeeX solid mark SVG (1024x1024, viewBox 120x120) - simplified flat variant of the logo mark: rounded rectangle filled with a single flat navy (#071D49), and two crossing diagonal X bands in flat blue (#1670E8) with slight opacity variation. Used where gradients are not appropriate (e.g. single-color print, embossing, dark monochrome contexts).",
+      "file_type": "image",
+      "source_file": "public/brand/prigeex-mark-solid.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prigeex_mark_solid",
+      "community": 8,
+      "norm_label": "prigeex solid mark svg (1024x1024, viewbox 120x120) - simplified flat variant of the logo mark: rounded rectangle filled with a single flat navy (#071d49), and two crossing diagonal x bands in flat blue (#1670e8) with slight opacity variation. used where gradients are not appropriate (e.g. single-color print, embossing, dark monochrome contexts)."
+    },
+    {
+      "label": "PrigeeX inline X mark SVG (120x120) - the full-gradient logo mark at a compact square size, sharing identical gradient vocabulary (navy background, radial glow, multi-stop blue X bands, edge highlights) with the primary logo. Intended for inline use within UI contexts such as nav bars, headers, or embedded brand stamps.",
+      "file_type": "image",
+      "source_file": "public/brand/prigeex-x-inline.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prigeex_x_inline",
+      "community": 8,
+      "norm_label": "prigeex inline x mark svg (120x120) - the full-gradient logo mark at a compact square size, sharing identical gradient vocabulary (navy background, radial glow, multi-stop blue x bands, edge highlights) with the primary logo. intended for inline use within ui contexts such as nav bars, headers, or embedded brand stamps."
+    },
+    {
+      "label": "PrigeeX wordmark SVG (1200x240, viewBox 600x120) - horizontal lockup combining the square X-mark logo (left) with the full brand name 'PrigeeX' as bold text (font-weight 800, Inter/Manrope, letter-spacing -2.5) in near-white (#F4F6F5) with the 'X' character accent-colored in brand blue (#1670E8). Used for horizontal header placements, marketing banners, and contexts requiring the full brand name alongside the mark.",
+      "file_type": "image",
+      "source_file": "public/brand/prigeex-wordmark.svg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "brand_prigeex_wordmark",
+      "community": 8,
+      "norm_label": "prigeex wordmark svg (1200x240, viewbox 600x120) - horizontal lockup combining the square x-mark logo (left) with the full brand name 'prigeex' as bold text (font-weight 800, inter/manrope, letter-spacing -2.5) in near-white (#f4f6f5) with the 'x' character accent-colored in brand blue (#1670e8). used for horizontal header placements, marketing banners, and contexts requiring the full brand name alongside the mark."
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "next_config_ts",
+      "target": "frontend_next_config_nextconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "eslint.config.mjs",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "eslint_config_mjs",
+      "target": "frontend_eslint_config_eslintconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "tsconfig_json",
+      "target": "frontend_tsconfig_compileroptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "tsconfig_json",
+      "target": "frontend_tsconfig_include",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "tsconfig_json",
+      "target": "frontend_tsconfig_exclude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_target",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_lib",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_allowjs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_skiplibcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_strict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_noemit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_esmoduleinterop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_module",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_moduleresolution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_resolvejsonmodule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_isolatedmodules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_jsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_incremental",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_plugins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions",
+      "target": "frontend_tsconfig_compileroptions_paths",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "frontend_tsconfig_compileroptions_paths",
+      "target": "frontend_tsconfig_paths",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_private",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_dependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "package_json",
+      "target": "frontend_package_overrides",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_dev",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_package_scripts",
+      "target": "frontend_package_scripts_lint",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_rainbow_me_rainbowkit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_tanstack_react_query",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_next",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_viem",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "frontend_package_dependencies",
+      "target": "frontend_package_dependencies_wagmi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_tailwindcss_postcss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_types_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_types_react",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_types_react_dom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_eslint",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_eslint_config_next",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_tailwindcss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "frontend_package_devdependencies",
+      "target": "frontend_package_devdependencies_typescript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "frontend_package_overrides",
+      "target": "frontend_package_overrides_uuid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "frontend_package_overrides",
+      "target": "frontend_package_overrides_postcss",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "frontend_package_overrides",
+      "target": "frontend_package_overrides_ws",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "postcss.config.mjs",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "postcss_config_mjs",
+      "target": "frontend_postcss_config_config",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "claude_settings_local_json",
+      "target": "claude_settings_local_permissions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/settings.local.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "claude_settings_local_permissions",
+      "target": "claude_settings_local_permissions_allow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_icons_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_wallet_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_wallet_usewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_toast_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_format_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_format_fmtnum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_format_fmtusd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_contracts_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_contracts_staking_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "lib_contracts_stakingabi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_illustrativestream",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_illustrative_streams",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_reward_history",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_streamid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_rewardspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L448",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_streamrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L561",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_tiercard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L639",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_earningschart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/rewards.tsx",
+      "source_location": "L668",
+      "weight": 1.0,
+      "source": "components_rewards_tsx",
+      "target": "components_rewards_tiprow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "components_rewards_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "components_rewards_rewardspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 72",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_wallet_usewallet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 73",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_toast_usetoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "L189",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "L253",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "lib_format_fmtusd"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 307",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_rewards_streamrow"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 392",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_rewards_tiercard"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 404",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_rewards_earningschart"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 424",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "components_rewards_tiprow"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 76",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "concept_wagmi_contract_integration"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 30",
+      "weight": 1.0,
+      "source": "components_rewards_rewardspage",
+      "target": "concept_illustrative_data_pattern"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "components/rewards.tsx",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "components_rewards_rewardspage",
+      "target": "components_stake_stakepage"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "L550",
+      "weight": 1.0,
+      "source": "components_rewards_streamrow",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "L554",
+      "weight": 1.0,
+      "source": "components_rewards_streamrow",
+      "target": "lib_format_fmtusd"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 515",
+      "weight": 1.0,
+      "source": "components_rewards_streamrow",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "L604",
+      "weight": 1.0,
+      "source": "components_rewards_tiercard",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 599",
+      "weight": 1.0,
+      "source": "components_rewards_tiercard",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/rewards.tsx",
+      "source_location": "line 698",
+      "weight": 1.0,
+      "source": "components_rewards_tiprow",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_icons_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_icons_tokenicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_wallet_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_wallet_usewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_toast_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_format_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_format_fmtnum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_format_fmtusd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_contracts_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_contracts_pgx_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_contracts_staking_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_contracts_erc20abi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "lib_contracts_stakingabi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_stake_summarycard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_stake_inlinestat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_stake_emissionschart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_stake_mode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/stake.tsx",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "components_stake_tsx",
+      "target": "components_stake_stakepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "components_stake_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 321",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_stake_summarycard"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 288",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_stake_inlinestat"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 627",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_stake_emissionschart"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "components_stake_stakepage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 95",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_wallet_usewallet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 96",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_toast_usetoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "L289",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "lib_format_fmtusd"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 571",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 396",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "components_icons_tokenicon"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/stake.tsx",
+      "source_location": "line 101",
+      "weight": 1.0,
+      "source": "components_stake_stakepage",
+      "target": "concept_wagmi_contract_integration"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "components/swap.tsx",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "components_swap_swappage",
+      "target": "components_stake_stakepage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_icons_tsx",
+      "target": "components_icons_iconprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_icons_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons.tsx",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "components_icons_tsx",
+      "target": "components_icons_tokenglyph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/icons.tsx",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "components_icons_tsx",
+      "target": "components_icons_tokenicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_icons_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_icons_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_icons_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_icons_icon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 90",
+      "weight": 1.0,
+      "source": "components_swap_tokeninput",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 128",
+      "weight": 1.0,
+      "source": "components_swap_tokenpicker",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 324",
+      "weight": 1.0,
+      "source": "components_swap_txmodal",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 252",
+      "weight": 1.0,
+      "source": "components_swap_recentswaps",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/toast.tsx",
+      "source_location": "line 36",
+      "weight": 1.0,
+      "source": "components_toast_toastprovider",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/wallet.tsx",
+      "source_location": "line 57",
+      "weight": 1.0,
+      "source": "components_wallet_walletprovider",
+      "target": "components_icons_icon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/icons.tsx",
+      "source_location": "line 257",
+      "weight": 1.0,
+      "source": "components_icons_tokenicon",
+      "target": "components_icons_tokenglyph"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_icons_tokenicon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 88",
+      "weight": 1.0,
+      "source": "components_swap_tokeninput",
+      "target": "components_icons_tokenicon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 149",
+      "weight": 1.0,
+      "source": "components_swap_tokenpicker",
+      "target": "components_icons_tokenicon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 251",
+      "weight": 1.0,
+      "source": "components_swap_recentswaps",
+      "target": "components_icons_tokenicon"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 176",
+      "weight": 1.0,
+      "source": "components_swap_routenode",
+      "target": "components_icons_tokenicon"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_wallet_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_wallet_usewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_toast_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "lib_format_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "lib_format_fmtnum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_mock_balances",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_tokeninput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_tokenpicker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_routenode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_routearrow",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_route",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L229",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_recentswaps",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_txmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/swap.tsx",
+      "source_location": "L384",
+      "weight": 1.0,
+      "source": "components_swap_tsx",
+      "target": "components_swap_swappage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "components_swap_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "components_swap_tokeninput",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 513",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_swap_tokeninput"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 639",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_swap_tokenpicker"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 216",
+      "weight": 1.0,
+      "source": "components_swap_route",
+      "target": "components_swap_routenode"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 217",
+      "weight": 1.0,
+      "source": "components_swap_route",
+      "target": "components_swap_routearrow"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "components_swap_route",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 627",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_swap_route"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 634",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_swap_recentswaps"
+    },
+    {
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 229",
+      "weight": 0.85,
+      "source": "components_swap_recentswaps",
+      "target": "concept_illustrative_data_pattern"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "L298",
+      "weight": 1.0,
+      "source": "components_swap_txmodal",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 652",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_swap_txmodal"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "components_swap_swappage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 385",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_wallet_usewallet"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 386",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "components_toast_usetoast"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "L558",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx",
+      "source_location": "line 11",
+      "weight": 1.0,
+      "source": "components_swap_swappage",
+      "target": "concept_illustrative_data_pattern"
+    },
+    {
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "components/swap.tsx",
+      "source_location": null,
+      "weight": 0.65,
+      "source": "components_swap_swappage",
+      "target": "concept_wagmi_contract_integration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_toast_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_toast_toastinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_toast_toastctx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/toast.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_toast_tsx",
+      "target": "components_toast_toastprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_toast_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "components_toast_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_toast_usetoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/wallet.tsx",
+      "source_location": "line 66",
+      "weight": 1.0,
+      "source": "components_wallet_walletprovider",
+      "target": "components_toast_usetoast"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/toast.tsx",
+      "source_location": "line 10",
+      "weight": 1.0,
+      "source": "components_toast_usetoast",
+      "target": "components_toast_toastprovider"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "components_toast_toastprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/toast.tsx",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "components_toast_toastprovider",
+      "target": "concept_context_provider_pattern"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "components/wallet.tsx",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "components_wallet_walletprovider",
+      "target": "components_toast_toastprovider"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_nav_tsx",
+      "target": "components_nav_navlink",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_nav_tsx",
+      "target": "components_nav_links",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Nav.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_nav_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_nav_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_perpetuals_page_tsx",
+      "target": "components_nav_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "components_nav_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "components_nav_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "components_nav_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_perpetuals_page_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "components_nav_nav",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 16",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "components_nav_nav"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "lib_format_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "lib_format_shortaddr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_walletctxvalue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_walletctx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_usewallet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_connector_labels",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_labelfor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_walletglyph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/wallet.tsx",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "components_wallet_tsx",
+      "target": "components_wallet_walletprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "components_wallet_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/wallet.tsx",
+      "source_location": "line 23",
+      "weight": 1.0,
+      "source": "components_wallet_usewallet",
+      "target": "components_wallet_walletprovider"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "components_wallet_walletprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/wallet.tsx",
+      "source_location": "line 21",
+      "weight": 1.0,
+      "source": "components_wallet_walletprovider",
+      "target": "concept_context_provider_pattern"
+    },
+    {
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "components/wallet.tsx",
+      "source_location": "line 4",
+      "weight": 0.85,
+      "source": "components_wallet_walletprovider",
+      "target": "concept_wagmi_contract_integration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Hero.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_landing_hero_tsx",
+      "target": "landing_hero_hero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_hero_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_hero_hero",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 17",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "landing_hero_hero"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_landing_boarding_tsx",
+      "target": "components_landing_reveal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_landing_boarding_tsx",
+      "target": "landing_reveal_reveal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_landing_boarding_tsx",
+      "target": "landing_boarding_boarding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_boarding_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_boarding_boarding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "landing_boarding_boarding",
+      "target": "landing_reveal_reveal"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 23",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "landing_boarding_boarding"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.55,
+      "source_file": "components/landing/Boarding.tsx",
+      "source_location": null,
+      "weight": 0.55,
+      "source": "landing_boarding_boarding",
+      "target": "landing_footer_footer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Reveal.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_landing_reveal_tsx",
+      "target": "landing_reveal_reveal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_flightplan_tsx",
+      "target": "components_landing_reveal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_manifest_tsx",
+      "target": "components_landing_reveal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_engineering_tsx",
+      "target": "components_landing_reveal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_flightplan_tsx",
+      "target": "landing_reveal_reveal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_manifest_tsx",
+      "target": "landing_reveal_reveal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_landing_engineering_tsx",
+      "target": "landing_reveal_reveal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "line 44",
+      "weight": 1.0,
+      "source": "landing_flightplan_flightplan",
+      "target": "landing_reveal_reveal"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Reveal.tsx",
+      "source_location": "line 17",
+      "weight": 1.0,
+      "source": "landing_reveal_reveal",
+      "target": "concept_scroll_reveal_pattern"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_manifest_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_manifest_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_rulertick_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_rulertick_rulertick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_flightplan_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_flightplan_flightplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_engineering_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_engineering_engineering",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "components_landing_footer_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_footer_footer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_landing_landing_tsx",
+      "target": "landing_landing_landing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_page_tsx",
+      "target": "components_landing_landing_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "app_page_tsx",
+      "target": "landing_landing_landing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 19",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "landing_rulertick_rulertick"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 20",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "landing_flightplan_flightplan"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx",
+      "source_location": "line 24",
+      "weight": 1.0,
+      "source": "landing_landing_landing",
+      "target": "landing_footer_footer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Footer.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_footer_tsx",
+      "target": "landing_footer_footer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_flightplan_tsx",
+      "target": "landing_flightplan_phase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_landing_flightplan_tsx",
+      "target": "landing_flightplan_phases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/FlightPlan.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "components_landing_flightplan_tsx",
+      "target": "landing_flightplan_flightplan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/RulerTick.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_landing_rulertick_tsx",
+      "target": "landing_rulertick_rulertick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_manifest_tsx",
+      "target": "landing_manifest_manifest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "components/landing/Manifest.tsx",
+      "source_location": null,
+      "weight": 0.65,
+      "source": "landing_manifest_manifest",
+      "target": "landing_engineering_engineering"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.55,
+      "source_file": "app/page.tsx",
+      "source_location": null,
+      "weight": 0.55,
+      "source": "app_page_home",
+      "target": "landing_manifest_manifest"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "concept_broad_copy_rule",
+      "target": "landing_manifest_manifest"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_landing_engineering_tsx",
+      "target": "landing_engineering_pillars",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "components_landing_engineering_tsx",
+      "target": "landing_engineering_engineering",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Engineering.tsx",
+      "source_location": "line 50",
+      "weight": 1.0,
+      "source": "landing_engineering_engineering",
+      "target": "landing_engineering_pillars"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "concept_broad_copy_rule",
+      "target": "landing_engineering_engineering"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_providers_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_providers_providers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_layout_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_layout_viewport",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/layout.tsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "app_layout_tsx",
+      "target": "app_layout_rootlayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/layout.tsx",
+      "source_location": "line 40",
+      "weight": 1.0,
+      "source": "app_layout_rootlayout",
+      "target": "app_providers_providers"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/layout.tsx",
+      "source_location": "line 38",
+      "weight": 1.0,
+      "source": "app_layout_rootlayout",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/layout.tsx",
+      "source_location": "line 41",
+      "weight": 1.0,
+      "source": "app_layout_rootlayout",
+      "target": "concept_app_shell"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_page_tsx",
+      "target": "app_page_home",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "lib_wagmi_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "lib_wagmi_wagmiconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/providers.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_providers_tsx",
+      "target": "app_providers_providers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/providers.tsx",
+      "source_location": "line 6",
+      "weight": 1.0,
+      "source": "app_providers_providers",
+      "target": "lib_wagmi_wagmiconfig"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/providers.tsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "app_providers_providers",
+      "target": "concept_wagmi_provider_stack"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_perpetuals_page_tsx",
+      "target": "perpetuals_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "app_perpetuals_page_tsx",
+      "target": "perpetuals_page_perpetuals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "swap_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/swap/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_swap_page_tsx",
+      "target": "swap_page_swap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "rewards_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/rewards/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_rewards_page_tsx",
+      "target": "rewards_page_rewards",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "stake_page_metadata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/stake/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_stake_page_tsx",
+      "target": "stake_page_stake",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "lib_wagmi_ts",
+      "target": "lib_wagmi_wagmiconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/wagmi.ts",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "lib_wagmi_ts",
+      "target": "lib_wagmi_register",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/wagmi.ts",
+      "source_location": "line 11",
+      "weight": 1.0,
+      "source": "lib_wagmi_wagmiconfig",
+      "target": "concept_sepolia_testnet"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/wagmi.ts",
+      "source_location": "line 20",
+      "weight": 1.0,
+      "source": "lib_wagmi_wagmiconfig",
+      "target": "lib_wagmi_sepoliarpc"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/wagmi.ts",
+      "source_location": "line 17",
+      "weight": 1.0,
+      "source": "lib_wagmi_wagmiconfig",
+      "target": "lib_wagmi_wc_project_id"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "app/providers.tsx",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "concept_wagmi_provider_stack",
+      "target": "lib_wagmi_wagmiconfig"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/format.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "lib_format_ts",
+      "target": "lib_format_shortaddr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/format.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "lib_format_ts",
+      "target": "lib_format_fmtnum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/format.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "lib_format_ts",
+      "target": "lib_format_fmtusd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/format.ts",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "lib_format_fmtusd",
+      "target": "lib_format_fmtnum"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "lib_contracts_ts",
+      "target": "lib_contracts_pgx_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "lib_contracts_ts",
+      "target": "lib_contracts_staking_address",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "lib_contracts_ts",
+      "target": "lib_contracts_erc20abi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/contracts.ts",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "lib_contracts_ts",
+      "target": "lib_contracts_stakingabi",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/contracts.ts",
+      "source_location": "line 3",
+      "weight": 1.0,
+      "source": "lib_contracts_pgx_address",
+      "target": "concept_pgx_token"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "lib/contracts.ts",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "lib_contracts_pgx_address",
+      "target": "lib_contracts_staking_address"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/contracts.ts",
+      "source_location": "line 4",
+      "weight": 1.0,
+      "source": "lib_contracts_staking_address",
+      "target": "concept_staking_contract"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/contracts.ts",
+      "source_location": "line 7",
+      "weight": 1.0,
+      "source": "lib_contracts_erc20abi",
+      "target": "concept_pgx_token"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/contracts.ts",
+      "source_location": "line 51",
+      "weight": 1.0,
+      "source": "lib_contracts_stakingabi",
+      "target": "concept_staking_contract"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/contracts.ts",
+      "source_location": "line 5",
+      "weight": 1.0,
+      "source": "concept_sepolia_testnet",
+      "target": "lib_contracts_chain"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "package.json",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "frontend_package_json",
+      "target": "frontend_next_config"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "eslint.config.mjs",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "frontend_eslint_config",
+      "target": "frontend_tsconfig"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "package.json",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "frontend_package_json",
+      "target": "frontend_tsconfig"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "package.json",
+      "source_location": null,
+      "weight": 0.95,
+      "source": "frontend_package_json",
+      "target": "frontend_postcss_config"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "components/rewards.tsx",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "concept_illustrative_data_pattern",
+      "target": "concept_wagmi_contract_integration"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "app/perpetuals/page.tsx",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "app_perpetuals_page_perpetuals",
+      "target": "concept_institutional_venue"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "app/swap/page.tsx",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "app_swap_page_swap",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "app/rewards/page.tsx",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "app_rewards_page_rewards",
+      "target": "concept_staking_contract"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/stake/page.tsx",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "app_stake_page_stake",
+      "target": "concept_staking_contract"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "agents_md_agentsmd",
+      "target": "concept_institutional_venue"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "line 14",
+      "weight": 1.0,
+      "source": "agents_md_agentsmd",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "line 25",
+      "weight": 1.0,
+      "source": "agents_md_agentsmd",
+      "target": "concept_broad_copy_rule"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "line 32",
+      "weight": 1.0,
+      "source": "agents_md_agentsmd",
+      "target": "concept_no_em_dash_rule"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "line 27",
+      "weight": 1.0,
+      "source": "agents_md_agentsmd",
+      "target": "concept_no_fake_telemetry"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "line 1",
+      "weight": 1.0,
+      "source": "claude_md_claudemd",
+      "target": "agents_md_agentsmd"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "line 16",
+      "weight": 1.0,
+      "source": "claude_md_claudemd",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "line 52",
+      "weight": 1.0,
+      "source": "claude_md_claudemd",
+      "target": "concept_sepolia_testnet"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "THEME.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "theme_md_thememd",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "THEME.md",
+      "source_location": "line 3",
+      "weight": 1.0,
+      "source": "theme_md_thememd",
+      "target": "concept_institutional_venue"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/brand/prompt.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "brand_prompt_md_brandpromptmd",
+      "target": "concept_prism_logo"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "concept_no_fake_telemetry",
+      "target": "concept_institutional_venue"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "public/brand/prompt.md",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "concept_prism_logo",
+      "target": "concept_design_system"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/prigeex-logo.svg",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "public_prigeex_logo",
+      "target": "brand_prigeex_logo"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/prigeex-logo.svg",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "public_prigeex_logo",
+      "target": "public_image"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/image.png",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "public_image",
+      "target": "brand_prigeex_logo"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/brand/prigeex-logo.svg",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "brand_prigeex_logo",
+      "target": "brand_prigeex_favicon"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/brand/prigeex-logo.svg",
+      "source_location": null,
+      "weight": 0.9,
+      "source": "brand_prigeex_logo",
+      "target": "brand_prigeex_x_inline"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "public/brand/prigeex-logo.svg",
+      "source_location": null,
+      "weight": 0.8,
+      "source": "brand_prigeex_logo",
+      "target": "brand_prigeex_mark_solid"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/brand/prigeex-wordmark.svg",
+      "source_location": "line 39-46",
+      "weight": 1.0,
+      "source": "brand_prigeex_wordmark",
+      "target": "brand_prigeex_logo"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "public/brand/prigeex-wordmark.svg",
+      "source_location": null,
+      "weight": 0.8,
+      "source": "brand_prigeex_wordmark",
+      "target": "brand_prigeex_x_inline"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "hyperedge_dapp_page_trio",
+      "label": "dApp page trio: Swap, Stake, Rewards share useWallet + useToast + Icon pattern",
+      "nodes": [
+        "components_swap_swappage",
+        "components_stake_stakepage",
+        "components_rewards_rewardspage",
+        "components_wallet_usewallet",
+        "components_toast_usetoast"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/swap.tsx"
+    },
+    {
+      "id": "hyperedge_landing_page_assembly",
+      "label": "Landing page composition: Landing assembles Nav, Hero, FlightPlan, Boarding, Footer via RulerTick dividers",
+      "nodes": [
+        "landing_landing_landing",
+        "components_nav_nav",
+        "landing_hero_hero",
+        "landing_flightplan_flightplan",
+        "landing_boarding_boarding",
+        "landing_footer_footer",
+        "landing_rulertick_rulertick"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/landing/Landing.tsx"
+    },
+    {
+      "id": "hyperedge_context_provider_stack",
+      "label": "App-level context provider stack: ToastProvider wraps WalletProvider which wraps page components",
+      "nodes": [
+        "components_toast_toastprovider",
+        "components_wallet_walletprovider",
+        "concept_context_provider_pattern"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "components/wallet.tsx"
+    },
+    {
+      "id": "hyper_dapp_pages_nav_shell",
+      "label": "dApp pages share Nav + app-shell layout pattern",
+      "nodes": [
+        "app_swap_page_swap",
+        "app_stake_page_stake",
+        "app_rewards_page_rewards",
+        "app_perpetuals_page_perpetuals"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "app/swap/page.tsx"
+    },
+    {
+      "id": "hyper_wagmi_provider_contracts",
+      "label": "Wagmi config, provider stack, and contracts together enable on-chain interactions",
+      "nodes": [
+        "lib_wagmi_wagmiconfig",
+        "app_providers_providers",
+        "lib_contracts_pgx_address"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/providers.tsx"
+    },
+    {
+      "id": "hyper_docs_design_rules",
+      "label": "AGENTS.md, THEME.md, and CLAUDE.md together define the contributor rule set for design and copy",
+      "nodes": [
+        "agents_md_agentsmd",
+        "theme_md_thememd",
+        "claude_md_claudemd"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "AGENTS.md"
+    },
+    {
+      "id": "prigeex_brand_system",
+      "label": "PrigeeX brand identity system - all SVG and raster assets sharing the signature crossing-X motif, deep navy palette (#0B2A6B/#03102E), and brand blue (#1670E8), forming a coherent multi-format brand system covering favicon, inline mark, square logo, solid mark, wordmark lockup, and PNG export.",
+      "nodes": [
+        "brand_prigeex_favicon",
+        "brand_prigeex_logo",
+        "brand_prigeex_mark_solid",
+        "brand_prigeex_x_inline",
+        "brand_prigeex_wordmark",
+        "public_prigeex_logo",
+        "public_image"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/brand/prigeex-wordmark.svg"
+    }
+  ],
+  "built_at_commit": "bec137a80457cb7e0140462253b4057047a5fad0"
+}
