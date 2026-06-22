@@ -38,6 +38,23 @@
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
 
+/* ── Light mode (FE-36) ──────────────────────────────────────────────
+   The dApp aliases above resolve to the base neutral tokens from theme.css,
+   so remapping those neutrals here flips every app surface. The warm accent is
+   intentionally unchanged - it reads on both backgrounds. */
+:root[data-theme="light"] {
+  --matte: #f4f1ea;
+  --matte-2: #ffffff;
+  --matte-3: #efeae0;
+  --ink: #1b1813;
+  --ink-soft: rgba(27, 24, 19, 0.64);
+  --ink-dim: rgba(27, 24, 19, 0.42);
+  --hairline: rgba(27, 24, 19, 0.12);
+  --hairline-strong: rgba(27, 24, 19, 0.2);
+  --glass: rgba(255, 255, 255, 0.7);
+  color-scheme: light;
+}
+
 /* Layout primitives. */
 .row { display: flex; align-items: center; }
 .col { display: flex; flex-direction: column; }
@@ -168,14 +185,40 @@ a { color: inherit; text-decoration: none; }
 .app-mobile-title { display: none; }
 
 /* Floating nav (shared by landing + app pages). */
-.navwrap { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); z-index: 50; }
+.navwrap {
+  position: fixed; left: 50%; top: 18px; transform: translateX(-50%); z-index: 50;
+  width: auto;
+  transition: width .38s cubic-bezier(.4,0,.2,1), border-radius .38s cubic-bezier(.4,0,.2,1);
+}
+.navwrap.is-dapp {
+  width: min(calc(100vw - 40px), 1260px);
+}
+.navwrap .nav-pill {
+  display: flex; align-items: center;
+  padding: 6px 10px;
+  background: var(--glass);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: .5px solid var(--hairline);
+  border-radius: var(--r-pill);
+  gap: 2px;
+  transition: border-radius .38s cubic-bezier(.4,0,.2,1), padding .38s cubic-bezier(.4,0,.2,1);
+}
+.navwrap.is-dapp .nav-pill {
+  border-radius: var(--r-lg);
+  padding: 8px 14px;
+}
 .navwrap .nav-pill .brand {
   display: flex; align-items: center; gap: 9px;
   font-size: 13.5px; font-weight: 500; letter-spacing: -.01em;
   padding-right: 14px; border-right: .5px solid var(--hairline);
   margin-right: 6px; color: var(--ink); text-decoration: none;
+  flex-shrink: 0;
 }
 .navwrap .nav-pill .brand svg { width: 16px; height: 16px; color: var(--warm); }
+.navwrap .nav-pill .nav-links {
+  display: flex; align-items: center; gap: 2px; flex: 1;
+}
 .navwrap .nav-pill .link {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 14px;
@@ -206,6 +249,50 @@ a { color: inherit; text-decoration: none; }
 .navwrap .nav-pill .cta:hover { background: #fff; transform: translateY(-.5px); }
 .navwrap .nav-pill .cta svg { width: 11px; height: 11px; }
 
+/* Wallet button — right corner of dApp nav. */
+.nav-actions { margin-left: auto; flex-shrink: 0; }
+.nav-theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; flex-shrink: 0;
+  color: var(--ink-soft);
+  background: rgba(255,255,255,.05); border: .5px solid var(--hairline);
+  border-radius: var(--r-pill); cursor: pointer;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+.nav-theme-toggle:hover { color: var(--ink); background: rgba(255,255,255,.09); border-color: var(--hairline-strong); }
+
+.nav-wallet {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  font-size: 12.5px; font-weight: 500; color: var(--ink-soft);
+  background: rgba(255,255,255,.05); border: .5px solid var(--hairline);
+  border-radius: var(--r-pill); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  white-space: nowrap; font-family: var(--f-sans);
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+.nav-wallet:hover { color: var(--ink); background: rgba(255,255,255,.09); border-color: var(--hairline-strong); }
+.nav-wallet--connected {
+  color: var(--ink);
+  background: rgba(232,192,137,.07);
+  border-color: var(--warm-soft);
+}
+.nav-wallet--connected:hover { background: rgba(232,192,137,.12); border-color: rgba(232,192,137,.35); }
+.nav-wallet__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--good); flex-shrink: 0;
+}
+.nav-wallet__chain {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--warm); opacity: .85;
+  padding: 1px 7px; border-radius: var(--r-pill);
+  border: .5px solid var(--warm-soft);
+  background: rgba(232,192,137,.06);
+}
+.nav-wallet__addr {
+  font-family: var(--f-mono); font-size: 12px; color: var(--ink);
+}
+
 /* App-page sec-head (smaller heading for non-landing pages). */
 .page-head {
   display: grid; grid-template-columns: 140px 1fr; gap: 36px; align-items: baseline;
@@ -224,7 +311,8 @@ a { color: inherit; text-decoration: none; }
 .app-main > .container-app { display: flex; flex-direction: column; gap: 24px; }
 
 @media (max-width: 960px) {
-  .navwrap .nav-pill .link { display: none; }
+  .navwrap.is-dapp { width: calc(100vw - 24px); }
+  .navwrap .nav-pill .nav-links { display: none; }
   .page-head { grid-template-columns: 1fr; gap: 12px; }
 }
 
@@ -239,12 +327,29 @@ body { min-height: 100vh; }
 .stake-grid { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 24px; }
 .stake-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .rewards-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; }
+.pool-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.add-liq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 24px; }
+.analytics-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+
+.position-card-link .panel { cursor: pointer; }
+.position-card-link:hover .panel { border-color: color-mix(in oklch, var(--accent) 40%, var(--line)); }
+
+.skeleton { position: relative; overflow: hidden; background: var(--panel); }
+.skeleton::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--line) 60%, transparent), transparent);
+  transform: translateX(-100%); animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }
 
 @media (max-width: 960px) {
   .swap-grid { grid-template-columns: minmax(0, 1fr); }
   .stake-grid { grid-template-columns: minmax(0, 1fr); }
   .stake-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rewards-grid { grid-template-columns: minmax(0, 1fr); }
+  .pool-grid { grid-template-columns: minmax(0, 1fr); }
+  .add-liq-grid { grid-template-columns: minmax(0, 1fr); }
+  .analytics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .md-hide { display: none !important; }
 }
 
@@ -273,5 +378,5 @@ body { min-height: 100vh; }
 @media (max-width: 640px) {
   .container-app { padding: 0 16px; }
   .sm-hide { display: none !important; }
-  .swap-grid, .stake-grid, .stake-summary, .rewards-grid { grid-template-columns: 1fr !important; }
+  .swap-grid, .stake-grid, .stake-summary, .rewards-grid, .pool-grid, .add-liq-grid, .analytics-grid { grid-template-columns: 1fr !important; }
 }

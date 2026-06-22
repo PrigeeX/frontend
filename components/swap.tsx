@@ -1,11 +1,31 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { parseUnits } from "viem";
 import { Icon, TokenIcon } from "./icons";
 import { useWallet } from "./wallet";
 import { useToast } from "./toast";
 import { TOKENS, tokenBySymbol, type TokenSymbol } from "@/lib/tokens";
 import { fmtNum } from "@/lib/format";
+import { dexConfigured, txUrl } from "@/lib/dex";
+import {
+  dexTokenFor,
+  useTokenAccount,
+  useSwapQuote,
+  useSwapActions,
+  useDebounced,
+  FeeAmount,
+} from "@/lib/quote";
+
+/** Parse a user amount to wei, tolerant of partial/invalid input. */
+const toRaw = (amount: string, decimals: number): bigint => {
+  if (!amount) return 0n;
+  try {
+    return parseUnits(amount, decimals);
+  } catch {
+    return 0n;
+  }
+};
 
 // Mock balances for demo (swap is not wired to a live DEX; PGX balance is fetched on the stake page).
 const MOCK_BALANCES: Record<TokenSymbol, number> = {
@@ -396,18 +416,46 @@ export const SwapPage = () => {
 
   const fromTok = tokenBySymbol(from);
   const toTok = tokenBySymbol(to);
-  const fromBal = balances[fromTok.balanceKey] ?? 0;
-  const toBal = balances[toTok.balanceKey] ?? 0;
 
-  const mid = fromTok.price / toTok.price;
-  const feePct = 0.003;
+  // Real on-chain path: active when both sides map to deployed DEX tokens.
+  const realIn = dexTokenFor(from);
+  const realOut = dexTokenFor(to);
+  const isReal =
+    dexConfigured() && Boolean(realIn && realOut) && realIn!.address !== realOut!.address;
+  const feeTier = FeeAmount.MEDIUM;
+
   const parsed = parseFloat(fromAmt) || 0;
-  const toAmt = parsed * mid * (1 - feePct);
+  const amountInRaw = isReal && realIn ? toRaw(fromAmt, realIn.decimals) : 0n;
+
+  const debouncedIn = useDebounced(amountInRaw);
+  const realInAcct = useTokenAccount(isReal ? realIn : undefined);
+  const realOutAcct = useTokenAccount(isReal ? realOut : undefined);
+  const quote = useSwapQuote(isReal ? realIn : undefined, isReal ? realOut : undefined, debouncedIn, feeTier);
+
+  const feePct = 0.003;
+  const mid = fromTok.price / toTok.price;
+  // Real balances/quote when available, illustrative numbers otherwise.
+  const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : balances[fromTok.balanceKey] ?? 0;
+  const toBal = isReal && realOutAcct.balance !== undefined ? realOutAcct.balance : balances[toTok.balanceKey] ?? 0;
+  const toAmt = isReal ? quote.amountOut ?? 0 : parsed * mid * (1 - feePct);
   const minReceived = toAmt * (1 - slippage / 100);
   const priceImpact = useMemo(() => {
     if (parsed === 0) return 0;
     return parsed * fromTok.price > 5000 ? 0.18 : 0.04;
   }, [parsed, fromTok.price]);
+
+  const minReceivedRaw = useMemo(() => {
+    if (!isReal || !realOut || !quote.amountOutRaw) return 0n;
+    return (quote.amountOutRaw * BigInt(Math.round((1 - slippage / 100) * 10_000))) / 10_000n;
+  }, [isReal, realOut, quote.amountOutRaw, slippage]);
+
+  const needsApproval =
+    isReal && realInAcct.allowance !== undefined && realInAcct.allowance < amountInRaw;
+
+  const { approve, swap, busy: realBusy } = useSwapActions(() => {
+    // Real tx mined: show the success step; balances refetch on their interval.
+    setTxStep("success");
+  });
 
   const flip = () => {
     setFrom(to);
@@ -417,13 +465,33 @@ export const SwapPage = () => {
   const setMax = () => setFromAmt(fromBal.toString());
   const setHalf = () => setFromAmt((fromBal / 2).toString());
 
-  const canSwap = wallet.connected && parsed > 0 && parsed <= fromBal && !txStep;
+  const canSwap = wallet.connected && parsed > 0 && parsed <= fromBal && !txStep && (!isReal || toAmt > 0);
 
   const executeSwap = () => {
     if (!wallet.connected) {
       wallet.open();
       return;
     }
+
+    // Real on-chain swap: approve if needed, otherwise execute via the router.
+    if (isReal && realIn && realOut) {
+      if (needsApproval) {
+        setTxStep("approve");
+        approve(realIn, amountInRaw, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol}` }),
+          onError: (e) => { setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
+        });
+        return;
+      }
+      setTxStep("pending");
+      swap(realIn, realOut, amountInRaw, minReceivedRaw, feeTier, {
+        onSuccess: (hash) => toast({ title: "Swap submitted", body: "View on explorer", href: txUrl(hash) }),
+        onError: (e) => { setTxStep(null); toast({ title: "Swap failed", body: e.message, kind: "error" }); },
+      });
+      return;
+    }
+
+    // Illustrative path for pairs without a live pool.
     setTxStep("approve");
     setTimeout(() => setTxStep("confirm"), 800);
     setTimeout(() => setTxStep("pending"), 1800);
@@ -555,7 +623,7 @@ export const SwapPage = () => {
             <div className="col gap-8" style={{ fontSize: 13 }}>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Rate</span>
-                <span className="mono">1 {from} = {fmtNum(mid, 6)} {to}</span>
+                <span className="mono">1 {from} = {fmtNum(isReal && parsed > 0 && toAmt > 0 ? toAmt / parsed : mid, 6)} {to}</span>
               </div>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Minimum received</span>
@@ -597,8 +665,12 @@ export const SwapPage = () => {
                 ? "Enter an amount"
                 : parsed > fromBal
                 ? `Insufficient ${from} balance`
-                : txStep
+                : isReal && quote.noRoute
+                ? "No route for this pair"
+                : txStep || realBusy
                 ? "Swapping…"
+                : needsApproval
+                ? `Approve ${from}`
                 : `Swap ${from} for ${to}`}
             </button>
           </div>
@@ -608,7 +680,7 @@ export const SwapPage = () => {
             <span>MEV protection · 0.30% + routing fee · Settles on-chain</span>
           </div>
           <div className="row gap-8" style={{ marginTop: 8, fontSize: 11, color: "var(--text-3)" }}>
-            <span>Swap quotes are illustrative on Sepolia.</span>
+            <span>{isReal ? "Live quote from QuoterV2 - settles on-chain via the router." : "This pair has no live pool; quote shown is illustrative."}</span>
           </div>
         </div>
 
