@@ -35,6 +35,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-scroll-behavior="smooth">
       <head>
         <link rel="stylesheet" href="/theme.css" />
+        {/* Apply the saved theme before paint to avoid a flash (FE-36). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('prigeex-theme');if(t==='light')document.documentElement.dataset.theme='light';}catch(e){}`,
+          }}
+        />
       </head>
       <body>
         <Providers>

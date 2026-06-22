@@ -1,8 +1,10 @@
-import { sepolia } from "wagmi/chains";
+import { DEX, DEX_CHAIN } from "./dex";
 
-export const PGX_ADDRESS = "0x828B8fAF6c38eB666dFA8c1F22b106ca1FCecf0c" as const;
-export const STAKING_ADDRESS = "0xDD8A20b1ABbD84a52d02Dc623E756E880FB13b6b" as const;
-export const CHAIN = sepolia;
+// Addresses live in packages/dex-config.ts (single source of truth). Re-exported
+// here under the names the existing modules already use.
+export const PGX_ADDRESS = DEX.PGX;
+export const STAKING_ADDRESS = DEX.staking;
+export const CHAIN = DEX_CHAIN;
 
 export const erc20Abi = [
   {
@@ -48,7 +50,12 @@ export const erc20Abi = [
   },
 ] as const;
 
+// ABI mirrors PrigeeXStaking.sol / IPrigeeXStaking.sol exactly. Do not add functions
+// the contract does not expose (no `withdraw`, `rewardRate`, `rewardBalance`,
+// `periodFinish`, `fundRewards`, or a no-arg `emergencyWithdraw`). Reads/writes should go
+// through lib/staking.ts rather than referencing this ABI directly from components.
 export const stakingAbi = [
+  // ── Writes ────────────────────────────────────────────────────────────────
   {
     type: "function",
     name: "stake",
@@ -58,7 +65,7 @@ export const stakingAbi = [
   },
   {
     type: "function",
-    name: "withdraw",
+    name: "unstake",
     stateMutability: "nonpayable",
     inputs: [{ name: "amount", type: "uint256" }],
     outputs: [],
@@ -72,44 +79,36 @@ export const stakingAbi = [
   },
   {
     type: "function",
-    name: "emergencyWithdraw",
-    stateMutability: "nonpayable",
-    inputs: [],
-    outputs: [],
-  },
-  {
-    type: "function",
-    name: "fundRewards",
+    name: "depositRewards",
     stateMutability: "nonpayable",
     inputs: [{ name: "amount", type: "uint256" }],
     outputs: [],
   },
-  {
-    type: "function",
-    name: "balanceOf",
-    stateMutability: "view",
-    inputs: [{ name: "", type: "address" }],
-    outputs: [{ type: "uint256" }],
-  },
+  // ── Views ─────────────────────────────────────────────────────────────────
   {
     type: "function",
     name: "earned",
     stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
+    inputs: [{ name: "user", type: "address" }],
     outputs: [{ type: "uint256" }],
   },
   {
     type: "function",
-    name: "rewardBalance",
+    name: "getStakingInfo",
     stateMutability: "view",
-    inputs: [],
-    outputs: [{ type: "uint256" }],
+    inputs: [{ name: "user", type: "address" }],
+    outputs: [
+      { name: "staked", type: "uint256" },
+      { name: "pending", type: "uint256" },
+      { name: "total", type: "uint256" },
+      { name: "rewardPerToken", type: "uint256" },
+    ],
   },
   {
     type: "function",
-    name: "rewardRate",
+    name: "stakedBalance",
     stateMutability: "view",
-    inputs: [],
+    inputs: [{ name: "user", type: "address" }],
     outputs: [{ type: "uint256" }],
   },
   {
@@ -121,9 +120,206 @@ export const stakingAbi = [
   },
   {
     type: "function",
-    name: "periodFinish",
+    name: "totalRewardsDeposited",
     stateMutability: "view",
     inputs: [],
     outputs: [{ type: "uint256" }],
   },
+  {
+    type: "function",
+    name: "rewardReserve",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "paused",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ type: "bool" }],
+  },
+] as const;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// V3 AMM ABIs (minimal, hand-trimmed). Components never touch these directly;
+// they go through lib/liquidity.ts and lib/quote.ts. Function shapes mirror
+// Uniswap v3-core / v3-periphery, which the deployed PrigeeX contracts fork.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const v3FactoryAbi = [
+  {
+    type: "function",
+    name: "getPool",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenA", type: "address" },
+      { name: "tokenB", type: "address" },
+      { name: "fee", type: "uint24" },
+    ],
+    outputs: [{ name: "pool", type: "address" }],
+  },
+] as const;
+
+export const v3PoolAbi = [
+  {
+    type: "function",
+    name: "slot0",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      { name: "sqrtPriceX96", type: "uint160" },
+      { name: "tick", type: "int24" },
+      { name: "observationIndex", type: "uint16" },
+      { name: "observationCardinality", type: "uint16" },
+      { name: "observationCardinalityNext", type: "uint16" },
+      { name: "feeProtocol", type: "uint8" },
+      { name: "unlocked", type: "bool" },
+    ],
+  },
+  { type: "function", name: "liquidity", stateMutability: "view", inputs: [], outputs: [{ type: "uint128" }] },
+  { type: "function", name: "fee", stateMutability: "view", inputs: [], outputs: [{ type: "uint24" }] },
+  { type: "function", name: "tickSpacing", stateMutability: "view", inputs: [], outputs: [{ type: "int24" }] },
+  { type: "function", name: "token0", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+  { type: "function", name: "token1", stateMutability: "view", inputs: [], outputs: [{ type: "address" }] },
+  {
+    type: "function",
+    name: "ticks",
+    stateMutability: "view",
+    inputs: [{ name: "tick", type: "int24" }],
+    outputs: [
+      { name: "liquidityGross", type: "uint128" },
+      { name: "liquidityNet", type: "int128" },
+      { name: "feeGrowthOutside0X128", type: "uint256" },
+      { name: "feeGrowthOutside1X128", type: "uint256" },
+      { name: "tickCumulativeOutside", type: "int56" },
+      { name: "secondsPerLiquidityOutsideX128", type: "uint160" },
+      { name: "secondsOutside", type: "uint32" },
+      { name: "initialized", type: "bool" },
+    ],
+  },
+] as const;
+
+export const positionManagerAbi = [
+  { type: "function", name: "balanceOf", stateMutability: "view", inputs: [{ name: "owner", type: "address" }], outputs: [{ type: "uint256" }] },
+  {
+    type: "function",
+    name: "tokenOfOwnerByIndex",
+    stateMutability: "view",
+    inputs: [
+      { name: "owner", type: "address" },
+      { name: "index", type: "uint256" },
+    ],
+    outputs: [{ name: "tokenId", type: "uint256" }],
+  },
+  {
+    type: "function",
+    name: "positions",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      { name: "nonce", type: "uint96" },
+      { name: "operator", type: "address" },
+      { name: "token0", type: "address" },
+      { name: "token1", type: "address" },
+      { name: "fee", type: "uint24" },
+      { name: "tickLower", type: "int24" },
+      { name: "tickUpper", type: "int24" },
+      { name: "liquidity", type: "uint128" },
+      { name: "feeGrowthInside0LastX128", type: "uint256" },
+      { name: "feeGrowthInside1LastX128", type: "uint256" },
+      { name: "tokensOwed0", type: "uint128" },
+      { name: "tokensOwed1", type: "uint128" },
+    ],
+  },
+  // The mint/increase/decrease/collect/burn calldata is built by the v3-sdk
+  // NonfungiblePositionManager helper and sent via `multicall`, so only the
+  // multicall entrypoint is needed here.
+  {
+    type: "function",
+    name: "multicall",
+    stateMutability: "payable",
+    inputs: [{ name: "data", type: "bytes[]" }],
+    outputs: [{ name: "results", type: "bytes[]" }],
+  },
+] as const;
+
+export const quoterV2Abi = [
+  {
+    type: "function",
+    name: "quoteExactInputSingle",
+    stateMutability: "nonpayable",
+    inputs: [
+      {
+        name: "params",
+        type: "tuple",
+        components: [
+          { name: "tokenIn", type: "address" },
+          { name: "tokenOut", type: "address" },
+          { name: "amountIn", type: "uint256" },
+          { name: "fee", type: "uint24" },
+          { name: "sqrtPriceLimitX96", type: "uint160" },
+        ],
+      },
+    ],
+    outputs: [
+      { name: "amountOut", type: "uint256" },
+      { name: "sqrtPriceX96After", type: "uint160" },
+      { name: "initializedTicksCrossed", type: "uint32" },
+      { name: "gasEstimate", type: "uint256" },
+    ],
+  },
+] as const;
+
+export const swapRouterAbi = [
+  {
+    type: "function",
+    name: "exactInputSingle",
+    stateMutability: "payable",
+    inputs: [
+      {
+        name: "params",
+        type: "tuple",
+        components: [
+          { name: "tokenIn", type: "address" },
+          { name: "tokenOut", type: "address" },
+          { name: "fee", type: "uint24" },
+          { name: "recipient", type: "address" },
+          { name: "deadline", type: "uint256" },
+          { name: "amountIn", type: "uint256" },
+          { name: "amountOutMinimum", type: "uint256" },
+          { name: "sqrtPriceLimitX96", type: "uint160" },
+        ],
+      },
+    ],
+    outputs: [{ name: "amountOut", type: "uint256" }],
+  },
+] as const;
+
+export const tickLensAbi = [
+  {
+    type: "function",
+    name: "getPopulatedTicksInWord",
+    stateMutability: "view",
+    inputs: [
+      { name: "pool", type: "address" },
+      { name: "tickBitmapIndex", type: "int16" },
+    ],
+    outputs: [
+      {
+        name: "populatedTicks",
+        type: "tuple[]",
+        components: [
+          { name: "tick", type: "int24" },
+          { name: "liquidityNet", type: "int128" },
+          { name: "liquidityGross", type: "uint128" },
+        ],
+      },
+    ],
+  },
+] as const;
+
+export const weth9Abi = [
+  { type: "function", name: "deposit", stateMutability: "payable", inputs: [], outputs: [] },
+  { type: "function", name: "withdraw", stateMutability: "nonpayable", inputs: [{ name: "wad", type: "uint256" }], outputs: [] },
 ] as const;

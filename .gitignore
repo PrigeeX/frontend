@@ -52,3 +52,6 @@ pnpm-debug.log*
 /lib/python*/
 /lib64
 /pyvenv.cfg
+
+graphify-out/
+graphify-out/*

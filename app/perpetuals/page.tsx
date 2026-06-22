@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Nav } from "@/components/Nav";
 
 export const metadata = {
@@ -37,15 +38,15 @@ export default function Perpetuals() {
               When it is ready, the venue will open early access. Until then, the live surface lives at Swap, Staking, and Rewards.
             </p>
             <div className="row gap-10" style={{ marginTop: 8 }}>
-              <a href="/swap" className="btn btn--warm">
+              <Link href="/swap" className="btn btn--warm">
                 Visit Swap
                 <svg viewBox="0 0 12 12" fill="none" aria-hidden style={{ width: 12, height: 12 }}>
                   <path d="M2 6h7M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              </a>
-              <a href="/" className="btn btn--ghost">
+              </Link>
+              <Link href="/" className="btn btn--ghost">
                 Back to the manifest
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { Icon } from "./icons";
 
-type Toast = { id: string; title: string; body?: string; kind?: "success" | "error"; duration?: number };
+type Toast = { id: string; title: string; body?: string; href?: string; kind?: "success" | "error"; duration?: number };
 type ToastInput = Omit<Toast, "id">;
 
 const ToastCtx = createContext<((t: ToastInput) => void) | null>(null);
@@ -36,7 +36,15 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
             </span>
             <div className="col gap-4" style={{ flex: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 500 }}>{t.title}</div>
-              {t.body && <div style={{ fontSize: 12, color: "var(--text-2)" }}>{t.body}</div>}
+              {t.body && (
+                t.href ? (
+                  <a href={t.href} target="_blank" rel="noreferrer" className="row gap-4" style={{ fontSize: 12, color: "var(--accent)" }}>
+                    {t.body} <Icon.Ext size={11} />
+                  </a>
+                ) : (
+                  <div style={{ fontSize: 12, color: "var(--text-2)" }}>{t.body}</div>
+                )
+              )}
             </div>
           </div>
         ))}

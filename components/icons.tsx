@@ -98,6 +98,32 @@ export const Icon = {
       <path d="M8 1v2m0 10v2M1 8h2m10 0h2M3.05 3.05l1.4 1.4m7.1 7.1l1.4 1.4M3.05 12.95l1.4-1.4m7.1-7.1l1.4-1.4" stroke="currentColor" strokeWidth="1.4" />
     </svg>
   ),
+  Plus: ({ size = 16 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+    </svg>
+  ),
+  Minus: ({ size = 16 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <path d="M3 8h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="square" />
+    </svg>
+  ),
+  Chart: ({ size = 16 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <path d="M2 14V2M2 14h12M5 11l3-4 2 2 4-5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square" strokeLinejoin="round" />
+    </svg>
+  ),
+  Sun: ({ size = 16 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M13 3l-1 1M4 12l-1 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  ),
+  Moon: ({ size = 16 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <path d="M13 9.5A5.5 5.5 0 016.5 3a5.5 5.5 0 100 10c2.3 0 4.3-1.4 5-3.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  ),
   Refresh: ({ size = 16 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
       <path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square" />
