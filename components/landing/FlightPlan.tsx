@@ -42,7 +42,7 @@ export const FlightPlan = () => (
     <div className="section-dark__grid" aria-hidden />
     <div className="container">
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">02, Flight plan</div>
+        <div className="sec-num">Flight plan</div>
         <h2 className="sec-title">
           From wheels-up
           <br />

@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { parseUnits } from "viem";
+import { useAccount, useBalance, useGasPrice, useWaitForTransactionReceipt } from "wagmi";
 import { Icon, TokenIcon } from "./icons";
 import { useWallet } from "./wallet";
 import { useToast } from "./toast";
 import { TOKENS, tokenBySymbol, type TokenSymbol } from "@/lib/tokens";
 import { fmtNum } from "@/lib/format";
-import { dexConfigured, txUrl } from "@/lib/dex";
+import { dexConfigured, txUrl, SUBGRAPHS } from "@/lib/dex";
 import {
   dexTokenFor,
   useTokenAccount,
@@ -15,7 +16,9 @@ import {
   useSwapActions,
   useDebounced,
   FeeAmount,
+  DEX_TOKENS,
 } from "@/lib/quote";
+import { usePool } from "@/lib/liquidity";
 
 /** Parse a user amount to wei, tolerant of partial/invalid input. */
 const toRaw = (amount: string, decimals: number): bigint => {
@@ -27,16 +30,68 @@ const toRaw = (amount: string, decimals: number): bigint => {
   }
 };
 
-// Mock balances for demo (swap is not wired to a live DEX; PGX balance is fetched on the stake page).
-const MOCK_BALANCES: Record<TokenSymbol, number> = {
-  PGX: 0,
-  ETH: 2.4138,
-  USDC: 4820.11,
-  USDT: 0,
-  WBTC: 0.0345,
-  DAI: 0,
-  ARB: 0,
-  OP: 0,
+// ── Live recent swaps from V3 subgraph ───────────────────────────────────────
+
+type SubgraphSwap = {
+  id: string;
+  transaction: { id: string };
+  timestamp: string;
+  amount0: string;
+  amount1: string;
+  token0: { symbol: string };
+  token1: { symbol: string };
+  origin: string;
+};
+
+function useRecentSwaps() {
+  const [swaps, setSwaps] = useState<SubgraphSwap[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetch_ = () =>
+      fetch(SUBGRAPHS.v3, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: `{
+            swaps(first: 10, orderBy: timestamp, orderDirection: desc) {
+              id
+              transaction { id }
+              timestamp
+              amount0
+              amount1
+              token0 { symbol }
+              token1 { symbol }
+              origin
+            }
+          }`,
+        }),
+      })
+        .then((r) => r.json())
+        .then((d) => { if (!cancelled) { setSwaps(d.data?.swaps ?? []); setLoading(false); } })
+        .catch(() => { if (!cancelled) setLoading(false); });
+
+    fetch_();
+    const id = setInterval(fetch_, 15_000);
+    return () => { cancelled = true; clearInterval(id); };
+  }, []);
+
+  return { swaps, loading };
+}
+
+// ── Components ────────────────────────────────────────────────────────────────
+
+const mapSym = (s: string): TokenSymbol =>
+  (s === "WETH" ? "ETH" : s) as TokenSymbol;
+
+const relTime = (ts: string) => {
+  const diff = Math.floor(Date.now() / 1000) - parseInt(ts);
+  if (diff < 60) return `${diff}s`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+  return `${Math.floor(diff / 86400)}d`;
 };
 
 const TokenInput = ({
@@ -218,9 +273,10 @@ const RouteArrow = ({ label }: { label: string }) => (
   </div>
 );
 
-const Route = ({ from, to, amount }: { from: TokenSymbol; to: TokenSymbol; amount: number }) => {
+const Route = ({ from, to, amount, feePct }: { from: TokenSymbol; to: TokenSymbol; amount: number; feePct: number }) => {
   const hasIntermediary = from !== "PGX" && to !== "PGX";
   const hop = hasIntermediary ? ("PGX" as const) : null;
+  const feeLabel = `Pool ${(feePct * 100).toFixed(2)}%`;
   return (
     <div
       className="row"
@@ -234,11 +290,11 @@ const Route = ({ from, to, amount }: { from: TokenSymbol; to: TokenSymbol; amoun
       }}
     >
       <RouteNode symbol={from} label={fmtNum(amount) + " " + from} />
-      <RouteArrow label="Pool 0.30%" />
+      <RouteArrow label={feeLabel} />
       {hop && (
         <>
           <RouteNode symbol={hop} label="Routing" />
-          <RouteArrow label="Pool 0.30%" />
+          <RouteArrow label={feeLabel} />
         </>
       )}
       <RouteNode symbol={to} label={to} right />
@@ -247,40 +303,63 @@ const Route = ({ from, to, amount }: { from: TokenSymbol; to: TokenSymbol; amoun
 };
 
 const RecentSwaps = () => {
-  const rows = [
-    { from: "ETH", to: "PGX", amt: "0.5", out: "4,091.40", time: "12s", addr: "0x3f2a…88c1" },
-    { from: "USDC", to: "PGX", amt: "250", out: "592.84", time: "48s", addr: "0xa901…ef32" },
-    { from: "PGX", to: "ETH", amt: "12,000", out: "1.466", time: "1m", addr: "0x7c4d…0019" },
-    { from: "WBTC", to: "USDC", amt: "0.01", out: "684.15", time: "2m", addr: "0x11b6…7742" },
-    { from: "PGX", to: "USDC", amt: "5,000", out: "2,103.20", time: "3m", addr: "0xe220…aa81" },
-  ] as const;
+  const { swaps, loading } = useRecentSwaps();
+
+  if (loading) {
+    return (
+      <div className="muted" style={{ padding: 40, textAlign: "center", fontSize: 13 }}>
+        Loading…
+      </div>
+    );
+  }
+
+  if (swaps.length === 0) {
+    return (
+      <div className="muted" style={{ padding: 40, textAlign: "center", fontSize: 13 }}>
+        No recent swaps
+      </div>
+    );
+  }
+
   return (
     <div>
-      {rows.map((r, i) => (
-        <div
-          key={i}
-          className="row"
-          style={{
-            padding: "12px 20px",
-            fontSize: 13,
-            borderBottom: i < rows.length - 1 ? "1px solid var(--line)" : "none",
-            gap: 12,
-          }}
-        >
-          <div className="row gap-8">
-            <TokenIcon symbol={r.from} size="sm" />
-            <Icon.Arrow size={11} dir="right" />
-            <TokenIcon symbol={r.to} size="sm" />
+      {swaps.map((s, i) => {
+        const amt0 = parseFloat(s.amount0);
+        const isZeroIn = amt0 > 0;
+        const fromSym = mapSym(isZeroIn ? s.token0.symbol : s.token1.symbol);
+        const toSym = mapSym(isZeroIn ? s.token1.symbol : s.token0.symbol);
+        const fromAmt = Math.abs(isZeroIn ? amt0 : parseFloat(s.amount1));
+        const toAmt_ = Math.abs(isZeroIn ? parseFloat(s.amount1) : amt0);
+        const addr = s.origin
+          ? `${s.origin.slice(0, 6)}…${s.origin.slice(-4)}`
+          : s.transaction.id.slice(0, 10);
+
+        return (
+          <div
+            key={s.id}
+            className="row"
+            style={{
+              padding: "12px 20px",
+              fontSize: 13,
+              borderBottom: i < swaps.length - 1 ? "1px solid var(--line)" : "none",
+              gap: 12,
+            }}
+          >
+            <div className="row gap-8">
+              <TokenIcon symbol={fromSym} size="sm" />
+              <Icon.Arrow size={11} dir="right" />
+              <TokenIcon symbol={toSym} size="sm" />
+            </div>
+            <div className="col gap-4" style={{ flex: 1 }}>
+              <span className="mono" style={{ fontSize: 12 }}>
+                {fmtNum(fromAmt)} {fromSym} → {fmtNum(toAmt_)} {toSym}
+              </span>
+              <span className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>{addr}</span>
+            </div>
+            <span className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>{relTime(s.timestamp)} ago</span>
           </div>
-          <div className="col gap-4" style={{ flex: 1 }}>
-            <span className="mono" style={{ fontSize: 12 }}>
-              {r.amt} {r.from} → {r.out} {r.to}
-            </span>
-            <span className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>{r.addr}</span>
-          </div>
-          <span className="mono" style={{ fontSize: 11, color: "var(--text-3)" }}>{r.time} ago</span>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
@@ -291,6 +370,7 @@ const TxModal = ({
   fromAmt,
   toAmt,
   step,
+  txHash,
   onClose,
 }: {
   from: TokenSymbol;
@@ -298,8 +378,14 @@ const TxModal = ({
   fromAmt: number;
   toAmt: number;
   step: "approve" | "confirm" | "pending" | "success";
+  txHash?: `0x${string}`;
   onClose: () => void;
 }) => {
+  const { data: receipt } = useWaitForTransactionReceipt({
+    hash: txHash,
+    query: { enabled: Boolean(txHash) },
+  });
+
   const steps = [
     { id: "approve", label: "Approve token" },
     { id: "confirm", label: "Confirm in wallet" },
@@ -366,18 +452,24 @@ const TxModal = ({
               className="col gap-8"
               style={{ marginTop: 20, padding: 14, background: "var(--bg-2)", borderRadius: 8, border: "1px solid var(--line)" }}
             >
-              <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
-                <span className="muted">Tx hash</span>
-                <span className="mono">0x8f2a…c4f1</span>
-              </div>
-              <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
-                <span className="muted">Block</span>
-                <span className="mono">22,418,091</span>
-              </div>
-              <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
-                <span className="muted">Gas used</span>
-                <span className="mono">142,508 · $1.67</span>
-              </div>
+              {receipt ? (
+                <>
+                  <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
+                    <span className="muted">Tx hash</span>
+                    <span className="mono">{receipt.transactionHash.slice(0, 6)}&hellip;{receipt.transactionHash.slice(-4)}</span>
+                  </div>
+                  <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
+                    <span className="muted">Block</span>
+                    <span className="mono">{receipt.blockNumber.toLocaleString()}</span>
+                  </div>
+                  <div className="row" style={{ justifyContent: "space-between", fontSize: 12 }}>
+                    <span className="muted">Gas used</span>
+                    <span className="mono">{receipt.gasUsed.toLocaleString()}</span>
+                  </div>
+                </>
+              ) : (
+                <span className="muted" style={{ fontSize: 13 }}>Loading receipt&hellip;</span>
+              )}
             </div>
           )}
         </div>
@@ -387,9 +479,14 @@ const TxModal = ({
         >
           {step === "success" ? (
             <>
-              <button className="btn btn-ghost">
+              <a
+                href={txHash ? txUrl(txHash) : "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost"
+              >
                 View on explorer <Icon.Ext />
-              </button>
+              </a>
               <button className="btn btn-primary" onClick={onClose}>Done</button>
             </>
           ) : (
@@ -404,6 +501,7 @@ const TxModal = ({
 export const SwapPage = () => {
   const wallet = useWallet();
   const toast = useToast();
+  const { address } = useAccount();
   const [from, setFrom] = useState<TokenSymbol>("ETH");
   const [to, setTo] = useState<TokenSymbol>("PGX");
   const [fromAmt, setFromAmt] = useState("1.0");
@@ -411,8 +509,8 @@ export const SwapPage = () => {
   const [deadline, setDeadline] = useState(30);
   const [settings, setSettings] = useState(false);
   const [picker, setPicker] = useState<"from" | "to" | null>(null);
-  const [balances, setBalances] = useState<Record<TokenSymbol, number>>(MOCK_BALANCES);
   const [txStep, setTxStep] = useState<"approve" | "confirm" | "pending" | "success" | null>(null);
+  const [swapTxHash, setSwapTxHash] = useState<`0x${string}` | undefined>();
 
   const fromTok = tokenBySymbol(from);
   const toTok = tokenBySymbol(to);
@@ -423,6 +521,7 @@ export const SwapPage = () => {
   const isReal =
     dexConfigured() && Boolean(realIn && realOut) && realIn!.address !== realOut!.address;
   const feeTier = FeeAmount.MEDIUM;
+  const feePct = feeTier / 1_000_000;
 
   const parsed = parseFloat(fromAmt) || 0;
   const amountInRaw = isReal && realIn ? toRaw(fromAmt, realIn.decimals) : 0n;
@@ -432,28 +531,65 @@ export const SwapPage = () => {
   const realOutAcct = useTokenAccount(isReal ? realOut : undefined);
   const quote = useSwapQuote(isReal ? realIn : undefined, isReal ? realOut : undefined, debouncedIn, feeTier);
 
-  const feePct = 0.003;
-  const mid = fromTok.price / toTok.price;
-  // Real balances/quote when available, illustrative numbers otherwise.
-  const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : balances[fromTok.balanceKey] ?? 0;
-  const toBal = isReal && realOutAcct.balance !== undefined ? realOutAcct.balance : balances[toTok.balanceKey] ?? 0;
-  const toAmt = isReal ? quote.amountOut ?? 0 : parsed * mid * (1 - feePct);
+  // Always fetch PGX balance for the token picker (ETH comes from useBalance).
+  const pgxDexToken = DEX_TOKENS.find((t) => t.symbol === "PGX");
+  const pgxPickerAcct = useTokenAccount(pgxDexToken);
+  const { data: nativeEth } = useBalance({
+    address,
+    query: { enabled: Boolean(address), refetchInterval: 12_000 },
+  });
+
+  // Live gas price for network fee estimate.
+  const { data: gasPrice } = useGasPrice();
+
+  // Live pool for real price impact.
+  const { pool: livePool } = usePool(isReal ? realIn : undefined, isReal ? realOut : undefined, feeTier);
+
+  // Picker balances: live for ETH and PGX, zero for undeployed tokens.
+  const pickerBalances = useMemo<Record<TokenSymbol, number>>(() => {
+    const m = Object.fromEntries(TOKENS.map((t) => [t.symbol, 0])) as Record<TokenSymbol, number>;
+    if (address) {
+      m.ETH = nativeEth ? Number(nativeEth.value) / 1e18 : 0;
+      m.PGX = pgxPickerAcct.balance ?? 0;
+    }
+    return m;
+  }, [address, nativeEth, pgxPickerAcct.balance]);
+
+  // Use on-chain balances when real, else 0.
+  const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : 0;
+  const toBal = isReal && realOutAcct.balance !== undefined ? realOutAcct.balance : 0;
+  const toAmt = isReal ? quote.amountOut ?? 0 : 0;
   const minReceived = toAmt * (1 - slippage / 100);
-  const priceImpact = useMemo(() => {
-    if (parsed === 0) return 0;
-    return parsed * fromTok.price > 5000 ? 0.18 : 0.04;
-  }, [parsed, fromTok.price]);
 
   const minReceivedRaw = useMemo(() => {
     if (!isReal || !realOut || !quote.amountOutRaw) return 0n;
     return (quote.amountOutRaw * BigInt(Math.round((1 - slippage / 100) * 10_000))) / 10_000n;
   }, [isReal, realOut, quote.amountOutRaw, slippage]);
 
+  // Real price impact: quoted rate vs live pool spot rate.
+  const priceImpact = useMemo(() => {
+    if (!isReal || !livePool || !realIn || parsed === 0 || toAmt === 0) return undefined;
+    const isToken0In = realIn.address.toLowerCase() === livePool.token0.address.toLowerCase();
+    const spotRate = parseFloat(
+      isToken0In
+        ? livePool.token0Price.toSignificant(10)
+        : livePool.token1Price.toSignificant(10),
+    );
+    if (spotRate === 0) return undefined;
+    const quotedRate = toAmt / parsed;
+    return Math.abs(spotRate - quotedRate) / spotRate;
+  }, [isReal, livePool, realIn, parsed, toAmt]);
+
+  // Network fee in ETH from QuoterV2 gas estimate × current gas price.
+  const networkFeeEth = useMemo(() => {
+    if (!isReal || !quote.gasEstimate || !gasPrice) return undefined;
+    return Number(quote.gasEstimate * gasPrice) / 1e18;
+  }, [isReal, quote.gasEstimate, gasPrice]);
+
   const needsApproval =
     isReal && realInAcct.allowance !== undefined && realInAcct.allowance < amountInRaw;
 
   const { approve, swap, busy: realBusy } = useSwapActions(() => {
-    // Real tx mined: show the success step; balances refetch on their interval.
     setTxStep("success");
   });
 
@@ -465,48 +601,36 @@ export const SwapPage = () => {
   const setMax = () => setFromAmt(fromBal.toString());
   const setHalf = () => setFromAmt((fromBal / 2).toString());
 
-  const canSwap = wallet.connected && parsed > 0 && parsed <= fromBal && !txStep && (!isReal || toAmt > 0);
+  const canSwap = wallet.connected && isReal && parsed > 0 && parsed <= fromBal && !txStep && toAmt > 0;
 
   const executeSwap = () => {
     if (!wallet.connected) {
       wallet.open();
       return;
     }
+    if (!isReal || !realIn || !realOut) return;
 
-    // Real on-chain swap: approve if needed, otherwise execute via the router.
-    if (isReal && realIn && realOut) {
-      if (needsApproval) {
-        setTxStep("approve");
-        approve(realIn, amountInRaw, {
-          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol}` }),
-          onError: (e) => { setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
-        });
-        return;
-      }
-      setTxStep("pending");
-      swap(realIn, realOut, amountInRaw, minReceivedRaw, feeTier, {
-        onSuccess: (hash) => toast({ title: "Swap submitted", body: "View on explorer", href: txUrl(hash) }),
-        onError: (e) => { setTxStep(null); toast({ title: "Swap failed", body: e.message, kind: "error" }); },
+    if (needsApproval) {
+      setTxStep("approve");
+      approve(realIn, amountInRaw, {
+        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol}` }),
+        onError: (e) => { setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
       });
       return;
     }
-
-    // Illustrative path for pairs without a live pool.
-    setTxStep("approve");
-    setTimeout(() => setTxStep("confirm"), 800);
-    setTimeout(() => setTxStep("pending"), 1800);
-    setTimeout(() => {
-      setTxStep("success");
-      setBalances((b) => ({
-        ...b,
-        [fromTok.balanceKey]: (b[fromTok.balanceKey] ?? 0) - parsed,
-        [toTok.balanceKey]: (b[toTok.balanceKey] ?? 0) + toAmt,
-      }));
-    }, 3200);
+    setTxStep("pending");
+    swap(realIn, realOut, amountInRaw, minReceivedRaw, feeTier, {
+      onSuccess: (hash) => {
+        setSwapTxHash(hash);
+        toast({ title: "Swap submitted", body: "View on explorer", href: txUrl(hash) });
+      },
+      onError: (e) => { setTxStep(null); toast({ title: "Swap failed", body: e.message, kind: "error" }); },
+    });
   };
 
   const closeTxModal = () => {
     setTxStep(null);
+    setSwapTxHash(undefined);
     toast({ title: "Swap settled", body: `${fmtNum(parsed)} ${from} → ${fmtNum(toAmt)} ${to}` });
   };
 
@@ -623,25 +747,35 @@ export const SwapPage = () => {
             <div className="col gap-8" style={{ fontSize: 13 }}>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Rate</span>
-                <span className="mono">1 {from} = {fmtNum(isReal && parsed > 0 && toAmt > 0 ? toAmt / parsed : mid, 6)} {to}</span>
+                <span className="mono">
+                  {isReal && parsed > 0 && toAmt > 0
+                    ? `1 ${from} = ${fmtNum(toAmt / parsed, 6)} ${to}`
+                    : "-"}
+                </span>
               </div>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Minimum received</span>
-                <span className="mono">{fmtNum(minReceived, 4)} {to}</span>
+                <span className="mono">{isReal && toAmt > 0 ? `${fmtNum(minReceived, 4)} ${to}` : "-"}</span>
               </div>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Price impact</span>
-                <span className="mono" style={{ color: priceImpact > 0.1 ? "var(--warn)" : "var(--text)" }}>
-                  {(priceImpact * 100).toFixed(2)}%
+                <span className="mono" style={{ color: (priceImpact ?? 0) > 0.01 ? "var(--warn)" : "var(--text)" }}>
+                  {priceImpact !== undefined ? `${(priceImpact * 100).toFixed(2)}%` : "-"}
                 </span>
               </div>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">LP fee</span>
-                <span className="mono">{(feePct * 100).toFixed(2)}% · {fmtNum(parsed * feePct)} {from}</span>
+                <span className="mono">
+                  {isReal && parsed > 0
+                    ? `${(feePct * 100).toFixed(2)}% · ${fmtNum(parsed * feePct)} ${from}`
+                    : "-"}
+                </span>
               </div>
               <div className="row" style={{ justifyContent: "space-between" }}>
                 <span className="muted">Network fee (est.)</span>
-                <span className="mono">~$1.82</span>
+                <span className="mono">
+                  {networkFeeEth !== undefined ? `~${networkFeeEth.toFixed(6)} ETH` : "-"}
+                </span>
               </div>
             </div>
 
@@ -661,11 +795,13 @@ export const SwapPage = () => {
             >
               {!wallet.connected
                 ? "Connect wallet to swap"
+                : !isReal
+                ? "No live pool for this pair"
                 : parsed === 0
                 ? "Enter an amount"
                 : parsed > fromBal
                 ? `Insufficient ${from} balance`
-                : isReal && quote.noRoute
+                : quote.noRoute
                 ? "No route for this pair"
                 : txStep || realBusy
                 ? "Swapping…"
@@ -677,10 +813,10 @@ export const SwapPage = () => {
 
           <div className="row gap-8" style={{ marginTop: 12, fontSize: 12, color: "var(--text-3)" }}>
             <Icon.Shield size={12} />
-            <span>MEV protection · 0.30% + routing fee · Settles on-chain</span>
+            <span>MEV protection · {(feePct * 100).toFixed(2)}% + routing fee · Settles on-chain</span>
           </div>
           <div className="row gap-8" style={{ marginTop: 8, fontSize: 11, color: "var(--text-3)" }}>
-            <span>{isReal ? "Live quote from QuoterV2 - settles on-chain via the router." : "This pair has no live pool; quote shown is illustrative."}</span>
+            <span>{isReal ? "Live quote from QuoterV2 - settles on-chain via the router." : "This pair has no live pool on this deployment."}</span>
           </div>
         </div>
 
@@ -689,14 +825,16 @@ export const SwapPage = () => {
             <div className="row" style={{ justifyContent: "space-between", marginBottom: 16 }}>
               <div className="col gap-4">
                 <span className="caps">Best route</span>
-                <span style={{ fontSize: 14, fontWeight: 500 }}>Via 2 pools · 1 hop</span>
+                <span style={{ fontSize: 14, fontWeight: 500 }}>
+                  {isReal ? "Via 1 pool · direct" : "No live route"}
+                </span>
               </div>
               <span className="chip accent">
                 <Icon.Bolt size={11} />
                 <span>Optimal</span>
               </span>
             </div>
-            <Route from={from} to={to} amount={parsed} />
+            <Route from={from} to={to} amount={parsed} feePct={feePct} />
           </div>
 
           <div className="panel">
@@ -711,7 +849,7 @@ export const SwapPage = () => {
       {picker && (
         <TokenPicker
           exclude={picker === "from" ? to : from}
-          balances={balances}
+          balances={pickerBalances}
           onPick={(sym) => {
             if (picker === "from") setFrom(sym);
             else setTo(sym);
@@ -721,8 +859,17 @@ export const SwapPage = () => {
         />
       )}
 
-      {txStep && <TxModal from={from} to={to} fromAmt={parsed} toAmt={toAmt} step={txStep} onClose={closeTxModal} />}
-
+      {txStep && (
+        <TxModal
+          from={from}
+          to={to}
+          fromAmt={parsed}
+          toAmt={toAmt}
+          step={txStep}
+          txHash={swapTxHash}
+          onClose={closeTxModal}
+        />
+      )}
     </main>
   );
 };

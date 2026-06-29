@@ -7,11 +7,8 @@ export const Footer = () => (
       <div className="foot__grid">
         <div className="foot__brand">
           <div className="mark">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M12 2 L22 18 L12 14 L2 18 Z" fill="currentColor" />
-              <path d="M12 14 L12 22" stroke="currentColor" strokeWidth="1.4" />
-            </svg>
-            <span>PrigeeX</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="foot-logo" src="/brand/logo-horizontal.svg" alt="PrigeeX" />
           </div>
           <p>An institutional venue for on-chain markets. Engineered on Arbitrum.</p>
         </div>
@@ -19,8 +16,8 @@ export const Footer = () => (
           <h4>Protocol</h4>
           <ul>
             <li><Link href="/swap">Swap</Link></li>
+            <li><Link href="/pool">Liquidity</Link></li>
             <li><Link href="/stake">Staking</Link></li>
-            <li><Link href="/rewards">Rewards</Link></li>
             <li><Link href="/perpetuals">Perpetuals</Link></li>
           </ul>
         </div>

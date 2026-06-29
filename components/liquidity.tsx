@@ -14,9 +14,10 @@ import { useWallet } from "./wallet";
 import { useToast } from "./toast";
 import { fmtNum } from "@/lib/format";
 import { erc20Abi } from "@/lib/contracts";
-import { dexConfigured, DEX } from "@/lib/dex";
+import { dexConfigured, v2Configured, DEX } from "@/lib/dex";
 import { PositionCard } from "./liquidity/PositionCard";
 import { RangeChart, type DepthBar } from "./liquidity/RangeChart";
+import { AddLiquidityV2, V2Positions } from "./liquidity/v2";
 import {
   usePositions,
   usePool,
@@ -27,6 +28,7 @@ import {
   priceToTick,
   tickToPriceNum,
   TickMath,
+  type PositionInfo,
 } from "@/lib/liquidity";
 import { Token } from "@uniswap/sdk-core";
 
@@ -72,8 +74,8 @@ export function PoolListPage() {
         </div>
       ) : positions.length === 0 ? (
         <EmptyState
-          title="No positions yet"
-          body="You have not provided liquidity. Open your first position to start earning fees."
+          title="No concentrated positions yet"
+          body="You have no V3 positions. Open one to earn fees on a chosen price range, or add a classic V2 position below."
           cta={<Link className="btn btn-primary" href="/pool/new"><Icon.Plus size={14} /> New position</Link>}
         />
       ) : (
@@ -83,6 +85,8 @@ export function PoolListPage() {
           ))}
         </div>
       )}
+
+      {v2Configured() && <V2Positions />}
     </main>
   );
 }
@@ -93,7 +97,33 @@ export function PoolListPage() {
 
 type Preset = "full" | "safe" | "concentrated" | "custom";
 
+// Wrapper that lets the user pick the AMM the new position lives in: concentrated
+// (V3) or classic constant-product (V2). The two bodies are mutually exclusive so
+// only the selected one mounts its on-chain reads.
 export function AddLiquidityPage() {
+  const [version, setVersion] = useState<"v3" | "v2">("v3");
+  const v2 = v2Configured();
+
+  return (
+    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
+      <div className="row gap-12" style={{ marginBottom: 18, alignItems: "center" }}>
+        <Link href="/pool" className="btn btn-ghost btn-sm" style={{ padding: 8 }}><Icon.Arrow dir="left" size={14} /></Link>
+        <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>New position</h1>
+      </div>
+
+      {v2 && (
+        <div className="tabs" style={{ marginBottom: 20 }}>
+          <button className={version === "v3" ? "active" : ""} onClick={() => setVersion("v3")}>Concentrated · V3</button>
+          <button className={version === "v2" ? "active" : ""} onClick={() => setVersion("v2")}>Classic · V2</button>
+        </div>
+      )}
+
+      {version === "v2" && v2 ? <AddLiquidityV2 /> : <AddLiquidityV3 />}
+    </main>
+  );
+}
+
+function AddLiquidityV3() {
   const wallet = useWallet();
   const toast = useToast();
   const { address } = useAccount();
@@ -223,12 +253,6 @@ export function AddLiquidityPage() {
                 : "Add liquidity";
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
-      <div className="row gap-12" style={{ marginBottom: 24, alignItems: "center" }}>
-        <Link href="/pool" className="btn btn-ghost btn-sm" style={{ padding: 8 }}><Icon.Arrow dir="left" size={14} /></Link>
-        <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>New position</h1>
-      </div>
-
       <div className="add-liq-grid" style={{ display: "grid", gap: 24 }}>
         {/* Left: pair, fee, range chart */}
         <div className="col gap-16" style={{ minWidth: 0 }}>
@@ -351,7 +375,6 @@ export function AddLiquidityPage() {
           </div>
         </div>
       </div>
-    </main>
   );
 }
 
@@ -417,6 +440,7 @@ export function PositionDetailPage({ tokenId }: { tokenId: string }) {
         </div>
 
         <div className="col gap-16" style={{ minWidth: 0, alignSelf: "start" }}>
+          {!p.closed && <IncreasePanel p={p} />}
           <div className="panel" style={{ padding: 20 }}>
             <span className="caps" style={{ display: "block", marginBottom: 14 }}>Remove liquidity</span>
             <div className="num" style={{ fontSize: 34, fontWeight: 600, color: "var(--accent)" }}>{removePct}%</div>
@@ -442,6 +466,116 @@ export function PositionDetailPage({ tokenId }: { tokenId: string }) {
         </div>
       </div>
     </Shell>
+  );
+}
+
+// Add to an existing position, reusing the position's pool + tick range. Mirrors
+// the deposit side of AddLiquidityPage but bound to a single live position.
+function IncreasePanel({ p }: { p: PositionInfo }) {
+  const wallet = useWallet();
+  const toast = useToast();
+  const { address } = useAccount();
+  const [amount0, setAmount0] = useState("");
+
+  const pool = p.sdk.position.pool;
+  const t0 = pool.token0;
+  const t1 = pool.token1;
+
+  const position = useMemo(() => {
+    const a0 = parseFloat(amount0);
+    if (!a0 || a0 <= 0) return undefined;
+    try {
+      const raw0 = BigInt(Math.floor(a0 * 10 ** t0.decimals));
+      return Position.fromAmount0({
+        pool,
+        tickLower: p.tickLower,
+        tickUpper: p.tickUpper,
+        amount0: raw0.toString(),
+        useFullPrecision: true,
+      });
+    } catch {
+      return undefined;
+    }
+  }, [amount0, pool, p.tickLower, p.tickUpper, t0]);
+
+  const amount1 = position ? Number(position.amount1.toSignificant(8)) : 0;
+
+  const { data: balData } = useReadContracts({
+    contracts: [
+      { address: t0.address as `0x${string}`, abi: erc20Abi, functionName: "balanceOf", args: [address!] },
+      { address: t1.address as `0x${string}`, abi: erc20Abi, functionName: "balanceOf", args: [address!] },
+      { address: t0.address as `0x${string}`, abi: erc20Abi, functionName: "allowance", args: [address!, DEX.positionManager] },
+      { address: t1.address as `0x${string}`, abi: erc20Abi, functionName: "allowance", args: [address!, DEX.positionManager] },
+    ],
+    query: { enabled: Boolean(address), refetchInterval: 12_000 },
+  });
+  const bal0 = balData?.[0]?.status === "success" ? Number(balData[0].result) / 10 ** t0.decimals : 0;
+  const bal1 = balData?.[1]?.status === "success" ? Number(balData[1].result) / 10 ** t1.decimals : 0;
+
+  const { approve, increase, busy } = useLiquidityActions(() => {
+    toast({ title: "Liquidity added", body: `Increased ${p.symbol0} / ${p.symbol1} position` });
+    setAmount0("");
+  });
+
+  const need0 = position ? BigInt(position.mintAmounts.amount0.toString()) : 0n;
+  const need1 = position ? BigInt(position.mintAmounts.amount1.toString()) : 0n;
+  const allow0 = balData?.[2]?.status === "success" ? (balData[2].result as bigint) : 0n;
+  const allow1 = balData?.[3]?.status === "success" ? (balData[3].result as bigint) : 0n;
+  const needApprove0 = position && allow0 < need0;
+  const needApprove1 = position && allow1 < need1;
+
+  const insufficient = (parseFloat(amount0) || 0) > bal0 || amount1 > bal1;
+
+  const onSubmit = () => {
+    if (!wallet.connected) return wallet.open();
+    if (!position) return;
+    if (needApprove0) {
+      approve(t0.address as `0x${string}`, need0, {
+        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t0.symbol}` }),
+        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
+      });
+    } else if (needApprove1) {
+      approve(t1.address as `0x${string}`, need1, {
+        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t1.symbol}` }),
+        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
+      });
+    } else {
+      increase(position, p.tokenId, 0.5, {
+        onSuccess: () => toast({ title: "Increase submitted", body: "Confirm in your wallet to add liquidity" }),
+        onError: (e) => toast({ title: "Increase failed", body: e.message, kind: "error" }),
+      });
+    }
+  };
+
+  const cta = !wallet.connected
+    ? "Connect wallet"
+    : !position
+      ? "Enter an amount"
+      : insufficient
+        ? "Insufficient balance"
+        : busy
+          ? "Confirming…"
+          : needApprove0
+            ? `Approve ${t0.symbol}`
+            : needApprove1
+              ? `Approve ${t1.symbol}`
+              : "Increase liquidity";
+
+  return (
+    <div className="panel" style={{ padding: 20 }}>
+      <span className="caps" style={{ display: "block", marginBottom: 12 }}>Increase liquidity</span>
+      <DepositInput symbol={p.symbol0} value={amount0} onChange={setAmount0} balance={bal0} editable />
+      <div style={{ height: 10 }} />
+      <DepositInput symbol={p.symbol1} value={amount1 > 0 ? fmtNum(amount1, 6) : ""} balance={bal1} />
+      <button
+        className="btn btn-primary btn-lg"
+        disabled={wallet.connected && (!position || insufficient || busy)}
+        onClick={onSubmit}
+        style={{ width: "100%", marginTop: 14, justifyContent: "center", opacity: wallet.connected && (!position || insufficient) ? 0.5 : 1 }}
+      >
+        {cta}
+      </button>
+    </div>
   );
 }
 

@@ -3,56 +3,65 @@
 // subgraph endpoint. Kept here (not in .env) so the whole deployment is
 // version-controlled and readable in one place.
 //
-// The chain is Arbitrum Sepolia (id 421614). For full-stack local dev we run an
-// Anvil *fork* of Arbitrum Sepolia at http://localhost:8545 - same chain id,
-// just a different RPC - with the contracts below deployed onto it. Promoting to
-// public Sepolia / mainnet later is a one-file edit: swap the addresses and
-// point RPC_URL at the public endpoint.
+// Network: Arbitrum Sepolia (chain id 421614)
+// Deployer: 0x3816BA21dCC9dfD3C714fFDB987163695408653F
 // =============================================================================
 
 import { arbitrumSepolia } from "wagmi/chains";
 
-/** The chain the dApp talks to. Local Anvil keeps Arbitrum Sepolia's id. */
+/** The chain the dApp talks to. */
 export const DEX_CHAIN = arbitrumSepolia;
 
 /**
- * RPC the wallet/reads use. Defaults to the local Anvil fork; override with
- * NEXT_PUBLIC_RPC_URL to point at a public Arbitrum Sepolia node.
+ * RPC URL, context-aware so the Alchemy key never reaches the browser:
+ *   - Server-side (SSR): reads the private RPC_URL env var directly.
+ *   - Browser: routes through the /api/rpc Next.js proxy.
+ * Set RPC_URL (no NEXT_PUBLIC prefix) in .env.local.
  */
-export const RPC_URL =
-  process.env.NEXT_PUBLIC_RPC_URL || "http://localhost:8545";
+export function getRpcUrl(): string {
+  if (typeof window === "undefined") {
+    return process.env.RPC_URL || "http://localhost:8545";
+  }
+  return `${window.location.origin}/api/rpc`;
+}
 
-/** Block explorer base for tx links (FE-14). */
+/** Block explorer base for tx links. */
 export const EXPLORER_URL = "https://sepolia.arbiscan.io";
 
-// ── Contract addresses (from ../anvil_deployments.txt) ───────────────────────
+// ── Contract addresses (Arbitrum Sepolia deployment) ─────────────────────────
 export const ADDRESSES = {
-  // Core token + staking
-  PGX: "0xe5617b9664db9c259AaDE0a7E2bc74D6c90AC2f4",
-  staking: "0xf78919fBB99DAf6c84e91Fa71A34B233A377FC56",
-  feeDistributor: "0x44b23B3C7EaA8B75a5F2Bc25D42DdffE42923036",
-  twapOracle: "0x9993FE6ae8e5B0E3648C4723498480dD77211d15",
+  // Core infrastructure
+  weth9:           "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
+  permit2:         "0x000000000022D473030F116dDEE9F6B43aC78BA3",
 
-  // V3 AMM (concentrated liquidity + swap)
-  v3Factory: "0x84C9D4838b8d1c0771C1d6a49122f8D869447B48",
-  positionManager: "0x12C23B3F6CAD664d8E81EB9C0220e58fe235a6C1",
-  swapRouter: "0x5d073c893b9F7b6C59A6Cc87bCE4154dcB1477C3",
-  quoterV2: "0xa3386E66bF2F763102797295Ebe668c758D8F402",
-  tickLens: "0x3Ea7e0212Dd5cD087C0c75Be3e0F5F9444aCC229",
-  multicall: "0xfe7c43C098D7b7A60beF94be9745Eb3D4B686e9d",
-  weth9: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73",
+  // PrigeeX protocol
+  PGX:             "0x1f3F0cE32DDca29DC1861796e71C9D4530666AA4",
+  twapOracle:      "0xba1009de3D10b304302C37616c143CF63A2b307c",
+  staking:         "0x5837cff2EDc2fC929bf418e2E1fA5b50bcB3572C", // proxy
+  feeDistributor:  "0x518fD25a207790A4405f5c217F448EF67F73456C",
 
-  // V2 AMM (legacy pairs / router)
-  v2Factory: "0xaDC6EB98Fca8050bb886Ecd978F70F43B4BB5563",
-  v2Router: "0x3518832Ef458F6EA24506215a39a82709806b76d",
+  // V3 AMM (concentrated liquidity)
+  v3Factory:       "0xAcbfF1d4e38968E8A3E37f3fdAd2B45c4283279f",
+  swapRouter:      "0x53B2cc9Df30e321fF13A618FA74916A404735C62",
+  positionManager: "0x1F4533B292E4d29fd1B17Fbc6B955Ded1A8bac32",
+  quoterV2:        "0x9252Fb68418A305ba7C31a8CCAf25707A9EF5591",
+  tickLens:        "0x9595B4DF1912982f835815fB757DAafd1397b141",
+  multicall:       "0x866Aae3B125eB1f0f2770a2eA495C83DD70D0b16",
+  universalRouter: "0x78AFf5b449312ab225Db942Ff5466513D9f769DF",
+
+  // V2 AMM (legacy constant-product pairs)
+  v2Factory:       "0xE2C7552726753a55ab2032C43B526Ff788c52A77",
+  v2Router:        "0xFF7e218FEfB3099A63CAB52AB81d2AD81bc9E48b",
 } as const satisfies Record<string, `0x${string}`>;
 
-// ── Subgraph endpoints (local graph-node) ────────────────────────────────────
-// V3 = swap/pool/LP analytics, V2 = legacy pairs, Protocol = staking + fees.
+// ── Subgraph endpoints ────────────────────────────────────────────────────────
+// All subgraph queries go through the Next.js proxy routes so private Goldsky
+// URLs and bearer tokens never reach the browser. Actual upstream URLs live in
+// server-only env vars (SUBGRAPH_URL_V3/V2/PROTOCOL + SUBGRAPH_BEARER_TOKEN).
 export const SUBGRAPHS = {
-  v3: "http://localhost:8000/subgraphs/name/prigeex-v3-arbitrum-sepolia",
-  v2: "http://localhost:8000/subgraphs/name/prigeex-v2-arbitrum-sepolia",
-  protocol: "http://localhost:8000/subgraphs/name/prigeex-protocol-subgraph",
-} as const;
+  v3:       "/api/subgraph/v3",
+  v2:       "/api/subgraph/v2",
+  protocol: "/api/subgraph/protocol",
+};
 
 export type DexAddressKey = keyof typeof ADDRESSES;

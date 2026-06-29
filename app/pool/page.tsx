@@ -12,7 +12,7 @@ export default function Pool() {
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">06, Liquidity</div>
+            <div className="sec-num">Liquidity</div>
             <h1>
               Provide liquidity, earn <em>every swap.</em>
             </h1>

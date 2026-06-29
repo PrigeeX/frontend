@@ -1,23 +1,23 @@
 import { Nav } from "@/components/Nav";
-import { RewardsPage } from "@/components/rewards";
+import { PortfolioPage } from "@/components/portfolio";
 
 export const metadata = {
-  title: "Rewards, PrigeeX",
+  title: "Portfolio, PrigeeX",
 };
 
-export default function Rewards() {
+export default function Portfolio() {
   return (
     <>
       <Nav />
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">06, Rewards</div>
+            <div className="sec-num">Portfolio</div>
             <h1>
-              Claim your <em>distribution.</em>
+              Everything you hold, <em>in one place.</em>
             </h1>
           </div>
-          <RewardsPage />
+          <PortfolioPage />
         </div>
       </main>
     </>

@@ -12,7 +12,7 @@ export default function Swap() {
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">04, Swap</div>
+            <div className="sec-num">Swap</div>
             <h1>
               Route a <em>trade.</em>
             </h1>

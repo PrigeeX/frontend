@@ -12,7 +12,7 @@ export default function Stake() {
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">05, Stake</div>
+            <div className="sec-num">Stake</div>
             <h1>
               Stake PGX, share in <em>protocol revenue.</em>
             </h1>

@@ -39,7 +39,7 @@ export const Engineering = () => (
     <div className="section-dark__grid" aria-hidden />
     <div className="container">
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">03, Engineered for</div>
+        <div className="sec-num">Engineered for</div>
         <h2 className="sec-title">
           Built like
           <br />

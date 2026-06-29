@@ -15,10 +15,13 @@
 
 :root {
   /* Aliases bridging the prior palette to the new theme. */
-  --accent: var(--warm);
+  --accent: var(--warm-ink);
   --accent-2: var(--warm);
   --accent-3: var(--warm-hot);
   --accent-ink: #221b0a;
+  /* Warm used as foreground/text. Equals --warm on dark; deepened on light so
+     it clears contrast on near-white surfaces (see light-mode block below). */
+  --warm-ink: var(--warm);
   --bg: var(--matte);
   --bg-2: var(--matte-2);
   --panel: var(--matte-2);
@@ -52,7 +55,95 @@
   --hairline: rgba(27, 24, 19, 0.12);
   --hairline-strong: rgba(27, 24, 19, 0.2);
   --glass: rgba(255, 255, 255, 0.7);
+  /* The pale tan warm reads fine on dark but washes out on white, so the
+     foreground variant is deepened to a true amber that clears 4.5:1 on paper.
+     The chromatic --warm itself stays put for fills/tints/glows. */
+  --warm-ink: #9a6c12;
   color-scheme: light;
+}
+
+/* ── Light-mode component corrections ────────────────────────────────
+   The neutral tokens flip above, but several shared component rules hard-code
+   dark-mode rgba fills, white-on-white hovers, or fixed label colors that do
+   not adapt. These are scoped to the dApp surfaces (.app-main content and the
+   .is-dapp nav) so the cinematic dark landing is never touched. */
+
+/* Dark "ink" pill buttons: pill stays dark, label flips light via --matte
+   (handled globally); only the white hover needs to go the other way. */
+:root[data-theme="light"] .app-main .btn--primary:hover { background: #000; }
+
+/* Warm fill buttons: the pale gold reads weak on paper, so match the deepened
+   accent the inline dApp CTAs already use (via --accent -> --warm-ink). */
+:root[data-theme="light"] .app-main .btn--warm,
+:root[data-theme="light"] .app-main .btn-grad {
+  background: var(--warm-ink);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 14px 30px -8px rgba(154, 108, 18, 0.35);
+}
+:root[data-theme="light"] .app-main .btn--warm:hover,
+:root[data-theme="light"] .app-main .btn-grad:hover:not(:disabled) { background: #855e10; }
+
+/* Outline / ghost buttons: dark translucent fill -> subtle ink-on-paper. */
+:root[data-theme="light"] .app-main .btn--ghost,
+:root[data-theme="light"] .app-main .btn-ghost {
+  background: rgba(27, 24, 19, 0.04);
+  border-color: var(--hairline-strong);
+}
+:root[data-theme="light"] .app-main .btn--ghost:hover,
+:root[data-theme="light"] .app-main .btn-ghost:hover:not(:disabled) {
+  background: rgba(27, 24, 19, 0.08);
+  border-color: var(--hairline-strong);
+}
+
+/* Mono status badges: dark fill -> faint ink fill so the label is legible. */
+:root[data-theme="light"] .app-main .pill,
+:root[data-theme="light"] .app-main .eyebrow,
+:root[data-theme="light"] .app-main .chip { background: rgba(27, 24, 19, 0.05); }
+
+/* Nav chrome: white-on-white fills become invisible on paper; use ink fills. */
+:root[data-theme="light"] .navwrap.is-dapp .nav-theme-toggle,
+:root[data-theme="light"] .navwrap.is-dapp .nav-wallet { background: rgba(27, 24, 19, 0.04); }
+:root[data-theme="light"] .navwrap.is-dapp .nav-theme-toggle:hover,
+:root[data-theme="light"] .navwrap.is-dapp .nav-wallet:hover { background: rgba(27, 24, 19, 0.08); }
+/* Theme toggle icon must stay full-ink in light mode — ink-soft at ~64% opacity is too faint on the paper nav. */
+:root[data-theme="light"] .navwrap.is-dapp .nav-theme-toggle {
+  color: var(--ink);
+  border-color: var(--hairline-strong);
+}
+:root[data-theme="light"] .navwrap.is-dapp .nav-pill .link:hover { background: rgba(27, 24, 19, 0.05); }
+:root[data-theme="light"] .navwrap.is-dapp .nav-wallet--connected { background: rgba(232, 192, 137, 0.18); }
+:root[data-theme="light"] .navwrap.is-dapp .nav-wallet--connected:hover { background: rgba(232, 192, 137, 0.26); }
+
+/* Mobile tab bar: opaque dark slab -> light glass to match the page. */
+:root[data-theme="light"] .app-tabbar {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Keep the landing dark regardless of the saved theme ─────────────
+   The toggle only lives on the dApp, but data-theme persists on <html>; if a
+   user flips to light then returns to "/", the global flip would wash out the
+   black hero and float a white nav over it. Re-assert the dark palette on the
+   landing surface and its (non-dapp) nav so the landing is always dark. */
+:root[data-theme="light"] .landing-root,
+:root[data-theme="light"] .navwrap:not(.is-dapp) {
+  --matte: #06070a;
+  --matte-2: #0c0d12;
+  --matte-3: #11131a;
+  --ink: #f3efe6;
+  --ink-soft: rgba(243, 239, 230, 0.66);
+  --ink-dim: rgba(243, 239, 230, 0.40);
+  --hairline: rgba(243, 239, 230, 0.14);
+  --hairline-strong: rgba(243, 239, 230, 0.22);
+  --glass: rgba(20, 20, 22, 0.46);
+  --warm-ink: var(--warm);
+  color-scheme: dark;
+  /* Re-establish the light text color here. Several landing titles (e.g.
+     .pillar__title, .sec-title) set no color and inherit from <body>, which
+     lives outside .landing-root and computes color: var(--ink) against the
+     global light-mode --ink (a dark ink). Inheritance carries that computed
+     dark value, washing the titles out. Declaring color on .landing-root
+     resolves --ink against the dark value re-asserted above, so descendants
+     inherit light text; the manifest keeps its own explicit dark paper-ink. */
+  color: var(--ink);
 }
 
 /* Layout primitives. */
@@ -101,7 +192,7 @@
   font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
   color: var(--ink-soft);
 }
-.chip.accent { background: rgba(232,192,137,.14); border-color: rgba(232,192,137,.32); color: var(--warm); }
+.chip.accent { background: rgba(232,192,137,.14); border-color: rgba(232,192,137,.32); color: var(--warm-ink); }
 
 /* Status dot. */
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); display: inline-block; }
@@ -209,13 +300,17 @@ a { color: inherit; text-decoration: none; }
   padding: 8px 14px;
 }
 .navwrap .nav-pill .brand {
-  display: flex; align-items: center; gap: 9px;
-  font-size: 13.5px; font-weight: 500; letter-spacing: -.01em;
+  display: flex; align-items: center;
   padding-right: 14px; border-right: .5px solid var(--hairline);
-  margin-right: 6px; color: var(--ink); text-decoration: none;
+  margin-right: 6px; text-decoration: none;
   flex-shrink: 0;
 }
-.navwrap .nav-pill .brand svg { width: 16px; height: 16px; color: var(--warm); }
+.navwrap .nav-pill .brand .brand-logo { height: 24px; width: auto; display: block; }
+.navwrap .nav-pill .brand .brand-logo--light { display: none; }
+/* On the light-themed dApp nav, swap to the dark-ink horizontal logo. The
+   landing nav (:not(.is-dapp)) is always dark, so it keeps the light-ink logo. */
+:root[data-theme="light"] .navwrap.is-dapp .brand .brand-logo--dark { display: none; }
+:root[data-theme="light"] .navwrap.is-dapp .brand .brand-logo--light { display: block; }
 .navwrap .nav-pill .nav-links {
   display: flex; align-items: center; gap: 2px; flex: 1;
 }
@@ -228,19 +323,19 @@ a { color: inherit; text-decoration: none; }
   transition: color .18s ease, background .18s ease;
 }
 .navwrap .nav-pill .link:hover { color: var(--ink); background: rgba(255,255,255,.04); }
-.navwrap .nav-pill .link[aria-current="page"] { color: var(--warm); background: rgba(232,192,137,.08); }
+.navwrap .nav-pill .link[aria-current="page"] { color: var(--warm-ink); background: rgba(232,192,137,.08); }
 .navwrap .nav-pill .link.is-soon { color: var(--ink-dim); cursor: default; }
 .navwrap .nav-pill .link.is-soon:hover { background: transparent; color: var(--ink-dim); }
 .navwrap .nav-pill .link .soon-tag {
   font-family: var(--f-mono);
   font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--warm); opacity: .8;
+  color: var(--warm-ink); opacity: .8;
   padding: 1px 6px; border-radius: var(--r-pill);
   border: .5px solid var(--warm-soft);
 }
 .navwrap .nav-pill .cta {
   margin-left: 6px; padding: 9px 16px;
-  font-size: 13px; font-weight: 500; color: #0e0f12;
+  font-size: 13px; font-weight: 500; color: var(--matte);
   background: var(--ink); border-radius: var(--r-pill);
   text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
   white-space: nowrap;
@@ -249,7 +344,7 @@ a { color: inherit; text-decoration: none; }
 .navwrap .nav-pill .cta:hover { background: #fff; transform: translateY(-.5px); }
 .navwrap .nav-pill .cta svg { width: 11px; height: 11px; }
 
-/* Wallet button — right corner of dApp nav. */
+/* Wallet button - right corner of dApp nav. */
 .nav-actions { margin-left: auto; flex-shrink: 0; }
 .nav-theme-toggle {
   display: inline-flex; align-items: center; justify-content: center;
@@ -284,7 +379,7 @@ a { color: inherit; text-decoration: none; }
 }
 .nav-wallet__chain {
   font-family: var(--f-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--warm); opacity: .85;
+  color: var(--warm-ink); opacity: .85;
   padding: 1px 7px; border-radius: var(--r-pill);
   border: .5px solid var(--warm-soft);
   background: rgba(232,192,137,.06);
@@ -298,13 +393,13 @@ a { color: inherit; text-decoration: none; }
   display: grid; grid-template-columns: 140px 1fr; gap: 36px; align-items: baseline;
   margin: 0 0 40px;
 }
-.page-head .sec-num { color: var(--warm); border-top: .5px solid var(--warm-soft); padding-top: 14px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+.page-head .sec-num { color: var(--warm-ink); border-top: .5px solid var(--warm-soft); padding-top: 14px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
 .page-head h1 {
   font-family: var(--f-display); font-weight: 400;
   font-size: clamp(32px, 4.4vw, 56px); line-height: 1.02; letter-spacing: -.015em;
   margin: 0;
 }
-.page-head h1 em { font-style: italic; color: var(--warm); }
+.page-head h1 em { font-style: italic; color: var(--warm-ink); }
 
 /* dApp main wrapper sits below the floating nav. */
 .app-main { padding-top: 110px; padding-bottom: 80px; min-height: 100vh; }
@@ -333,6 +428,12 @@ body { min-height: 100vh; }
 
 .position-card-link .panel { cursor: pointer; }
 .position-card-link:hover .panel { border-color: color-mix(in oklch, var(--accent) 40%, var(--line)); }
+
+/* Portfolio list rows (token balances + activity feed). */
+.portfolio-row { color: inherit; text-decoration: none; border-radius: 8px; transition: background .12s; }
+.portfolio-row:last-child { border-bottom: none !important; }
+.portfolio-row:hover { background: color-mix(in oklch, var(--accent) 5%, transparent); }
+.portfolio-act-ic { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--matte-3); }
 
 .skeleton { position: relative; overflow: hidden; background: var(--panel); }
 .skeleton::after {

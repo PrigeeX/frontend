@@ -12,7 +12,7 @@ export default function Analytics() {
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">07, Analytics</div>
+            <div className="sec-num">Analytics</div>
             <h1>
               The protocol, <em>measured.</em>
             </h1>

@@ -121,7 +121,7 @@ export const Icon = {
   ),
   Moon: ({ size = 16 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
-      <path d="M13 9.5A5.5 5.5 0 016.5 3a5.5 5.5 0 100 10c2.3 0 4.3-1.4 5-3.5z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M14 8.53A6 6 0 1 1 7.47 2 4.67 4.67 0 0 0 14 8.53z" fill="currentColor" />
     </svg>
   ),
   Refresh: ({ size = 16 }: IconProps) => (
@@ -152,51 +152,19 @@ export const Icon = {
 
 const TokenGlyph = ({ symbol, s }: { symbol: string; s: number }) => {
   switch (symbol) {
-    case "PGX": {
-      const bgId = `pgx-tok-bg-${s}`;
-      const xFrontId = `pgx-tok-xf-${s}`;
-      const xBackId = `pgx-tok-xb-${s}`;
-      const e1 = `pgx-tok-e1-${s}`;
-      const e2 = `pgx-tok-e2-${s}`;
+    case "PGX":
+      // Apogee coin: warm-ringed dark disc with the apogee mark (arc + dot + line).
       return (
-        <svg width={s} height={s} viewBox="0 0 120 120">
-          <defs>
-            <linearGradient id={bgId} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#0B2A6B" />
-              <stop offset="100%" stopColor="#03102E" />
-            </linearGradient>
-            <linearGradient id={xFrontId} x1="0.5" y1="0" x2="0.5" y2="1">
-              <stop offset="0%" stopColor="#7CC2FF" />
-              <stop offset="20%" stopColor="#2F8AF0" />
-              <stop offset="45%" stopColor="#1670E8" />
-              <stop offset="75%" stopColor="#0B3FA8" />
-              <stop offset="100%" stopColor="#020828" />
-            </linearGradient>
-            <linearGradient id={xBackId} x1="0.5" y1="0" x2="0.5" y2="1">
-              <stop offset="0%" stopColor="#3A8CE0" />
-              <stop offset="35%" stopColor="#1058C8" />
-              <stop offset="70%" stopColor="#062B84" />
-              <stop offset="100%" stopColor="#010516" />
-            </linearGradient>
-            <linearGradient id={e1} x1="30" y1="16" x2="106" y2="92" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#F4FBFF" stopOpacity="1" />
-              <stop offset="45%" stopColor="#65B8FF" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#020828" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id={e2} x1="94" y1="16" x2="18" y2="92" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#EAF6FF" stopOpacity="0.9" />
-              <stop offset="45%" stopColor="#4FA2F3" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#020828" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <circle cx="60" cy="60" r="58" fill={`url(#${bgId})`} stroke="#1A3470" strokeWidth="1.5" />
-          <path d="M94 16 L106 28 L30 104 L18 92 Z" fill={`url(#${xBackId})`} />
-          <path d="M94 16 L18 92 L20.12 94.12 L96.12 18.12 Z" fill={`url(#${e2})`} />
-          <path d="M18 28 L30 16 L106 92 L94 104 Z" fill={`url(#${xFrontId})`} />
-          <path d="M30 16 L106 92 L103.88 94.12 L27.88 18.12 Z" fill={`url(#${e1})`} />
+        <svg width={s} height={s} viewBox="0 0 96 96" fill="none">
+          <circle cx="48" cy="48" r="46" fill="#0C0D12" stroke="#E8C089" strokeWidth="1.6" />
+          <circle cx="48" cy="48" r="39" fill="none" stroke="#E8C089" strokeOpacity="0.28" strokeWidth="1" />
+          <g transform="translate(24,22)">
+            <path d="M6 32 A18 18 0 0 1 42 32" stroke="#E7E6E1" strokeWidth="1.7" strokeLinecap="round" />
+            <circle cx="24" cy="14" r="4.6" fill="#E8C089" />
+            <path d="M24 18.6 L24 40" stroke="#E8C089" strokeWidth="1.7" strokeLinecap="round" />
+          </g>
         </svg>
       );
-    }
     case "ETH":
       return (
         <svg width={s} height={s} viewBox="0 0 32 32">

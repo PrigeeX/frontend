@@ -137,6 +137,88 @@ export async function fetchProtocolStats(): Promise<ProtocolStats | undefined> {
   };
 }
 
+// ── Portfolio helpers (token USD prices + per-wallet activity) ───────────────
+
+/**
+ * USD price for each requested token address, derived from the V3 subgraph
+ * (token.derivedETH x bundle.ethPriceUSD). Returns a lowercased-address map, or
+ * undefined when the subgraph is unset/unreachable so callers can show amounts
+ * without a fabricated USD figure.
+ */
+export async function fetchTokenPricesUSD(addresses: string[]): Promise<Record<string, number> | undefined> {
+  const ids = addresses.map((a) => a.toLowerCase());
+  const data = await query<{
+    bundles: { ethPriceUSD: string }[];
+    tokens: { id: string; derivedETH: string }[];
+  }>(
+    SUBGRAPHS.v3,
+    `query($ids: [Bytes!]) {
+       bundles(first: 1) { ethPriceUSD }
+       tokens(where: { id_in: $ids }) { id derivedETH }
+     }`,
+    { ids },
+  );
+  if (!data) return undefined;
+  const eth = Number(data.bundles?.[0]?.ethPriceUSD ?? 0);
+  const out: Record<string, number> = {};
+  for (const t of data.tokens ?? []) out[t.id.toLowerCase()] = Number(t.derivedETH) * eth;
+  return out;
+}
+
+export type ActivityItem = {
+  id: string;
+  type: "swap" | "add" | "remove";
+  timestamp: number;
+  txId: string;
+  token0: string;
+  token1: string;
+  amount0: number;
+  amount1: number;
+  amountUSD: number;
+};
+
+type RawEvent = {
+  id: string;
+  timestamp: string;
+  transaction: { id: string };
+  token0: { symbol: string };
+  token1: { symbol: string };
+  amount0: string;
+  amount1: string;
+  amountUSD?: string;
+};
+
+/** Recent on-chain activity (swaps + mints + burns) initiated by a wallet. */
+export async function fetchUserActivity(user: string): Promise<ActivityItem[] | undefined> {
+  const origin = user.toLowerCase();
+  const fields = "id timestamp transaction { id } token0 { symbol } token1 { symbol } amount0 amount1 amountUSD";
+  const data = await query<{ swaps: RawEvent[]; mints: RawEvent[]; burns: RawEvent[] }>(
+    SUBGRAPHS.v3,
+    `query($origin: Bytes!) {
+       swaps(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
+       mints(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
+       burns(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
+     }`,
+    { origin },
+  );
+  if (!data) return undefined;
+  const map = (arr: RawEvent[] | undefined, type: ActivityItem["type"]): ActivityItem[] =>
+    (arr ?? []).map((r) => ({
+      id: r.id,
+      type,
+      timestamp: Number(r.timestamp),
+      txId: r.transaction.id,
+      token0: r.token0.symbol,
+      token1: r.token1.symbol,
+      amount0: Number(r.amount0),
+      amount1: Number(r.amount1),
+      amountUSD: Number(r.amountUSD ?? 0),
+    }));
+  return [...map(data.swaps, "swap"), ...map(data.mints, "add"), ...map(data.burns, "remove")]
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .slice(0, 12);
+}
+
 // ── Tiny async hook ──────────────────────────────────────────────────────────
 
 /** Run an async subgraph fetch, re-running when `deps` change. */
