@@ -393,6 +393,18 @@ export const StakePage = () => {
                 </div>
               </div>
             )}
+            <div
+              className="row gap-8"
+              style={{
+                padding: "12px 20px",
+                borderTop: "1px solid var(--line)",
+                fontSize: 12,
+                color: "var(--text-3)",
+              }}
+            >
+              <Icon.Shield size={12} />
+              <span>Rewards are your pro-rata share of protocol fees. Claim on-chain anytime - no lock, no schedule.</span>
+            </div>
           </div>
 
           <div className="panel" style={{ padding: 20 }}>

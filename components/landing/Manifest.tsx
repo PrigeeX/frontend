@@ -5,7 +5,7 @@ export const Manifest = () => (
   <section className="manifest" id="mission">
     <div className="container" style={{ position: "relative" }}>
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">01, Manifest</div>
+        <div className="sec-num">Manifest</div>
         <h2 className="sec-title">
           Capital is coming on-chain.
           <br />

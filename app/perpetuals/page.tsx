@@ -12,7 +12,7 @@ export default function Perpetuals() {
       <main className="app-main">
         <div className="container-app">
           <div className="page-head">
-            <div className="sec-num">07, Perpetuals</div>
+            <div className="sec-num">Perpetuals</div>
             <h1>
               Perpetuals, <em>on approach.</em>
             </h1>
@@ -35,7 +35,7 @@ export default function Perpetuals() {
               The full institutional surface includes perpetuals, aggregator routing, and gated pools for regulated capital. We are building it. This page is the placeholder while the runway is cleared.
             </p>
             <p style={{ fontSize: 15, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0, maxWidth: 56 + "ch" }}>
-              When it is ready, the venue will open early access. Until then, the live surface lives at Swap, Staking, and Rewards.
+              When it is ready, the venue will open early access. Until then, the live surface lives at Swap, Liquidity, and Staking.
             </p>
             <div className="row gap-10" style={{ marginTop: 8 }}>
               <Link href="/swap" className="btn btn--warm">

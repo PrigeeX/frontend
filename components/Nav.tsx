@@ -12,13 +12,13 @@ type NavLink = { href: string; label: string; soon?: boolean };
 const LINKS: NavLink[] = [
   { href: "/swap", label: "Swap" },
   { href: "/pool", label: "Liquidity" },
+  { href: "/portfolio", label: "Portfolio" },
   { href: "/stake", label: "Staking" },
   { href: "/analytics", label: "Analytics" },
-  { href: "/rewards", label: "Rewards" },
   { href: "/perpetuals", label: "Perpetuals", soon: true },
 ];
 
-const DAPP_PATHS = ["/swap", "/pool", "/stake", "/analytics", "/rewards", "/perpetuals"];
+const DAPP_PATHS = ["/swap", "/pool", "/portfolio", "/stake", "/analytics", "/perpetuals"];
 
 const WalletButton = () => {
   const { open } = useAppKit();
@@ -55,12 +55,13 @@ export const Nav = () => {
   return (
     <div className={`navwrap${isDapp ? " is-dapp" : ""}`}>
       <nav className="nav-pill" aria-label="Primary">
-        <Link className="brand" href="/">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2 L22 18 L12 14 L2 18 Z" fill="currentColor" />
-            <path d="M12 14 L12 22" stroke="currentColor" strokeWidth="1.4" />
-          </svg>
-          <span>PrigeeX</span>
+        <Link className="brand" href="/" aria-label="PrigeeX home">
+          {/* Dark-bg logo (light ink) for the landing nav + dApp dark mode;
+              light-bg logo (dark ink) swaps in only on the light-themed dApp nav. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-logo brand-logo--dark" src="/brand/logo-horizontal.svg" alt="PrigeeX" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-logo brand-logo--light" src="/brand/logo-horizontal-light.svg" alt="" aria-hidden="true" />
         </Link>
 
         <div className="nav-links">
