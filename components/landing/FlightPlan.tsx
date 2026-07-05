@@ -14,26 +14,26 @@ const PHASES: Phase[] = [
   {
     cls: "phase--now",
     tag: "Now",
-    sub: "Ascent",
+    sub: "Live",
     name: "",
-    italic: "Ascent.",
-    copy: "The MVP is live. Trade, provide liquidity, stake, and watch the venue work.",
+    italic: "Foundation.",
+    copy: "The core exchange is live on Arbitrum: swaps, concentrated liquidity, and PGX staking backed by real protocol revenue.",
   },
   {
     cls: "phase--next",
     tag: "Next",
-    sub: "Cruise",
+    sub: "Scale",
     name: "",
-    italic: "Cruise.",
-    copy: "Distribution and depth. We open the venue to a wider operator base and extend across chains.",
+    italic: "Expansion.",
+    copy: "Deeper liquidity, perpetuals, and multi-chain deployment, bringing the venue to every major pool of on-chain capital.",
   },
   {
     cls: "phase--horizon",
     tag: "Horizon",
-    sub: "Apogee",
+    sub: "Vision",
     name: "",
-    italic: "Apogee.",
-    copy: "The full institutional surface. Settlement, treasury infrastructure, tokenised real-world assets, and the broader aviation-fintech ecosystem the venue is built to host.",
+    italic: "The full stack.",
+    copy: "Tokenised real-world assets, treasury-grade settlement, and institutional market infrastructure: a complete capital-markets layer, on-chain.",
   },
 ];
 
@@ -42,11 +42,11 @@ export const FlightPlan = () => (
     <div className="section-dark__grid" aria-hidden />
     <div className="container">
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">Flight plan</div>
+        <div className="sec-num">Roadmap</div>
         <h2 className="sec-title">
-          From wheels-up
+          From working product
           <br />
-          to <em>apogee.</em>
+          to <em>market standard.</em>
         </h2>
       </Reveal>
 

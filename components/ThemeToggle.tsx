@@ -3,18 +3,19 @@
 // Light/dark toggle (FE-36). Persists to localStorage and flips the
 // data-theme on <html>, which remaps the neutral tokens in globals.css.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "./icons";
 
 type Theme = "dark" | "light";
 
-// Initialised from the data-theme the no-flash script in layout.tsx already set,
-// so there is no effect-driven setState (and no flash).
-const initialTheme = (): Theme =>
-  typeof document !== "undefined" && document.documentElement.dataset.theme === "light" ? "light" : "dark";
-
 export const ThemeToggle = () => {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
+  // The server always renders the dark icon; the saved theme (already applied to
+  // <html> by the no-flash script in layout.tsx) is read after mount so the
+  // hydrated tree matches the server markup.
+  const [theme, setTheme] = useState<Theme>("dark");
+  useEffect(() => {
+    if (document.documentElement.dataset.theme === "light") setTheme("light");
+  }, []);
 
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";

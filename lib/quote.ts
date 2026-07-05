@@ -51,9 +51,24 @@ export function useTokenAccount(token?: Token) {
   };
 }
 
+/** A swap route: direct single pool, or two pools hopping through WETH. */
+export type SwapRoute = "direct" | "viaWeth";
+
+/** V3 path bytes: token(20) ++ fee(3) ++ token(20) [++ fee(3) ++ token(20)]. */
+export function encodePath(tokens: string[], fees: FeeAmount[]): `0x${string}` {
+  let out = "0x";
+  for (let i = 0; i < tokens.length; i++) {
+    out += tokens[i].slice(2).toLowerCase();
+    if (i < fees.length) out += fees[i].toString(16).padStart(6, "0");
+  }
+  return out as `0x${string}`;
+}
+
 /**
- * Live quote via QuoterV2.quoteExactInputSingle, simulated (the quoter is a
- * state-changing call used read-only). Debounce happens in the caller.
+ * Live quote via QuoterV2, simulated (the quoter is a state-changing call used
+ * read-only). Tries the direct pool first; when the pair has no direct pool it
+ * falls back to a two-hop path through WETH, so every listed token stays
+ * swappable against every other. Debounce happens in the caller.
  */
 export function useSwapQuote(tokenIn?: Token, tokenOut?: Token, amountIn?: bigint, fee: FeeAmount = FeeAmount.MEDIUM) {
   const enabled = Boolean(tokenIn && tokenOut && amountIn && amountIn > 0n);
@@ -75,13 +90,42 @@ export function useSwapQuote(tokenIn?: Token, tokenOut?: Token, amountIn?: bigin
     query: { enabled },
   });
 
-  const result = data?.result as readonly [bigint, bigint, number, bigint] | undefined;
+  // Fallback: hop through WETH. Quoted in parallel with the direct pool (a
+  // failed direct simulation can sit in TanStack's paused-retry state without
+  // ever reporting isError, so we never gate the fallback on it) and used only
+  // when the direct pool has no answer.
+  const weth = DEX.weth9.toLowerCase();
+  const hopEligible =
+    enabled &&
+    tokenIn!.address.toLowerCase() !== weth &&
+    tokenOut!.address.toLowerCase() !== weth;
+  const hopPath = hopEligible
+    ? encodePath([tokenIn!.address, DEX.weth9, tokenOut!.address], [fee, fee])
+    : undefined;
+  const { data: hopData, isFetching: hopFetching } = useSimulateContract({
+    address: DEX.quoterV2,
+    abi: quoterV2Abi,
+    functionName: "quoteExactInput",
+    args: hopPath ? [hopPath, amountIn!] : undefined,
+    query: { enabled: hopEligible },
+  });
+
+  const direct = data?.result as readonly [bigint, bigint, number, bigint] | undefined;
+  const hop = hopData?.result as readonly [bigint, readonly bigint[], readonly number[], bigint] | undefined;
+
+  const route: SwapRoute | undefined = direct ? "direct" : hop ? "viaWeth" : undefined;
+  const amountOutRaw = direct?.[0] ?? hop?.[0];
+  const gasEstimate = direct?.[3] ?? hop?.[3];
+  // Loading only while no result is in yet; a dead direct pool can keep its
+  // query "fetching" indefinitely, which must not mask a settled hop quote.
+  const loading = enabled && amountOutRaw === undefined && (isFetching || hopFetching);
   return {
-    amountOutRaw: result?.[0],
-    gasEstimate: result?.[3],
-    amountOut: result && tokenOut ? Number(result[0]) / 10 ** tokenOut.decimals : undefined,
-    loading: enabled && isFetching,
-    noRoute: enabled && !isFetching && !result,
+    amountOutRaw,
+    gasEstimate,
+    route,
+    amountOut: amountOutRaw !== undefined && tokenOut ? Number(amountOutRaw) / 10 ** tokenOut.decimals : undefined,
+    loading,
+    noRoute: enabled && !loading && amountOutRaw === undefined,
   };
 }
 
@@ -113,8 +157,30 @@ export function useSwapActions(onMined?: () => void) {
     minOut: bigint,
     fee: FeeAmount,
     cb?: Cb,
+    route: SwapRoute = "direct",
   ) => {
     if (!address) return;
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 30 * 60);
+    if (route === "viaWeth") {
+      writeContract(
+        {
+          address: DEX.swapRouter,
+          abi: swapRouterAbi,
+          functionName: "exactInput",
+          args: [
+            {
+              path: encodePath([tokenIn.address, DEX.weth9, tokenOut.address], [fee, fee]),
+              recipient: address,
+              deadline,
+              amountIn,
+              amountOutMinimum: minOut,
+            },
+          ],
+        },
+        cb,
+      );
+      return;
+    }
     writeContract(
       {
         address: DEX.swapRouter,
@@ -126,7 +192,7 @@ export function useSwapActions(onMined?: () => void) {
             tokenOut: tokenOut.address as `0x${string}`,
             fee,
             recipient: address,
-            deadline: BigInt(Math.floor(Date.now() / 1000) + 30 * 60),
+            deadline,
             amountIn,
             amountOutMinimum: minOut,
             sqrtPriceLimitX96: 0n,

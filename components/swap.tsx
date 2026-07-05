@@ -8,7 +8,8 @@ import { useWallet } from "./wallet";
 import { useToast } from "./toast";
 import { TOKENS, tokenBySymbol, type TokenSymbol } from "@/lib/tokens";
 import { fmtNum } from "@/lib/format";
-import { dexConfigured, txUrl, SUBGRAPHS } from "@/lib/dex";
+import { dexConfigured, txUrl } from "@/lib/dex";
+import { fetchAnalytics, type AnalyticsSwap } from "@/lib/subgraph";
 import {
   dexTokenFor,
   useTokenAccount,
@@ -19,6 +20,7 @@ import {
   DEX_TOKENS,
 } from "@/lib/quote";
 import { usePool } from "@/lib/liquidity";
+import { useTxQueue } from "@/lib/txqueue";
 
 /** Parse a user amount to wei, tolerant of partial/invalid input. */
 const toRaw = (amount: string, decimals: number): bigint => {
@@ -30,48 +32,22 @@ const toRaw = (amount: string, decimals: number): bigint => {
   }
 };
 
-// ── Live recent swaps from V3 subgraph ───────────────────────────────────────
-
-type SubgraphSwap = {
-  id: string;
-  transaction: { id: string };
-  timestamp: string;
-  amount0: string;
-  amount1: string;
-  token0: { symbol: string };
-  token1: { symbol: string };
-  origin: string;
-};
+// ── Live recent swaps (server analytics aggregator) ──────────────────────────
 
 function useRecentSwaps() {
-  const [swaps, setSwaps] = useState<SubgraphSwap[]>([]);
+  const [swaps, setSwaps] = useState<AnalyticsSwap[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
 
     const fetch_ = () =>
-      fetch(SUBGRAPHS.v3, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: `{
-            swaps(first: 10, orderBy: timestamp, orderDirection: desc) {
-              id
-              transaction { id }
-              timestamp
-              amount0
-              amount1
-              token0 { symbol }
-              token1 { symbol }
-              origin
-            }
-          }`,
-        }),
-      })
-        .then((r) => r.json())
-        .then((d) => { if (!cancelled) { setSwaps(d.data?.swaps ?? []); setLoading(false); } })
-        .catch(() => { if (!cancelled) setLoading(false); });
+      fetchAnalytics().then((d) => {
+        if (!cancelled) {
+          setSwaps(d?.recentSwaps ?? []);
+          setLoading(false);
+        }
+      });
 
     fetch_();
     const id = setInterval(fetch_, 15_000);
@@ -86,8 +62,8 @@ function useRecentSwaps() {
 const mapSym = (s: string): TokenSymbol =>
   (s === "WETH" ? "ETH" : s) as TokenSymbol;
 
-const relTime = (ts: string) => {
-  const diff = Math.floor(Date.now() / 1000) - parseInt(ts);
+const relTime = (ts: string | number) => {
+  const diff = Math.floor(Date.now() / 1000) - Number(ts);
   if (diff < 60) return `${diff}s`;
   if (diff < 3600) return `${Math.floor(diff / 60)}m`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
@@ -324,15 +300,14 @@ const RecentSwaps = () => {
   return (
     <div>
       {swaps.map((s, i) => {
-        const amt0 = parseFloat(s.amount0);
-        const isZeroIn = amt0 > 0;
-        const fromSym = mapSym(isZeroIn ? s.token0.symbol : s.token1.symbol);
-        const toSym = mapSym(isZeroIn ? s.token1.symbol : s.token0.symbol);
-        const fromAmt = Math.abs(isZeroIn ? amt0 : parseFloat(s.amount1));
-        const toAmt_ = Math.abs(isZeroIn ? parseFloat(s.amount1) : amt0);
+        const isZeroIn = s.amount0 > 0;
+        const fromSym = mapSym(isZeroIn ? s.token0 : s.token1);
+        const toSym = mapSym(isZeroIn ? s.token1 : s.token0);
+        const fromAmt = Math.abs(isZeroIn ? s.amount0 : s.amount1);
+        const toAmt_ = Math.abs(isZeroIn ? s.amount1 : s.amount0);
         const addr = s.origin
           ? `${s.origin.slice(0, 6)}…${s.origin.slice(-4)}`
-          : s.transaction.id.slice(0, 10);
+          : s.txId.slice(0, 10);
 
         return (
           <div
@@ -531,9 +506,12 @@ export const SwapPage = () => {
   const realOutAcct = useTokenAccount(isReal ? realOut : undefined);
   const quote = useSwapQuote(isReal ? realIn : undefined, isReal ? realOut : undefined, debouncedIn, feeTier);
 
-  // Always fetch PGX balance for the token picker (ETH comes from useBalance).
+  // Always fetch real-token balances for the picker (ETH comes from useBalance).
   const pgxDexToken = DEX_TOKENS.find((t) => t.symbol === "PGX");
   const pgxPickerAcct = useTokenAccount(pgxDexToken);
+  const wethPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "WETH"));
+  const tusdcPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "tUSDC"));
+  const tdaiPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "tDAI"));
   const { data: nativeEth } = useBalance({
     address,
     query: { enabled: Boolean(address), refetchInterval: 12_000 },
@@ -551,9 +529,12 @@ export const SwapPage = () => {
     if (address) {
       m.ETH = nativeEth ? Number(nativeEth.value) / 1e18 : 0;
       m.PGX = pgxPickerAcct.balance ?? 0;
+      m.WETH = wethPickerAcct.balance ?? 0;
+      m.tUSDC = tusdcPickerAcct.balance ?? 0;
+      m.tDAI = tdaiPickerAcct.balance ?? 0;
     }
     return m;
-  }, [address, nativeEth, pgxPickerAcct.balance]);
+  }, [address, nativeEth, pgxPickerAcct.balance, wethPickerAcct.balance, tusdcPickerAcct.balance, tdaiPickerAcct.balance]);
 
   // Use on-chain balances when real, else 0.
   const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : 0;
@@ -589,7 +570,10 @@ export const SwapPage = () => {
   const needsApproval =
     isReal && realInAcct.allowance !== undefined && realInAcct.allowance < amountInRaw;
 
+  const queue = useTxQueue();
   const { approve, swap, busy: realBusy } = useSwapActions(() => {
+    // An approval mined → the queued swap fires and prompts the wallet again.
+    if (queue.advance()) return;
     setTxStep("success");
   });
 
@@ -610,22 +594,30 @@ export const SwapPage = () => {
     }
     if (!isReal || !realIn || !realOut) return;
 
+    const doSwap = () => {
+      setTxStep("pending");
+      swap(realIn, realOut, amountInRaw, minReceivedRaw, feeTier, {
+        onSuccess: (hash) => {
+          setSwapTxHash(hash);
+          toast({ title: "Swap submitted", body: "View on explorer", href: txUrl(hash) });
+        },
+        onError: (e) => { queue.clear(); setTxStep(null); toast({ title: "Swap failed", body: e.message, kind: "error" }); },
+      }, quote.route ?? "direct");
+    };
+
     if (needsApproval) {
       setTxStep("approve");
-      approve(realIn, amountInRaw, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol}` }),
-        onError: (e) => { setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
-      });
+      queue.start([
+        () =>
+          approve(realIn, amountInRaw, {
+            onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol} — swap follows automatically` }),
+            onError: (e) => { queue.clear(); setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
+          }),
+        doSwap,
+      ]);
       return;
     }
-    setTxStep("pending");
-    swap(realIn, realOut, amountInRaw, minReceivedRaw, feeTier, {
-      onSuccess: (hash) => {
-        setSwapTxHash(hash);
-        toast({ title: "Swap submitted", body: "View on explorer", href: txUrl(hash) });
-      },
-      onError: (e) => { setTxStep(null); toast({ title: "Swap failed", body: e.message, kind: "error" }); },
-    });
+    doSwap();
   };
 
   const closeTxModal = () => {
@@ -806,7 +798,7 @@ export const SwapPage = () => {
                 : txStep || realBusy
                 ? "Swapping…"
                 : needsApproval
-                ? `Approve ${from}`
+                ? `Approve & swap ${from} for ${to}`
                 : `Swap ${from} for ${to}`}
             </button>
           </div>
@@ -826,7 +818,11 @@ export const SwapPage = () => {
               <div className="col gap-4">
                 <span className="caps">Best route</span>
                 <span style={{ fontSize: 14, fontWeight: 500 }}>
-                  {isReal ? "Via 1 pool · direct" : "No live route"}
+                  {!isReal
+                    ? "No live route"
+                    : quote.route === "viaWeth"
+                      ? "Via 2 pools · WETH hop"
+                      : "Via 1 pool · direct"}
                 </span>
               </div>
               <span className="chip accent">

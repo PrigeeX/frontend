@@ -14,6 +14,7 @@ import { useToast } from "../toast";
 import { fmtNum } from "@/lib/format";
 import { erc20Abi } from "@/lib/contracts";
 import { DEX } from "@/lib/dex";
+import { useTxQueue } from "@/lib/txqueue";
 import { DEX_TOKENS } from "@/lib/liquidity";
 import {
   useV2Pair,
@@ -68,7 +69,10 @@ export function AddLiquidityV2() {
   const allowA = balData?.[2]?.status === "success" ? (balData[2].result as bigint) : 0n;
   const allowB = balData?.[3]?.status === "success" ? (balData[3].result as bigint) : 0n;
 
+  const queue = useTxQueue();
   const { approve, addLiquidity, busy } = useV2Actions(() => {
+    // An approval mined → the next queued step fires and re-prompts the wallet.
+    if (queue.advance()) return;
     toast({ title: "Liquidity added", body: `${base.symbol} / ${quote.symbol} V2 position` });
     setAmountA("");
     setAmountBManual("");
@@ -83,17 +87,23 @@ export function AddLiquidityV2() {
   const onSubmit = () => {
     if (!wallet.connected) return wallet.open();
     if (!valid) return;
-    if (needApproveA) {
-      approve(base.address as `0x${string}`, DEX.v2Router, aDesired, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${base.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else if (needApproveB) {
-      approve(quote.address as `0x${string}`, DEX.v2Router, bDesired, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${quote.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else {
+    const approveErr = (e: Error) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); };
+    const steps: (() => void)[] = [];
+    if (needApproveA)
+      steps.push(() =>
+        approve(base.address as `0x${string}`, DEX.v2Router, aDesired, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${base.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    if (needApproveB)
+      steps.push(() =>
+        approve(quote.address as `0x${string}`, DEX.v2Router, bDesired, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${quote.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    steps.push(() =>
       addLiquidity(
         base.address as `0x${string}`,
         quote.address as `0x${string}`,
@@ -103,10 +113,11 @@ export function AddLiquidityV2() {
         withSlippage(bDesired, SLIPPAGE),
         {
           onSuccess: () => toast({ title: "Add submitted", body: "Confirm in your wallet to add liquidity" }),
-          onError: (e) => toast({ title: "Add failed", body: e.message, kind: "error" }),
+          onError: (e) => { queue.clear(); toast({ title: "Add failed", body: e.message, kind: "error" }); },
         },
-      );
-    }
+      ),
+    );
+    queue.start(steps);
   };
 
   const cta = !wallet.connected
@@ -119,11 +130,9 @@ export function AddLiquidityV2() {
         ? "Insufficient balance"
         : busy
           ? "Confirming…"
-          : needApproveA
-            ? `Approve ${base.symbol}`
-            : needApproveB
-              ? `Approve ${quote.symbol}`
-              : "Add liquidity";
+          : needApproveA || needApproveB
+            ? "Approve & add liquidity"
+            : "Add liquidity";
 
   return (
     <div className="add-liq-grid" style={{ display: "grid", gap: 24 }}>
@@ -232,7 +241,9 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
   const [open, setOpen] = useState(false);
   const [pct, setPct] = useState(100);
 
+  const queue = useTxQueue();
   const { approve, removeLiquidity, busy } = useV2Actions(() => {
+    if (queue.advance()) return;
     toast({ title: "Liquidity removed", body: `${p.tokenA.symbol} / ${p.tokenB.symbol}` });
     onChanged();
     setOpen(false);
@@ -246,12 +257,15 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
 
   const onRemove = () => {
     if (liquidity <= 0n) return;
-    if (needApproveLp) {
-      approve(p.pairAddress!, DEX.v2Router, liquidity, {
-        onSuccess: () => toast({ title: "Approve submitted", body: "Authorizing LP token" }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else {
+    const steps: (() => void)[] = [];
+    if (needApproveLp)
+      steps.push(() =>
+        approve(p.pairAddress!, DEX.v2Router, liquidity, {
+          onSuccess: () => toast({ title: "Approve submitted", body: "Authorizing LP token — removal follows automatically" }),
+          onError: (e) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
+        }),
+      );
+    steps.push(() =>
       removeLiquidity(
         p.tokenA.address as `0x${string}`,
         p.tokenB.address as `0x${string}`,
@@ -260,10 +274,11 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
         bMin,
         {
           onSuccess: () => toast({ title: "Remove submitted", body: `Removing ${pct}% of liquidity` }),
-          onError: (e) => toast({ title: "Remove failed", body: e.message, kind: "error" }),
+          onError: (e) => { queue.clear(); toast({ title: "Remove failed", body: e.message, kind: "error" }); },
         },
-      );
-    }
+      ),
+    );
+    queue.start(steps);
   };
 
   return (
@@ -319,7 +334,7 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
               disabled={busy}
               style={{ flex: 1, justifyContent: "center", opacity: busy ? 0.5 : 1 }}
             >
-              {busy ? "Confirming…" : needApproveLp ? "Approve LP" : `Remove ${pct}%`}
+              {busy ? "Confirming…" : needApproveLp ? `Approve & remove ${pct}%` : `Remove ${pct}%`}
             </button>
           </div>
         </div>

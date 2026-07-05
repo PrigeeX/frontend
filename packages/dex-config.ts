@@ -52,6 +52,10 @@ export const ADDRESSES = {
   // V2 AMM (legacy constant-product pairs)
   v2Factory:       "0xE2C7552726753a55ab2032C43B526Ff788c52A77",
   v2Router:        "0xFF7e218FEfB3099A63CAB52AB81d2AD81bc9E48b",
+
+  // Testnet-only ERC20s (PrigeeXSeedERC20), paired with WETH on V2 + V3
+  tUSDC:           "0x828B8fAF6c38eB666dFA8c1F22b106ca1FCecf0c", // 6 decimals
+  tDAI:            "0xDD8A20b1ABbD84a52d02Dc623E756E880FB13b6b", // 18 decimals
 } as const satisfies Record<string, `0x${string}`>;
 
 // ── Subgraph endpoints ────────────────────────────────────────────────────────

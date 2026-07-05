@@ -11,6 +11,7 @@ import {
   parsePgx,
   fmtPgx,
 } from "@/lib/staking";
+import { useTxQueue } from "@/lib/txqueue";
 
 const SummaryCard = ({
   label,
@@ -70,7 +71,10 @@ export const StakePage = () => {
   const [amount, setAmount] = useState("");
 
   const { state, loading, hasError, refetch } = useStaking();
+  const queue = useTxQueue();
   const { approve, stake, unstake, claim, busy } = useStakingActions(() => {
+    // Approval mined → the queued stake fires and re-prompts the wallet.
+    if (queue.advance()) return;
     refetch();
     setAmount("");
   });
@@ -94,17 +98,25 @@ export const StakePage = () => {
     parsedWei > 0n &&
     (state.allowance === undefined || state.allowance < parsedWei);
 
-  const onApprove = () =>
-    approve(parsedWei, {
-      onSuccess: () => toast({ title: "Approve submitted", body: "Confirm in wallet to authorize staking" }),
-      onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-    });
-
-  const onStake = () =>
-    stake(parsedWei, {
-      onSuccess: () => toast({ title: "Stake submitted", body: `${fmtNum(parsed)} PGX` }),
-      onError: (e) => toast({ title: "Stake failed", body: e.message, kind: "error" }),
-    });
+  const onStake = () => {
+    const doStake = () =>
+      stake(parsedWei, {
+        onSuccess: () => toast({ title: "Stake submitted", body: `${fmtNum(parsed)} PGX` }),
+        onError: (e) => { queue.clear(); toast({ title: "Stake failed", body: e.message, kind: "error" }); },
+      });
+    if (needsApproval) {
+      queue.start([
+        () =>
+          approve(parsedWei, {
+            onSuccess: () => toast({ title: "Approve submitted", body: "Staking follows automatically once it confirms" }),
+            onError: (e) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
+          }),
+        doStake,
+      ]);
+    } else {
+      doStake();
+    }
+  };
 
   const onUnstake = () =>
     unstake(parsedWei, {
@@ -284,7 +296,7 @@ export const StakePage = () => {
               <button
                 className="btn btn-primary btn-lg"
                 disabled={stakeDisabled}
-                onClick={needsApproval ? onApprove : onStake}
+                onClick={onStake}
                 style={{ width: "100%", marginTop: 14, justifyContent: "center", opacity: stakeDisabled ? 0.5 : 1 }}
               >
                 {!wallet.connected
@@ -298,7 +310,7 @@ export const StakePage = () => {
                   : busy
                   ? needsApproval ? "Approving…" : "Staking…"
                   : needsApproval
-                  ? `Approve ${fmtNum(parsed)} PGX`
+                  ? `Approve & stake ${fmtNum(parsed)} PGX`
                   : `Stake ${fmtNum(parsed)} PGX`}
               </button>
             </>

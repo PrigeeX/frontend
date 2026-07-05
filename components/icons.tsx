@@ -166,6 +166,7 @@ const TokenGlyph = ({ symbol, s }: { symbol: string; s: number }) => {
         </svg>
       );
     case "ETH":
+    case "WETH":
       return (
         <svg width={s} height={s} viewBox="0 0 32 32">
           <circle cx="16" cy="16" r="14" fill="#343434" />
@@ -178,6 +179,7 @@ const TokenGlyph = ({ symbol, s }: { symbol: string; s: number }) => {
         </svg>
       );
     case "USDC":
+    case "tUSDC":
       return (
         <svg width={s} height={s} viewBox="0 0 32 32">
           <circle cx="16" cy="16" r="14" fill="#2775CA" />
@@ -201,6 +203,7 @@ const TokenGlyph = ({ symbol, s }: { symbol: string; s: number }) => {
         </svg>
       );
     case "DAI":
+    case "tDAI":
       return (
         <svg width={s} height={s} viewBox="0 0 32 32">
           <circle cx="16" cy="16" r="14" fill="#F5AC37" />

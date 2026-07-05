@@ -5,7 +5,7 @@ export const Manifest = () => (
   <section className="manifest" id="mission">
     <div className="container" style={{ position: "relative" }}>
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">Manifest</div>
+        <div className="sec-num">The thesis</div>
         <h2 className="sec-title">
           Capital is coming on-chain.
           <br />
@@ -14,21 +14,18 @@ export const Manifest = () => (
       </Reveal>
 
       <Reveal as="div" className="manifest__body">
-        <div className="label">Position</div>
+        <div className="label">Thesis</div>
         <div>
           <p>
-            For most of crypto, liquidity has lived in casinos. Loud interfaces, hidden mechanics, yield with no provenance.
+            Trillions in treasuries, funds, and real-world assets are beginning their migration on-chain. The rails they settle on will define the next decade of financial markets.
           </p>
           <p>
-            PrigeeX is built for the next visitor: the treasury desk, the family office, the allocator routing institutional capital on-chain. They do not need novelty. They need a <em>venue.</em> Audited execution, transparent revenue, and a control surface that respects how serious money operates.
+            PrigeeX is building those rails: one venue for trading, liquidity, staking, and settlement, engineered on Arbitrum with audited execution and protocol revenue that flows back to <em>the people who hold it.</em>
           </p>
-          <p>PrigeeX is that venue.</p>
+          <p>
+            Liquidity compounds. The venue that earns this first wave of capital becomes the default for everything that follows.
+          </p>
         </div>
-      </Reveal>
-
-      <Reveal as="div" className="manifest__sig">
-        <div>Filed</div>
-        <div>PRIGEEX · 2026 · ARBITRUM</div>
       </Reveal>
     </div>
   </section>

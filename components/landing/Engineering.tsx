@@ -5,7 +5,7 @@ const PILLARS = [
   {
     idx: "01",
     title: "Institutional grade by design.",
-    body: "Built from the ground up for capital that expects the discipline of a venue, not the volatility of a casino floor.",
+    body: "Deterministic execution, verified contracts, and risk controls modelled on how professional trading desks actually operate.",
   },
   {
     idx: "02",
@@ -25,7 +25,7 @@ const PILLARS = [
   {
     idx: "05",
     title: "Built for settlement at scale.",
-    body: "Infrastructure to host treasury operations, tokenised real-world assets, and the broader aviation-fintech ecosystem.",
+    body: "Infrastructure ready for treasury operations, tokenised real-world assets, and the capital markets moving on-chain.",
   },
   {
     idx: "06",
@@ -39,11 +39,11 @@ export const Engineering = () => (
     <div className="section-dark__grid" aria-hidden />
     <div className="container">
       <Reveal as="div" className="sec-head">
-        <div className="sec-num">Engineered for</div>
+        <div className="sec-num">Engineering</div>
         <h2 className="sec-title">
-          Built like
+          Built to earn
           <br />
-          the <em>venue it is.</em>
+          <em>serious capital.</em>
         </h2>
       </Reveal>
 

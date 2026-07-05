@@ -15,6 +15,7 @@ import { useToast } from "./toast";
 import { fmtNum } from "@/lib/format";
 import { erc20Abi } from "@/lib/contracts";
 import { dexConfigured, v2Configured, DEX } from "@/lib/dex";
+import { useTxQueue } from "@/lib/txqueue";
 import { PositionCard } from "./liquidity/PositionCard";
 import { RangeChart, type DepthBar } from "./liquidity/RangeChart";
 import { AddLiquidityV2, V2Positions } from "./liquidity/v2";
@@ -165,6 +166,11 @@ function AddLiquidityV3() {
 
   const priceLower = range ? tickToPriceNum(range.lower, t0, t1) : 0;
   const priceUpper = range ? tickToPriceNum(range.upper, t0, t1) : 0;
+  // Full-range bounds read as 0 / ∞ rather than astronomic tick-edge prices.
+  const atMinTick = Boolean(range && range.lower <= nearestFullTick(fee, true));
+  const atMaxTick = Boolean(range && range.upper >= nearestFullTick(fee, false));
+  const lowerLabel = atMinTick ? "0" : fmtNum(priceLower, 6);
+  const upperLabel = atMaxTick ? "∞" : fmtNum(priceUpper, 6);
 
   // Build a Position from the entered amount0 (derives amount1 for the range).
   const position = useMemo(() => {
@@ -200,7 +206,10 @@ function AddLiquidityV3() {
   const bal0 = balData?.[0]?.status === "success" ? Number(balData[0].result) / 10 ** t0.decimals : 0;
   const bal1 = balData?.[1]?.status === "success" ? Number(balData[1].result) / 10 ** t1.decimals : 0;
 
+  const queue = useTxQueue();
   const { approve, mint, busy } = useLiquidityActions(() => {
+    // An approval mined → the next queued step (approve/mint) fires itself.
+    if (queue.advance()) return;
     toast({ title: "Liquidity added", body: `${base.symbol} / ${quote.symbol} position minted` });
     setAmount0("");
   });
@@ -217,22 +226,29 @@ function AddLiquidityV3() {
   const onSubmit = () => {
     if (!wallet.connected) return wallet.open();
     if (!position) return;
-    if (needApprove0) {
-      approve(t0.address as `0x${string}`, need0, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t0.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else if (needApprove1) {
-      approve(t1.address as `0x${string}`, need1, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t1.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else {
+    const approveErr = (e: Error) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); };
+    const steps: (() => void)[] = [];
+    if (needApprove0)
+      steps.push(() =>
+        approve(t0.address as `0x${string}`, need0, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t0.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    if (needApprove1)
+      steps.push(() =>
+        approve(t1.address as `0x${string}`, need1, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t1.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    steps.push(() =>
       mint(position, slippage, {
         onSuccess: () => toast({ title: "Mint submitted", body: "Confirm in your wallet to add liquidity" }),
-        onError: (e) => toast({ title: "Mint failed", body: e.message, kind: "error" }),
-      });
-    }
+        onError: (e) => { queue.clear(); toast({ title: "Mint failed", body: e.message, kind: "error" }); },
+      }),
+    );
+    queue.start(steps);
   };
 
   const insufficient = (parseFloat(amount0) || 0) > bal0 || amount1 > bal1;
@@ -246,11 +262,9 @@ function AddLiquidityV3() {
           ? "Insufficient balance"
           : busy
             ? "Confirming…"
-            : needApprove0
-              ? `Approve ${t0.symbol}`
-              : needApprove1
-                ? `Approve ${t1.symbol}`
-                : "Add liquidity";
+            : needApprove0 || needApprove1
+              ? "Approve & add liquidity"
+              : "Add liquidity";
 
   return (
       <div className="add-liq-grid" style={{ display: "grid", gap: 24 }}>
@@ -338,8 +352,8 @@ function AddLiquidityV3() {
             )}
 
             <div className="row gap-12" style={{ marginTop: 14 }}>
-              <RangeField label="Min price" value={fmtNum(priceLower, 6)} symbol={t1.symbol} />
-              <RangeField label="Max price" value={fmtNum(priceUpper, 6)} symbol={t1.symbol} />
+              <RangeField label="Min price" value={lowerLabel} symbol={t1.symbol} />
+              <RangeField label="Max price" value={upperLabel} symbol={t1.symbol} />
             </div>
           </div>
         </div>
@@ -354,7 +368,7 @@ function AddLiquidityV3() {
 
             <div className="hairline" style={{ margin: "16px 0" }} />
             <div className="col gap-8" style={{ fontSize: 13 }}>
-              <Row label="Selected range" value={`${fmtNum(priceLower, 4)} – ${fmtNum(priceUpper, 4)}`} />
+              <Row label="Selected range" value={`${atMinTick ? "0" : fmtNum(priceLower, 4)} – ${atMaxTick ? "∞" : fmtNum(priceUpper, 4)}`} />
               <Row label="Fee tier" value={FEE_OPTIONS.find((o) => o.fee === fee)?.label ?? "-"} />
               <Row label="Slippage" value={`${slippage}%`} />
             </div>
@@ -512,7 +526,9 @@ function IncreasePanel({ p }: { p: PositionInfo }) {
   const bal0 = balData?.[0]?.status === "success" ? Number(balData[0].result) / 10 ** t0.decimals : 0;
   const bal1 = balData?.[1]?.status === "success" ? Number(balData[1].result) / 10 ** t1.decimals : 0;
 
+  const queue = useTxQueue();
   const { approve, increase, busy } = useLiquidityActions(() => {
+    if (queue.advance()) return;
     toast({ title: "Liquidity added", body: `Increased ${p.symbol0} / ${p.symbol1} position` });
     setAmount0("");
   });
@@ -529,22 +545,29 @@ function IncreasePanel({ p }: { p: PositionInfo }) {
   const onSubmit = () => {
     if (!wallet.connected) return wallet.open();
     if (!position) return;
-    if (needApprove0) {
-      approve(t0.address as `0x${string}`, need0, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t0.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else if (needApprove1) {
-      approve(t1.address as `0x${string}`, need1, {
-        onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t1.symbol}` }),
-        onError: (e) => toast({ title: "Approve failed", body: e.message, kind: "error" }),
-      });
-    } else {
+    const approveErr = (e: Error) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); };
+    const steps: (() => void)[] = [];
+    if (needApprove0)
+      steps.push(() =>
+        approve(t0.address as `0x${string}`, need0, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t0.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    if (needApprove1)
+      steps.push(() =>
+        approve(t1.address as `0x${string}`, need1, {
+          onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${t1.symbol}` }),
+          onError: approveErr,
+        }),
+      );
+    steps.push(() =>
       increase(position, p.tokenId, 0.5, {
         onSuccess: () => toast({ title: "Increase submitted", body: "Confirm in your wallet to add liquidity" }),
-        onError: (e) => toast({ title: "Increase failed", body: e.message, kind: "error" }),
-      });
-    }
+        onError: (e) => { queue.clear(); toast({ title: "Increase failed", body: e.message, kind: "error" }); },
+      }),
+    );
+    queue.start(steps);
   };
 
   const cta = !wallet.connected
@@ -555,11 +578,9 @@ function IncreasePanel({ p }: { p: PositionInfo }) {
         ? "Insufficient balance"
         : busy
           ? "Confirming…"
-          : needApprove0
-            ? `Approve ${t0.symbol}`
-            : needApprove1
-              ? `Approve ${t1.symbol}`
-              : "Increase liquidity";
+          : needApprove0 || needApprove1
+            ? "Approve & increase liquidity"
+            : "Increase liquidity";
 
   return (
     <div className="panel" style={{ padding: 20 }}>

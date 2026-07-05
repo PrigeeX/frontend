@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "PrigeeX is institutional-grade infrastructure for on-chain liquidity, settlement, and tokenised real-world assets. Built for capital arriving on-chain.",
   keywords: [
-    "PrigeeX", "PGX", "DEX", "institutional", "aviation", "fintech",
+    "PrigeeX", "PGX", "DEX", "institutional", "fintech",
     "liquidity", "settlement", "tokenisation", "RWA", "staking", "Arbitrum",
   ],
   icons: {
@@ -32,7 +32,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    // suppressHydrationWarning: the no-flash script below mutates data-theme
+    // before React hydrates, so the server/client attribute set can differ.
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="/theme.css" />
         {/* Apply the saved theme before paint to avoid a flash (FE-36). */}

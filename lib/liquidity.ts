@@ -93,6 +93,8 @@ const FEE_TIERS: FeeAmount[] = [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIU
 export const DEX_TOKENS: Token[] = [
   new Token(DEX_CHAIN.id, DEX.PGX, 18, "PGX", "PrigeeX"),
   new Token(DEX_CHAIN.id, DEX.weth9, 18, "WETH", "Wrapped Ether"),
+  new Token(DEX_CHAIN.id, DEX.tUSDC, 6, "tUSDC", "Test USD Coin"),
+  new Token(DEX_CHAIN.id, DEX.tDAI, 18, "tDAI", "Test Dai"),
 ];
 
 export const tokenByAddress = (a: string) =>
@@ -259,6 +261,11 @@ export function usePositions() {
       const fmt = (t: ReturnType<typeof tickToPrice>) =>
         t.toSignificant(6);
 
+      // Full-range bounds read as "0 - ∞", not a 40-digit decimal expansion.
+      const spacing = TICK_SPACINGS[pos.fee as FeeAmount];
+      const atMin = pos.tickLower <= nearestUsableTick(TickMath.MIN_TICK, spacing);
+      const atMax = pos.tickUpper >= nearestUsableTick(TickMath.MAX_TICK, spacing);
+
       out.push({
         tokenId: id,
         token0: pos.token0,
@@ -268,8 +275,8 @@ export function usePositions() {
         fee: pos.fee as FeeAmount,
         tickLower: pos.tickLower,
         tickUpper: pos.tickUpper,
-        priceLower: fmt(tickToPrice(t0, t1, pos.tickLower)),
-        priceUpper: fmt(tickToPrice(t0, t1, pos.tickUpper)),
+        priceLower: atMin ? "0" : fmt(tickToPrice(t0, t1, pos.tickLower)),
+        priceUpper: atMax ? "∞" : fmt(tickToPrice(t0, t1, pos.tickUpper)),
         priceCurrent: pool.token0Price.toSignificant(6),
         inRange: tickCurrent >= pos.tickLower && tickCurrent < pos.tickUpper,
         closed: pos.liquidity === 0n,

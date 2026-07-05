@@ -57,65 +57,55 @@ export type ProtocolStats = {
   totalFeesDistributed: number;
 };
 
+// ── Analytics aggregator (/api/analytics) ────────────────────────────────────
+// The deployed v3 subgraph is an event stub without factory/pool/swap entities,
+// so DEX-wide analytics come from a server route that combines the stub's pool
+// list with live on-chain reads and raw Swap logs.
+
+export type AnalyticsSwap = {
+  id: string;
+  txId: string;
+  timestamp: number;
+  amount0: number;
+  amount1: number;
+  amountUSD: number;
+  token0: string;
+  token1: string;
+  origin: string;
+};
+
+type AnalyticsSnapshot = {
+  metrics: { totalValueLockedUSD: number; volumeUSD: number; feesUSD: number; poolCount: number };
+  pools: { id: string; token0: string; token1: string; feeTier: number; tvlUSD: number; volumeUSD: number }[];
+  dayHistory: DayPoint[];
+  recentSwaps: AnalyticsSwap[];
+  prices: Record<string, number>;
+  activity?: (AnalyticsSwap & { type: "swap" | "add" | "remove" })[];
+};
+
+export async function fetchAnalytics(user?: string): Promise<AnalyticsSnapshot | undefined> {
+  try {
+    const res = await fetch(`/api/analytics${user ? `?user=${user}` : ""}`);
+    if (!res.ok) return undefined;
+    return (await res.json()) as AnalyticsSnapshot;
+  } catch (e) {
+    console.warn("[analytics] request failed:", e);
+    return undefined;
+  }
+}
+
 // ── Query helpers ────────────────────────────────────────────────────────────
 
 export async function fetchGlobalMetrics(): Promise<GlobalMetrics | undefined> {
-  const data = await query<{
-    factories: { totalValueLockedUSD: string; totalVolumeUSD: string; totalFeesUSD: string; poolCount: string }[];
-  }>(
-    SUBGRAPHS.v3,
-    `{ factories(first: 1) { totalValueLockedUSD totalVolumeUSD totalFeesUSD poolCount } }`,
-  );
-  const f = data?.factories?.[0];
-  if (!f) return undefined;
-  return {
-    totalValueLockedUSD: Number(f.totalValueLockedUSD),
-    volumeUSD: Number(f.totalVolumeUSD),
-    feesUSD: Number(f.totalFeesUSD),
-    poolCount: Number(f.poolCount),
-  };
+  return (await fetchAnalytics())?.metrics;
 }
 
 export async function fetchTopPools(): Promise<PoolRow[] | undefined> {
-  const data = await query<{
-    pools: {
-      id: string;
-      feeTier: string;
-      totalValueLockedUSD: string;
-      volumeUSD: string;
-      token0: { symbol: string };
-      token1: { symbol: string };
-    }[];
-  }>(
-    SUBGRAPHS.v3,
-    `{ pools(first: 20, orderBy: totalValueLockedUSD, orderDirection: desc) {
-        id feeTier totalValueLockedUSD volumeUSD
-        token0 { symbol } token1 { symbol }
-    } }`,
-  );
-  if (!data?.pools) return undefined;
-  return data.pools.map((p) => ({
-    id: p.id,
-    token0: p.token0.symbol,
-    token1: p.token1.symbol,
-    feeTier: Number(p.feeTier),
-    tvlUSD: Number(p.totalValueLockedUSD),
-    volumeUSD: Number(p.volumeUSD),
-  }));
+  return (await fetchAnalytics())?.pools;
 }
 
 export async function fetchDayHistory(days = 30): Promise<DayPoint[] | undefined> {
-  const data = await query<{
-    prigeeXDayDatas: { date: number; tvlUSD: string; volumeUSD: string }[];
-  }>(
-    SUBGRAPHS.v3,
-    `query($n: Int!) { prigeeXDayDatas(first: $n, orderBy: date, orderDirection: desc) { date tvlUSD volumeUSD } }`,
-    { n: days },
-  );
-  if (!data?.prigeeXDayDatas) return undefined;
-  return data.prigeeXDayDatas
-    .map((d) => ({ date: d.date, tvlUSD: Number(d.tvlUSD), volumeUSD: Number(d.volumeUSD) }))
-    .reverse();
+  return (await fetchAnalytics())?.dayHistory?.slice(-days);
 }
 
 export async function fetchProtocolStats(): Promise<ProtocolStats | undefined> {
@@ -146,22 +136,13 @@ export async function fetchProtocolStats(): Promise<ProtocolStats | undefined> {
  * without a fabricated USD figure.
  */
 export async function fetchTokenPricesUSD(addresses: string[]): Promise<Record<string, number> | undefined> {
-  const ids = addresses.map((a) => a.toLowerCase());
-  const data = await query<{
-    bundles: { ethPriceUSD: string }[];
-    tokens: { id: string; derivedETH: string }[];
-  }>(
-    SUBGRAPHS.v3,
-    `query($ids: [Bytes!]) {
-       bundles(first: 1) { ethPriceUSD }
-       tokens(where: { id_in: $ids }) { id derivedETH }
-     }`,
-    { ids },
-  );
-  if (!data) return undefined;
-  const eth = Number(data.bundles?.[0]?.ethPriceUSD ?? 0);
+  const prices = (await fetchAnalytics())?.prices;
+  if (!prices) return undefined;
   const out: Record<string, number> = {};
-  for (const t of data.tokens ?? []) out[t.id.toLowerCase()] = Number(t.derivedETH) * eth;
+  for (const a of addresses) {
+    const p = prices[a.toLowerCase()];
+    if (p !== undefined) out[a.toLowerCase()] = p;
+  }
   return out;
 }
 
@@ -177,46 +158,21 @@ export type ActivityItem = {
   amountUSD: number;
 };
 
-type RawEvent = {
-  id: string;
-  timestamp: string;
-  transaction: { id: string };
-  token0: { symbol: string };
-  token1: { symbol: string };
-  amount0: string;
-  amount1: string;
-  amountUSD?: string;
-};
-
 /** Recent on-chain activity (swaps + mints + burns) initiated by a wallet. */
 export async function fetchUserActivity(user: string): Promise<ActivityItem[] | undefined> {
-  const origin = user.toLowerCase();
-  const fields = "id timestamp transaction { id } token0 { symbol } token1 { symbol } amount0 amount1 amountUSD";
-  const data = await query<{ swaps: RawEvent[]; mints: RawEvent[]; burns: RawEvent[] }>(
-    SUBGRAPHS.v3,
-    `query($origin: Bytes!) {
-       swaps(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
-       mints(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
-       burns(first: 10, orderBy: timestamp, orderDirection: desc, where: { origin: $origin }) { ${fields} }
-     }`,
-    { origin },
-  );
-  if (!data) return undefined;
-  const map = (arr: RawEvent[] | undefined, type: ActivityItem["type"]): ActivityItem[] =>
-    (arr ?? []).map((r) => ({
-      id: r.id,
-      type,
-      timestamp: Number(r.timestamp),
-      txId: r.transaction.id,
-      token0: r.token0.symbol,
-      token1: r.token1.symbol,
-      amount0: Number(r.amount0),
-      amount1: Number(r.amount1),
-      amountUSD: Number(r.amountUSD ?? 0),
-    }));
-  return [...map(data.swaps, "swap"), ...map(data.mints, "add"), ...map(data.burns, "remove")]
-    .sort((a, b) => b.timestamp - a.timestamp)
-    .slice(0, 12);
+  const activity = (await fetchAnalytics(user))?.activity;
+  if (!activity) return undefined;
+  return activity.map((a) => ({
+    id: a.id,
+    type: a.type,
+    timestamp: a.timestamp,
+    txId: a.txId,
+    token0: a.token0,
+    token1: a.token1,
+    amount0: a.amount0,
+    amount1: a.amount1,
+    amountUSD: a.amountUSD,
+  }));
 }
 
 // ── Tiny async hook ──────────────────────────────────────────────────────────

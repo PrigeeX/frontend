@@ -44,8 +44,6 @@ export const Footer = () => (
         <div className="L">
           <span>PRIGEEX</span>
           <span className="sep">·</span>
-          <span>APOGEE.LIQUIDITY</span>
-          <span className="sep">·</span>
           <span>© 2026</span>
         </div>
         <div className="R">

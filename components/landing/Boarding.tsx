@@ -7,12 +7,12 @@ export const Boarding = () => (
     <div className="boarding__grid" aria-hidden />
     <div className="container">
       <Reveal as="h2">
-        Boarding,
+        The venue is live.
         <br />
-        <em>gate open.</em>
+        <em>Be early.</em>
       </Reveal>
       <Reveal as="p">
-        PrigeeX is now boarding on Arbitrum testnet, with mainnet on final approach. Connect a wallet, route a trade, provide liquidity, or stake PGX to share in protocol revenue.
+        PrigeeX is live on Arbitrum testnet, with mainnet ahead. Connect a wallet, route a trade, provide liquidity, or stake PGX to share in protocol revenue from day one.
       </Reveal>
       <Reveal as="div" className="cta-row">
         <Link className="btn btn--warm" href="/swap">
@@ -24,9 +24,6 @@ export const Boarding = () => (
         <a className="btn btn--ghost" href="#mission">
           Read documentation
         </a>
-      </Reveal>
-      <Reveal as="div" className="gate-stamp">
-        PRIGEEX · ARBITRUM
       </Reveal>
     </div>
   </section>
