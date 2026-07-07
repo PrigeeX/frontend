@@ -53,7 +53,6 @@
 .hero__inner {
   position: relative; z-index: 1; text-align: center; max-width: 1000px; margin: 0 auto;
 }
-.hero .eyebrow { margin-bottom: 30px; }
 
 h1.headline {
   font-family: var(--f-display); font-weight: 400;
@@ -244,7 +243,7 @@ h1.headline em { font-style: italic; color: var(--warm); font-weight: 400; }
 /* ── FOOTER ────────────────────────────────────────────────────── */
 footer.foot { background: var(--matte); border-top: .5px solid var(--hairline); padding: 60px 0 40px; }
 .foot__inner { max-width: var(--container); margin: 0 auto; padding: 0 32px; }
-.foot__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: .5px solid var(--hairline); }
+.foot__grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: .5px solid var(--hairline); }
 .foot__brand { display: flex; flex-direction: column; gap: 14px; }
 .foot__brand .mark { display: flex; align-items: center; }
 .foot__brand .mark .foot-logo { height: 26px; width: auto; display: block; }
@@ -275,7 +274,8 @@ footer.foot { background: var(--matte); border-top: .5px solid var(--hairline); 
 
 /* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .phases, .pillars { grid-template-columns: 1fr; }
+  .phases { grid-template-columns: 1fr; }
+  .pillars { grid-template-columns: 1fr 1fr; }
   .manifest__body, .manifest__sig { grid-template-columns: 1fr; gap: 14px; }
   .foot__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .navwrap .nav-pill .link { display: none; }
@@ -286,4 +286,22 @@ footer.foot { background: var(--matte); border-top: .5px solid var(--hairline); 
   h1.headline { font-size: clamp(44px, 12vw, 80px); }
   .foot__grid { grid-template-columns: 1fr; }
   .hero__sub { font-size: 16px; max-width: 92%; }
+
+  /* Desktop-scale section rhythm is too tall on phones. */
+  .manifest, .flightplan, .engineering { padding: 88px 0 96px; }
+  .boarding { padding: 100px 0 116px; }
+  .sec-head { margin-bottom: 40px; }
+  .manifest__sig { margin-top: 48px; }
+  .gate-stamp { margin-top: 44px; }
+  .boarding h2 { font-size: clamp(42px, 11vw, 72px); }
+
+  /* Stacked cards size to content instead of the desktop grid height. */
+  .phase { min-height: 0; }
+  .pillar { min-height: 0; }
+  .pillar__body { margin-top: 0; }
+}
+@media (max-width: 640px) {
+  .landing-root .container, .foot__inner { padding: 0 20px; }
+  .hero__stage { padding: 110px 20px 80px; }
+  .pillars { grid-template-columns: 1fr; }
 }

@@ -5,27 +5,27 @@ const PILLARS = [
   {
     idx: "01",
     title: "Institutional grade by design.",
-    body: "Deterministic execution, verified contracts, and risk controls modelled on how professional trading desks actually operate.",
+    body: "Deterministic execution and verified contracts, built on industry-standard security patterns.",
   },
   {
     idx: "02",
     title: "Precision execution.",
-    body: "Every route carries slippage and deadline guards. No stale fills, no surprise prints.",
+    body: "Every route carries slippage and deadline guards. No stale quotes, no silent failures.",
   },
   {
     idx: "03",
-    title: "Revenue flows back to stakers.",
-    body: "Protocol revenue routes to PGX stakers, proportional, claimable, and transparent on-chain.",
+    title: "Fees flow back to stakers.",
+    body: "Protocol fees route to PGX stakers, proportional, claimable, and transparent on-chain.",
   },
   {
     idx: "04",
-    title: "Audited and publicly verified.",
-    body: "Industry-standard security patterns throughout, with every contract verified on the block explorer.",
+    title: "Audit-ready and publicly verified.",
+    body: "Built to an audit-ready standard, with every contract verified on the block explorer.",
   },
   {
     idx: "05",
     title: "Built for settlement at scale.",
-    body: "Infrastructure ready for treasury operations, tokenised real-world assets, and the capital markets moving on-chain.",
+    body: "Infrastructure ready for treasury operations and the capital markets moving on-chain.",
   },
   {
     idx: "06",

@@ -3,23 +3,31 @@
 // Light/dark toggle (FE-36). Persists to localStorage and flips the
 // data-theme on <html>, which remaps the neutral tokens in globals.css.
 
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
 import { Icon } from "./icons";
 
 type Theme = "dark" | "light";
 
+// The data-theme attribute on <html> is the source of truth: the no-flash
+// script in layout.tsx applies the saved theme there before hydration, so the
+// server snapshot ("dark") is corrected without a synchronous setState.
+const subscribe = (onChange: () => void) => {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+  return () => observer.disconnect();
+};
+const getTheme = (): Theme =>
+  document.documentElement.dataset.theme === "light" ? "light" : "dark";
+const getServerTheme = (): Theme => "dark";
+
 export const ThemeToggle = () => {
-  // The server always renders the dark icon; the saved theme (already applied to
-  // <html> by the no-flash script in layout.tsx) is read after mount so the
-  // hydrated tree matches the server markup.
-  const [theme, setTheme] = useState<Theme>("dark");
-  useEffect(() => {
-    if (document.documentElement.dataset.theme === "light") setTheme("light");
-  }, []);
+  const theme = useSyncExternalStore(subscribe, getTheme, getServerTheme);
 
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
     localStorage.setItem("prigeex-theme", next);
     if (next === "light") document.documentElement.dataset.theme = "light";
     else delete document.documentElement.dataset.theme;

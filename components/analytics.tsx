@@ -29,7 +29,7 @@ export function AnalyticsPage() {
   const { data: history } = useAsync(() => fetchDayHistory(range), [range]);
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
+    <div style={{ minWidth: 0 }}>
       <div className="col gap-8" style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 24, fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>Analytics</h1>
         <p className="muted" style={{ margin: 0, fontSize: 14 }}>
@@ -75,7 +75,7 @@ export function AnalyticsPage() {
           </div>
         </>
       )}
-    </main>
+    </div>
   );
 }
 

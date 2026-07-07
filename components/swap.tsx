@@ -610,7 +610,7 @@ export const SwapPage = () => {
       queue.start([
         () =>
           approve(realIn, amountInRaw, {
-            onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol} — swap follows automatically` }),
+            onSuccess: () => toast({ title: "Approve submitted", body: `Authorizing ${realIn.symbol} - swap follows automatically` }),
             onError: (e) => { queue.clear(); setTxStep(null); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
           }),
         doSwap,
@@ -627,7 +627,7 @@ export const SwapPage = () => {
   };
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32, minWidth: 0, overflow: "hidden" }}>
+    <div style={{ minWidth: 0 }}>
       <div className="swap-grid" style={{ display: "grid", gap: 28 }}>
         <div style={{ minWidth: 0 }}>
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 16 }}>
@@ -866,6 +866,6 @@ export const SwapPage = () => {
           onClose={closeTxModal}
         />
       )}
-    </main>
+    </div>
   );
 };

@@ -139,7 +139,7 @@ export const StakePage = () => {
   const unstakeDisabled = !wallet.connected || parsed <= 0 || parsed > stakedPgx || busy;
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32, minWidth: 0, overflow: "hidden" }}>
+    <div style={{ minWidth: 0 }}>
       <div className="row" style={{ justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
         <div className="col gap-8">
           <h1 style={{ fontSize: 24, fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>Staking</h1>
@@ -438,6 +438,6 @@ export const StakePage = () => {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 };

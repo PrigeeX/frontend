@@ -123,8 +123,11 @@ export function useStakingActions(onMined?: () => void) {
 
   useEffect(() => {
     if (mined) {
-      onMined?.();
+      // Reset before onMined: the callback may (via the tx queue) synchronously
+      // fire the next writeContract call, and resetting after that would detach
+      // tracking from the new tx instead of the one that just mined.
       reset();
+      onMined?.();
     }
   }, [mined, onMined, reset]);
 

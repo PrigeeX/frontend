@@ -261,7 +261,7 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
     if (needApproveLp)
       steps.push(() =>
         approve(p.pairAddress!, DEX.v2Router, liquidity, {
-          onSuccess: () => toast({ title: "Approve submitted", body: "Authorizing LP token — removal follows automatically" }),
+          onSuccess: () => toast({ title: "Approve submitted", body: "Authorizing LP token - removal follows automatically" }),
           onError: (e) => { queue.clear(); toast({ title: "Approve failed", body: e.message, kind: "error" }); },
         }),
       );

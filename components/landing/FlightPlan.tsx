@@ -17,7 +17,7 @@ const PHASES: Phase[] = [
     sub: "Live",
     name: "",
     italic: "Foundation.",
-    copy: "The core exchange is live on Arbitrum: swaps, concentrated liquidity, and PGX staking backed by real protocol revenue.",
+    copy: "The core exchange is live on Arbitrum testnet: swaps, concentrated liquidity, and PGX staking backed by protocol fees, with mainnet ahead.",
   },
   {
     cls: "phase--next",

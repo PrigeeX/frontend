@@ -5,10 +5,10 @@ import { Providers } from "./providers";
 export const metadata: Metadata = {
   title: "PrigeeX, an institutional venue for on-chain markets.",
   description:
-    "PrigeeX is institutional-grade infrastructure for on-chain liquidity, settlement, and tokenised real-world assets. Built for capital arriving on-chain.",
+    "PrigeeX is institutional-grade infrastructure for on-chain liquidity and settlement. Built for capital arriving on-chain.",
   keywords: [
     "PrigeeX", "PGX", "DEX", "institutional", "fintech",
-    "liquidity", "settlement", "tokenisation", "RWA", "staking", "Arbitrum",
+    "liquidity", "settlement", "staking", "Arbitrum",
   ],
   icons: {
     icon: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PrigeeX, an institutional venue for on-chain markets.",
     description:
-      "Institutional-grade infrastructure for on-chain liquidity, settlement, and tokenised real-world assets.",
+      "Institutional-grade infrastructure for on-chain liquidity and settlement.",
     type: "website",
   },
 };

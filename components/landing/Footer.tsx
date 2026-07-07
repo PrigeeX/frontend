@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { DOCS } from "@/lib/docs";
 
 export const Footer = () => (
   <footer className="foot">
@@ -18,25 +19,19 @@ export const Footer = () => (
             <li><Link href="/swap">Swap</Link></li>
             <li><Link href="/pool">Liquidity</Link></li>
             <li><Link href="/stake">Staking</Link></li>
-            <li><Link href="/perpetuals">Perpetuals</Link></li>
           </ul>
         </div>
         <div className="foot__col">
           <h4>Resources</h4>
           <ul>
-            <li><a href="#">Documentation</a></li>
-            <li><a href="#">Contracts</a></li>
-            <li><a href="#">Audit reports</a></li>
-            <li><a href="#">Subgraph</a></li>
-          </ul>
-        </div>
-        <div className="foot__col">
-          <h4>Channels</h4>
-          <ul>
-            <li><a href="#">GitHub</a></li>
-            <li><a href="#">X</a></li>
-            <li><a href="#">Discord</a></li>
-            <li><a href="#">Contact</a></li>
+            <li>
+              <a
+                href={DOCS.root}
+                {...(DOCS.root !== "#" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              >
+                Docs
+              </a>
+            </li>
           </ul>
         </div>
       </div>

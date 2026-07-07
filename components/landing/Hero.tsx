@@ -48,11 +48,6 @@ export const Hero = () => {
         </div>
 
         <div className="hero__inner">
-          {/* <div className="eyebrow">
-            <i className="pulse" />
-            An institutional venue, boarding now
-          </div> */}
-
           <h1 className="headline">
             Liquidity,
             <br />
@@ -60,11 +55,11 @@ export const Hero = () => {
           </h1>
 
           <p className="hero__sub">
-            PrigeeX is institutional-grade infrastructure for on-chain liquidity, settlement, and tokenised real-world assets. Engineered for the capital arriving on-chain.
+            PrigeeX is institutional-grade infrastructure for on-chain liquidity and settlement. Engineered for the capital arriving on-chain.
           </p>
 
           <div className="cta-row">
-            <a className="btn btn--primary" href="#boarding">
+            <a className="btn btn--primary" href="/swap">
               Launch App
               <svg viewBox="0 0 12 12" fill="none" aria-hidden>
                 <path d="M2 6h7M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />

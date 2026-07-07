@@ -17,13 +17,10 @@ export const Manifest = () => (
         <div className="label">Thesis</div>
         <div>
           <p>
-            Trillions in treasuries, funds, and real-world assets are beginning their migration on-chain. The rails they settle on will define the next decade of financial markets.
+            Trillions in treasuries and funds are beginning their migration on-chain. The rails they settle on will define the next decade of financial markets.
           </p>
           <p>
-            PrigeeX is building those rails: one venue for trading, liquidity, staking, and settlement, engineered on Arbitrum with audited execution and protocol revenue that flows back to <em>the people who hold it.</em>
-          </p>
-          <p>
-            Liquidity compounds. The venue that earns this first wave of capital becomes the default for everything that follows.
+            PrigeeX is building those rails: one venue for trading, liquidity, and staking, engineered on Arbitrum with verified contracts and protocol fees that route back to <em>the people who hold it.</em>
           </p>
         </div>
       </Reveal>

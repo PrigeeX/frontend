@@ -21,7 +21,7 @@ export default function Perpetuals() {
           <div
             className="surface"
             style={{
-              padding: 48,
+              padding: "clamp(24px, 6vw, 48px)",
               maxWidth: 760,
               display: "grid",
               gap: 18,
@@ -37,7 +37,7 @@ export default function Perpetuals() {
             <p style={{ fontSize: 15, lineHeight: 1.6, color: "var(--ink-soft)", margin: 0, maxWidth: 56 + "ch" }}>
               When it is ready, the venue will open early access. Until then, the live surface lives at Swap, Liquidity, and Staking.
             </p>
-            <div className="row gap-10" style={{ marginTop: 8 }}>
+            <div className="row gap-10" style={{ marginTop: 8, flexWrap: "wrap" }}>
               <Link href="/swap" className="btn btn--warm">
                 Visit Swap
                 <svg viewBox="0 0 12 12" fill="none" aria-hidden style={{ width: 12, height: 12 }}>

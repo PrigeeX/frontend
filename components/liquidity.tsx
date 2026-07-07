@@ -49,7 +49,7 @@ export function PoolListPage() {
   const configured = dexConfigured();
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
+    <div style={{ minWidth: 0 }}>
       <div className="row" style={{ justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
         <div className="col gap-8">
           <h1 style={{ fontSize: 24, fontWeight: 600, margin: 0, letterSpacing: "-0.01em" }}>Liquidity</h1>
@@ -88,7 +88,7 @@ export function PoolListPage() {
       )}
 
       {v2Configured() && <V2Positions />}
-    </main>
+    </div>
   );
 }
 
@@ -106,7 +106,7 @@ export function AddLiquidityPage() {
   const v2 = v2Configured();
 
   return (
-    <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
+    <div style={{ minWidth: 0 }}>
       <div className="row gap-12" style={{ marginBottom: 18, alignItems: "center" }}>
         <Link href="/pool" className="btn btn-ghost btn-sm" style={{ padding: 8 }}><Icon.Arrow dir="left" size={14} /></Link>
         <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>New position</h1>
@@ -120,7 +120,7 @@ export function AddLiquidityPage() {
       )}
 
       {version === "v2" && v2 ? <AddLiquidityV2 /> : <AddLiquidityV3 />}
-    </main>
+    </div>
   );
 }
 
@@ -601,13 +601,13 @@ function IncreasePanel({ p }: { p: PositionInfo }) {
 }
 
 const Shell = ({ tokenId, pair, children }: { tokenId: string; pair?: string; children: React.ReactNode }) => (
-  <main className="container-app" style={{ paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 }}>
+  <div style={{ minWidth: 0 }}>
     <div className="row gap-12" style={{ marginBottom: 24, alignItems: "center" }}>
       <Link href="/pool" className="btn btn-ghost btn-sm" style={{ padding: 8 }}><Icon.Arrow dir="left" size={14} /></Link>
       <h1 style={{ fontSize: 22, fontWeight: 600, margin: 0 }}>{pair ?? "Position"} <span className="mono" style={{ fontSize: 14, color: "var(--text-3)" }}>#{tokenId}</span></h1>
     </div>
     {children}
-  </main>
+  </div>
 );
 
 // ── Small building blocks ────────────────────────────────────────────────────

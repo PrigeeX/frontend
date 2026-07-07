@@ -55,3 +55,5 @@ pnpm-debug.log*
 
 graphify-out/
 graphify-out/*
+
+.claude

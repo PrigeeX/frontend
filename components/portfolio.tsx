@@ -73,7 +73,7 @@ export function PortfolioPage() {
   // ── Empty / disconnected ────────────────────────────────────────────────────
   if (!wallet.connected) {
     return (
-      <main className="container-app" style={pagePad}>
+      <div style={pageWrap}>
         <Header total="-" />
         <div className="panel" style={{ padding: 56, textAlign: "center" }}>
           <div style={{ fontSize: 16, fontWeight: 600 }}>Connect your wallet</div>
@@ -84,12 +84,12 @@ export function PortfolioPage() {
             <button className="btn btn-primary" onClick={wallet.open}>Connect wallet</button>
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="container-app" style={pagePad}>
+    <div style={pageWrap}>
       <Header total={usd(totalUsd)} address={address} />
 
       {/* Summary cards */}
@@ -153,7 +153,7 @@ export function PortfolioPage() {
       {tab === "activity" && (
         <ActivityTab items={activity} loading={actLoading} />
       )}
-    </main>
+    </div>
   );
 }
 
@@ -302,7 +302,7 @@ const relTime = (ts: number) => {
   return `${Math.floor(diff / 86400)}d ago`;
 };
 
-const pagePad = { paddingTop: 40, paddingBottom: 80, paddingLeft: 32, paddingRight: 32 } as const;
+const pageWrap = { minWidth: 0 } as const;
 const sectionHead = { fontSize: 14, fontWeight: 600, margin: "0 0 12px", color: "var(--text-2)" } as const;
 const rowStyle = {
   justifyContent: "space-between",

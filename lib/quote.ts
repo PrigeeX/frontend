@@ -137,8 +137,12 @@ export function useSwapActions(onMined?: () => void) {
 
   useEffect(() => {
     if (mined) {
-      onMined?.();
+      // Reset the shared mutation state before onMined runs: onMined may
+      // (via the tx queue) synchronously fire the next writeContract call,
+      // and resetting after that would detach tracking from that new tx
+      // instead of the one that just mined.
       reset();
+      onMined?.();
     }
   }, [mined, onMined, reset]);
 
