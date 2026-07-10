@@ -182,7 +182,7 @@ function PoolsTab({ v3, v2, loading }: { v3: ReturnType<typeof usePositions>["po
     <div className="col gap-24">
       {v3.length > 0 && (
         <div>
-          <h2 style={sectionHead}>Concentrated (V3)</h2>
+          <h2 style={sectionHead}>Concentrated</h2>
           <div className="pool-grid" style={{ display: "grid", gap: 16 }}>
             {v3.map((p) => <PositionCard key={p.tokenId.toString()} p={p} href={`/pool/${p.tokenId.toString()}`} />)}
           </div>
@@ -190,7 +190,7 @@ function PoolsTab({ v3, v2, loading }: { v3: ReturnType<typeof usePositions>["po
       )}
       {v2.length > 0 && (
         <div>
-          <h2 style={sectionHead}>Classic (V2)</h2>
+          <h2 style={sectionHead}>Classic</h2>
           <div className="pool-grid" style={{ display: "grid", gap: 16 }}>
             {v2.map((p) => <V2Mini key={p.pairAddress} p={p} />)}
           </div>
@@ -206,7 +206,7 @@ function V2Mini({ p }: { p: V2PositionInfo }) {
       <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
         <div className="row gap-8" style={{ alignItems: "center" }}>
           <span style={{ fontSize: 15, fontWeight: 600 }}>{p.tokenA.symbol} / {p.tokenB.symbol}</span>
-          <span className="chip" style={{ fontSize: 10, padding: "1px 7px" }}>V2</span>
+          <span className="chip" style={{ fontSize: 10, padding: "1px 7px" }}>Classic</span>
         </div>
         <span className="mono" style={{ fontSize: 12.5, color: "var(--accent)" }}>{p.sharePct.toFixed(4)}%</span>
       </div>

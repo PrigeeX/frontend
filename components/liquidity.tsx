@@ -16,6 +16,7 @@ import { fmtNum } from "@/lib/format";
 import { erc20Abi } from "@/lib/contracts";
 import { dexConfigured, v2Configured, DEX } from "@/lib/dex";
 import { useTxQueue } from "@/lib/txqueue";
+import { DOCS } from "@/lib/docs";
 import { PositionCard } from "./liquidity/PositionCard";
 import { RangeChart, type DepthBar } from "./liquidity/RangeChart";
 import { AddLiquidityV2, V2Positions } from "./liquidity/v2";
@@ -65,7 +66,7 @@ export function PoolListPage() {
       {!configured ? (
         <EmptyState
           title="Liquidity not configured"
-          body="The V3 AMM addresses are not set for this deployment. Fill them in packages/dex-config.ts to enable liquidity."
+          body="The Concentrated pool addresses are not set for this deployment. Fill them in packages/dex-config.ts to enable liquidity."
         />
       ) : !wallet.connected ? (
         <EmptyState title="Connect your wallet" body="Connect to view and manage your liquidity positions." cta={<button className="btn btn-primary" onClick={wallet.open}>Connect wallet</button>} />
@@ -76,7 +77,7 @@ export function PoolListPage() {
       ) : positions.length === 0 ? (
         <EmptyState
           title="No concentrated positions yet"
-          body="You have no V3 positions. Open one to earn fees on a chosen price range, or add a classic V2 position below."
+          body="You have no Concentrated positions. Open one to earn fees on a chosen price range, or add a Classic position below."
           cta={<Link className="btn btn-primary" href="/pool/new"><Icon.Plus size={14} /> New position</Link>}
         />
       ) : (
@@ -114,12 +115,97 @@ export function AddLiquidityPage() {
 
       {v2 && (
         <div className="tabs" style={{ marginBottom: 20 }}>
-          <button className={version === "v3" ? "active" : ""} onClick={() => setVersion("v3")}>Concentrated · V3</button>
-          <button className={version === "v2" ? "active" : ""} onClick={() => setVersion("v2")}>Classic · V2</button>
+          <div className="row gap-4" style={{ alignItems: "center" }}>
+            <button className={version === "v3" ? "active" : ""} onClick={() => setVersion("v3")}>Concentrated</button>
+            <PoolInfoButton
+              title="Concentrated pools"
+              body="Focus your liquidity in a price range you choose, so it earns more fees where trading is actually happening. If the price moves outside your range, it stops earning until you adjust it."
+              href={DOCS.guides.addLiquidityV3}
+            />
+          </div>
+          <div className="row gap-4" style={{ alignItems: "center" }}>
+            <button className={version === "v2" ? "active" : ""} onClick={() => setVersion("v2")}>Classic</button>
+            <PoolInfoButton
+              title="Classic pools"
+              body="Spreads your liquidity across every price automatically. No range to manage - deposit once and earn a steady, lower share of fees."
+              href={DOCS.guides.addLiquidityV2}
+            />
+          </div>
         </div>
       )}
 
       {version === "v2" && v2 ? <AddLiquidityV2 /> : <AddLiquidityV3 />}
+    </div>
+  );
+}
+
+// Small disclosure popover next to a pool-type toggle: a one-line explainer
+// plus a link out to the matching docs guide. Closes on outside click/Escape
+// so only one can be open at a time.
+function PoolInfoButton({ title, body, href }: { title: string; body: string; href: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        className="pool-info-toggle"
+        aria-label={`What are ${title}?`}
+        onClick={() => setOpen((o) => !o)}
+        style={{
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 16,
+          height: 16,
+          color: "var(--text-3)",
+        }}
+      >
+        <Icon.Info size={13} />
+      </button>
+      {open && (
+        <div
+          className="panel"
+          style={{
+            position: "absolute",
+            top: "calc(100% + 8px)",
+            left: 0,
+            zIndex: 20,
+            width: "min(260px, 80vw)",
+            padding: 14,
+            boxShadow: "0 12px 28px -8px rgba(0,0,0,.28)",
+          }}
+        >
+          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{title}</div>
+          <div className="muted" style={{ fontSize: 12.5, lineHeight: 1.5, marginBottom: 10 }}>{body}</div>
+          <a
+            href={href}
+            {...(href !== "#" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="row gap-4"
+            style={{ alignItems: "center", fontSize: 12.5, color: "var(--accent)", width: "fit-content" }}
+          >
+            Read the guide <Icon.Ext size={10} />
+          </a>
+        </div>
+      )}
     </div>
   );
 }

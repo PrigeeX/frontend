@@ -73,7 +73,7 @@ export function AddLiquidityV2() {
   const { approve, addLiquidity, busy } = useV2Actions(() => {
     // An approval mined → the next queued step fires and re-prompts the wallet.
     if (queue.advance()) return;
-    toast({ title: "Liquidity added", body: `${base.symbol} / ${quote.symbol} V2 position` });
+    toast({ title: "Liquidity added", body: `${base.symbol} / ${quote.symbol} Classic position` });
     setAmountA("");
     setAmountBManual("");
     pair.refetch();
@@ -164,7 +164,7 @@ export function AddLiquidityV2() {
             </div>
           ) : (
             <div className="muted" style={{ marginTop: 12, fontSize: 13 }}>
-              No V2 pool yet for this pair. Your deposit creates it and sets the starting price.
+              No Classic pool yet for this pair. Your deposit creates it and sets the starting price.
             </div>
           )}
         </div>
@@ -218,7 +218,7 @@ export function V2Positions() {
   return (
     <section style={{ marginTop: 32 }}>
       <div className="row gap-8" style={{ alignItems: "center", marginBottom: 14 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Classic (V2) positions</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>Classic positions</h2>
         <span className="chip" style={{ fontSize: 10, padding: "1px 8px" }}>Constant product</span>
       </div>
       {loading ? (
@@ -286,7 +286,7 @@ function V2PositionCard({ p, onChanged }: { p: V2PositionInfo; onChanged: () => 
       <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
         <div className="row gap-8" style={{ alignItems: "center" }}>
           <span style={{ fontSize: 15, fontWeight: 600 }}>{p.tokenA.symbol} / {p.tokenB.symbol}</span>
-          <span className="chip" style={{ fontSize: 10, padding: "1px 7px" }}>V2</span>
+          <span className="chip" style={{ fontSize: 10, padding: "1px 7px" }}>Classic</span>
         </div>
         <div className="col gap-4" style={{ alignItems: "flex-end" }}>
           <span className="caps">Pool share</span>

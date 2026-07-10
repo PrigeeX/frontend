@@ -92,6 +92,13 @@ export const Icon = {
       <path d="M1.5 7h11M7 1.5c2 2 2 9 0 11M7 1.5c-2 2-2 9 0 11" stroke="currentColor" strokeWidth="1.3" />
     </svg>
   ),
+  Info: ({ size = 14 }: IconProps) => (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none">
+      <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeWidth="1.3" />
+      <path d="M7 6.3v3.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <circle cx="7" cy="4.3" r="0.9" fill="currentColor" />
+    </svg>
+  ),
   Settings: ({ size = 16 }: IconProps) => (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
       <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.4" />
