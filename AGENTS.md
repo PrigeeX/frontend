@@ -4,7 +4,9 @@ Repo-wide contributor instructions for the PrigeeX frontend. This file travels w
 
 ## What this repo is
 
-The PrigeeX frontend. Next.js 16 + React 19 + wagmi + viem. The landing page deploys to `prigeex.com`. The dApp routes (`/swap`, `/stake`, `/rewards`, `/perpetuals`) live in this same codebase, deploy target to be decided.
+The PrigeeX dApp. Next.js 16 + React 19 + wagmi + viem. Deploys to `app.prigeex.com`. `/` redirects to `/swap` - there is no marketing page here.
+
+The landing page lives in a separate repo, `PrigeeX/prigeex-web`, deployed at `prigeex.com`. The nav brand link in this repo points out to it (`lib/web-url.ts`, `NEXT_PUBLIC_WEB_URL`).
 
 PrigeeX is positioned as an institutional venue for on-chain markets: liquidity, settlement, and tokenised real-world assets, engineered for capital arriving on-chain. Read `THEME.md` for the voice and design system before writing copy or components.
 
@@ -19,13 +21,6 @@ The source of truth is `public/theme.css` (tokens + shared component classes) an
 - Headlines are Instrument Serif, italic for warm emphasis. Body is Geist. Telemetry / labels / addresses are Geist Mono.
 
 The file `app/globals.css` provides aliases (`--accent` → `--warm`, `--text` → `--ink`, `.panel` → matte-2 surface) so the migrated dApp components from `prigeex-app` resolve correctly without per-line rewrites. Add a new alias to `globals.css` if you find a stray legacy reference, but do not duplicate tokens that already live in `theme.css`.
-
-## Content rules for landing copy
-
-- **Keep landing copy broad.** Do not list specific fee tiers, library names, function-parameter names, contract module names, or hyper-specific market segments. Engineering pillars describe qualities of the venue (institutional grade, precision, audited, transparent, open analytics). Phase cards describe what each phase delivers in one or two general lines. Implementation specifics live in documentation, not on the investor landing.
-- **No Phase-1 markers.** No "Phase 1" / "BETA" / "MVP" eyebrows, stamps, or footer cells on the landing. Phase 1 / Phase 2 / Phase 3 are valid structural section labels *inside* the Flight Plan section only.
-- **No fake telemetry.** Do not fabricate TVL, volume, fees, or APY figures. If the number is not real, leave the placeholder cell at `-` or omit the metric.
-- **No DeFi tropes.** No emoji, no "WAGMI", no purple-to-pink gradients, no glowing 3D coins, no "Empower the future of finance".
 
 ## Style rule that applies everywhere
 
@@ -46,15 +41,13 @@ For every pull request:
 - [ ] `npm run lint` passes.
 - [ ] `npm run build` passes with zero warnings.
 - [ ] `grep -R "—"` returns nothing in `app/`, `components/`, `lib/`, `public/theme.css`, and the markdown files.
-- [ ] No fabricated metrics on the landing.
 - [ ] Design-system primitives used where they apply (instead of inline styles or one-off CSS).
-- [ ] Landing changes preserve the broad-copy rule above.
 
 ## Repository layout
 
 ```
 app/              Next.js App Router routes
-  page.tsx        Landing
+  page.tsx        redirects "/" to "/swap"
   swap/           dApp swap page
   stake/          dApp stake page
   rewards/        dApp rewards page
@@ -63,8 +56,7 @@ app/              Next.js App Router routes
   providers.tsx   wagmi + react-query + toast + wallet
   globals.css     aliases, layout helpers, app-shell chrome
 components/
-  Nav.tsx         floating pill nav, shared by landing + dApp
-  landing/        landing-only sections + landing.css
+  Nav.tsx         floating pill nav - brand link points out to prigeex.com
   wallet.tsx      wagmi-driven connect modal
   toast.tsx
   icons.tsx
@@ -76,9 +68,10 @@ lib/
   contracts.ts    PGX + Staking addresses + ABIs
   tokens.ts       supported token list
   format.ts       number / address formatters
+  docs.ts         doc link builder, defaults to docs.prigeex.com
+  web-url.ts      marketing-site link builder, defaults to prigeex.com
 public/
-  theme.css       design system, source of truth
-  assets/         aviation video, other media
+  theme.css       design system, source of truth (kept in sync with prigeex-web by hand)
   brand/          PrigeeX logo SVGs
 THEME.md          design-system spec (voice, color, type, components)
 AGENTS.md         this file
@@ -98,10 +91,15 @@ Required env vars (see `.env.example`):
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` (WalletConnect Cloud project id)
 - `NEXT_PUBLIC_SEPOLIA_RPC_URL` (optional custom RPC; public fallbacks are wired)
 
+Optional env vars:
+
+- `NEXT_PUBLIC_DOCS_URL` (defaults to `https://docs.prigeex.com`)
+- `NEXT_PUBLIC_WEB_URL` (defaults to `https://prigeex.com`)
+
 ## What is NOT in scope here
 
+- The marketing/landing page. Lives in `PrigeeX/prigeex-web`, deployed at `prigeex.com`.
 - Smart contract source. Lives in the contracts repo.
 - Subgraph definitions. Live in the subgraph repo.
-- Marketing site outside `prigeex.com`.
 
-If you find yourself wanting to add one of these, open a separate repo, not this one.
+If you find yourself wanting to add one of these, open the relevant repo, not this one.

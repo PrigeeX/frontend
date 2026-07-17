@@ -1,13 +1,12 @@
-// Base URL for the published GitBook docs site.
-// Not live yet - set NEXT_PUBLIC_DOCS_URL once the space is published, and every
-// link below resolves automatically. Until then they fall back to "#".
-const DOCS_BASE = process.env.NEXT_PUBLIC_DOCS_URL || "";
+// Base URL for the published docs site (docs.prigeex.com).
+// Override with NEXT_PUBLIC_DOCS_URL if it ever needs to point elsewhere
+// (e.g. a staging docs space).
+const DOCS_BASE = process.env.NEXT_PUBLIC_DOCS_URL || "https://docs.prigeex.com";
 
-const docsPath = (path: string) =>
-  DOCS_BASE ? `${DOCS_BASE.replace(/\/$/, "")}/${path.replace(/^\//, "")}` : "#";
+const docsPath = (path: string) => `${DOCS_BASE.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 
 export const DOCS = {
-  root: DOCS_BASE || "#",
+  root: DOCS_BASE,
   gettingStarted: {
     whatYouNeed: docsPath("getting-started/what-you-need"),
     setUpWallet: docsPath("getting-started/set-up-a-wallet"),
@@ -33,7 +32,7 @@ export const DOCS = {
     vision: docsPath("investors/vision"),
     tokenomics: docsPath("investors/pgx-tokenomics"),
     roadmap: docsPath("investors/roadmap"),
-    roadmapSecurity: docsPath("investors/roadmap") + (DOCS_BASE ? "#a-note-on-security" : ""),
+    roadmapSecurity: docsPath("investors/roadmap") + "#a-note-on-security",
   },
   reference: {
     faq: docsPath("reference/faq"),

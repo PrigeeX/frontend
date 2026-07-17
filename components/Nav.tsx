@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
 import { shortAddr } from "@/lib/format";
+import { WEB_URL } from "@/lib/web-url";
 import { ThemeToggle } from "./ThemeToggle";
 import { Icon } from "./icons";
 
@@ -18,8 +19,6 @@ const LINKS: NavLink[] = [
   { href: "/analytics", label: "Analytics" },
   { href: "/perpetuals", label: "Perpetuals", soon: true },
 ];
-
-const DAPP_PATHS = ["/swap", "/pool", "/portfolio", "/stake", "/analytics", "/perpetuals"];
 
 const LINK_ICONS: Record<string, React.ReactNode> = {
   "/swap": <Icon.Swap size={16} />,
@@ -60,7 +59,6 @@ const WalletButton = () => {
 
 export const Nav = () => {
   const pathname = usePathname();
-  const isDapp = DAPP_PATHS.some((p) => pathname?.startsWith(p));
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   // Route change means a link was chosen; fold the menu away. Adjusted during
@@ -76,16 +74,16 @@ export const Nav = () => {
       {/* Outside-click catcher. Lives outside .navwrap: its transform would
           re-anchor position: fixed descendants. */}
       {menuOpen && <div className="nav-menu-backdrop" onClick={() => setMenuOpen(false)} />}
-      <div className={`navwrap${isDapp ? " is-dapp" : ""}`}>
+      <div className="navwrap is-dapp">
         <nav className="nav-pill" aria-label="Primary">
-          <Link className="brand" href="/" aria-label="PrigeeX home">
-            {/* Dark-bg logo (light ink) for the landing nav + dApp dark mode;
-                light-bg logo (dark ink) swaps in only on the light-themed dApp nav. */}
+          <a className="brand" href={WEB_URL} aria-label="PrigeeX home">
+            {/* Dark-bg logo (light ink) for dApp dark mode; light-bg logo
+                (dark ink) swaps in only on the light-themed dApp nav. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="brand-logo brand-logo--dark" src="/brand/logo-horizontal.svg" alt="PrigeeX" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="brand-logo brand-logo--light" src="/brand/logo-horizontal-light.svg" alt="" aria-hidden="true" />
-          </Link>
+          </a>
 
           <div className="nav-links">
             {LINKS.map((l) =>
@@ -107,19 +105,10 @@ export const Nav = () => {
             )}
           </div>
 
-          {isDapp ? (
-            <div className="row gap-8 nav-actions">
-              <ThemeToggle />
-              <WalletButton />
-            </div>
-          ) : (
-            <Link className="cta" href="/swap">
-              Launch App
-              <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 6h7M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          )}
+          <div className="row gap-8 nav-actions">
+            <ThemeToggle />
+            <WalletButton />
+          </div>
 
           <button
             className="nav-menu-btn"
