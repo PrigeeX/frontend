@@ -33,6 +33,7 @@ import {
   nearestUsableTick,
   tickToPrice,
   NonfungiblePositionManager,
+  encodeSqrtRatioX96,
 } from "@uniswap/v3-sdk";
 import JSBI from "jsbi";
 import {
@@ -106,6 +107,29 @@ export function priceToTick(price: number, t0: Token, t1: Token, fee: FeeAmount)
 /** Inverse of priceToTick - tick to a human price (token1 per token0). */
 export function tickToPriceNum(tick: number, t0: Token, t1: Token): number {
   return 1.0001 ** tick / 10 ** (t1.decimals - t0.decimals);
+}
+
+/**
+ * An empty (zero-liquidity) SDK pool at a chosen starting price, used to mint
+ * the first position of a pool that does not exist or is not initialized yet.
+ * `price` is human units: token1 per token0.
+ */
+export function poolAtPrice(t0: Token, t1: Token, fee: FeeAmount, price: number): Pool | undefined {
+  if (!Number.isFinite(price) || price <= 0) return undefined;
+  try {
+    // raw1 / raw0 = price * 10^(dec1 - dec0), kept as an integer fraction.
+    const SCALE = 10n ** 18n;
+    const scaled = BigInt(Math.round(price * 1e18));
+    if (scaled === 0n) return undefined;
+    const num = scaled * 10n ** BigInt(t1.decimals);
+    const den = SCALE * 10n ** BigInt(t0.decimals);
+    const sqrt = encodeSqrtRatioX96(num.toString(), den.toString());
+    if (JSBI.lessThan(sqrt, TickMath.MIN_SQRT_RATIO) || JSBI.greaterThanOrEqual(sqrt, TickMath.MAX_SQRT_RATIO))
+      return undefined;
+    return new Pool(t0, t1, fee, sqrt, 0, TickMath.getTickAtSqrtRatio(sqrt));
+  } catch {
+    return undefined;
+  }
 }
 
 const jsbi = (v: bigint) => JSBI.BigInt(v.toString());
@@ -310,7 +334,7 @@ export function usePool(
 
   const exists = Boolean(poolAddr && poolAddr !== "0x0000000000000000000000000000000000000000");
 
-  const { data } = useReadContracts({
+  const { data, isLoading: stateLoading } = useReadContracts({
     contracts: exists
       ? [
           { address: poolAddr!, abi: v3PoolAbi, functionName: "slot0" as const },
@@ -320,10 +344,17 @@ export function usePool(
     query: { enabled: exists, refetchInterval: 12_000 },
   });
 
+  // A pool can exist (factory.createPool) but still be uninitialized
+  // (sqrtPriceX96 == 0); both cases need a starting price before the first mint.
+  const sqrtPrice = data?.[0]?.status === "success" ? ((data[0].result as readonly unknown[])[0] as bigint) : undefined;
+  const initialized = exists && sqrtPrice !== undefined && sqrtPrice > 0n;
+  const loading = !ready || poolAddr === undefined || (exists && stateLoading);
+
   const pool = useMemo(() => {
     if (!token0 || !token1 || !data || data[0]?.status !== "success" || data[1]?.status !== "success")
       return undefined;
     const slot = data[0].result as readonly unknown[];
+    if ((slot[0] as bigint) === 0n) return undefined;
     return new Pool(
       token0,
       token1,
@@ -334,7 +365,7 @@ export function usePool(
     );
   }, [token0, token1, fee, data]);
 
-  return { pool, poolAddress: poolAddr as `0x${string}` | undefined, exists };
+  return { pool, poolAddress: poolAddr as `0x${string}` | undefined, exists, initialized, loading };
 }
 
 // ── Writes (add / increase / remove / collect) ───────────────────────────────
@@ -371,14 +402,17 @@ export function useLiquidityActions(onMined?: () => void) {
 
   const deadline = () => Math.floor(Date.now() / 1000) + 30 * 60;
 
-  /** Mint a brand-new position (FE-16). */
-  const mint = (position: Position, slippagePct: number, cb?: Cb) => {
+  /**
+   * Mint a brand-new position (FE-16). With createPool, the same multicall first
+   * creates and initializes the pool at the position's pool price.
+   */
+  const mint = (position: Position, slippagePct: number, cb?: Cb, createPool = false) => {
     if (!address) return;
     const { calldata, value } = NonfungiblePositionManager.addCallParameters(position, {
       recipient: address,
       deadline: deadline(),
       slippageTolerance: new Percent(Math.round(slippagePct * 100), 10_000),
-      createPool: false,
+      createPool,
     });
     sendTransaction({ to: DEX.positionManager, data: calldata as `0x${string}`, value: BigInt(value) }, cb);
   };

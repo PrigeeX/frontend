@@ -23,6 +23,7 @@ import { AddLiquidityV2, V2Positions } from "./liquidity/v2";
 import {
   usePositions,
   usePool,
+  poolAtPrice,
   useLiquidityActions,
   DEX_TOKENS,
   FeeAmount,
@@ -227,7 +228,19 @@ function AddLiquidityV3() {
     () => (base.sortsBefore(quote) ? [base, quote] : [quote, base]),
     [base, quote],
   );
-  const { pool, exists } = usePool(t0, t1, fee);
+  const { pool: livePool, initialized, loading: poolLoading } = usePool(t0, t1, fee);
+
+  // First liquidity for a pair/fee: the depositor sets the starting price,
+  // entered as "1 base = X quote" and converted to token1 per token0.
+  const needsInit = !poolLoading && !initialized;
+  const [startPrice, setStartPrice] = useState("");
+  const startPool = useMemo(() => {
+    if (!needsInit) return undefined;
+    const p = parseFloat(startPrice);
+    if (!p || p <= 0) return undefined;
+    return poolAtPrice(t0, t1, fee, base.equals(t0) ? p : 1 / p);
+  }, [needsInit, startPrice, t0, t1, fee, base]);
+  const pool = livePool ?? startPool;
 
   const currentPrice = pool ? Number(pool.token0Price.toSignificant(8)) : undefined;
 
@@ -329,10 +342,19 @@ function AddLiquidityV3() {
         }),
       );
     steps.push(() =>
-      mint(position, slippage, {
-        onSuccess: () => toast({ title: "Mint submitted", body: "Confirm in your wallet to add liquidity" }),
-        onError: (e) => { queue.clear(); toast({ title: "Mint failed", body: e.message, kind: "error" }); },
-      }),
+      mint(
+        position,
+        slippage,
+        {
+          onSuccess: () =>
+            toast({
+              title: needsInit ? "Create pool submitted" : "Mint submitted",
+              body: needsInit ? "Confirm in your wallet to create the pool and add liquidity" : "Confirm in your wallet to add liquidity",
+            }),
+          onError: (e) => { queue.clear(); toast({ title: "Mint failed", body: e.message, kind: "error" }); },
+        },
+        needsInit,
+      ),
     );
     queue.start(steps);
   };
@@ -340,17 +362,19 @@ function AddLiquidityV3() {
   const insufficient = (parseFloat(amount0) || 0) > bal0 || amount1 > bal1;
   const cta = !wallet.connected
     ? "Connect wallet"
-    : !exists
-      ? "Pool not initialized"
-      : !position
+    : poolLoading
+      ? "Loading pool…"
+      : needsInit && !startPool
+        ? "Set a starting price"
+        : !position
         ? "Enter an amount"
         : insufficient
           ? "Insufficient balance"
           : busy
             ? "Confirming…"
             : needApprove0 || needApprove1
-              ? "Approve & add liquidity"
-              : "Add liquidity";
+              ? needsInit ? "Approve & create pool" : "Approve & add liquidity"
+              : needsInit ? "Create pool & add liquidity" : "Add liquidity";
 
   return (
       <div className="add-liq-grid" style={{ display: "grid", gap: 24 }}>
@@ -396,6 +420,30 @@ function AddLiquidityV3() {
               )}
             </div>
 
+            {needsInit && (
+              <div className="col gap-8" style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 13, color: "var(--text-2)" }}>
+                  No {FEE_OPTIONS.find((o) => o.fee === fee)?.label} pool for this pair yet. Your deposit creates it at the starting price you set.
+                </div>
+                <label className="row gap-8" style={{ alignItems: "center", fontSize: 13 }}>
+                  <span className="mono" style={{ whiteSpace: "nowrap" }}>1 {base.symbol} =</span>
+                  <input
+                    className="input num"
+                    inputMode="decimal"
+                    placeholder="0.0"
+                    value={startPrice}
+                    onChange={(e) => setStartPrice(e.target.value.replace(/[^0-9.]/g, ""))}
+                    style={{ flex: 1, minWidth: 0 }}
+                    aria-label={`Starting price in ${quote.symbol} per ${base.symbol}`}
+                  />
+                  <span className="mono">{quote.symbol}</span>
+                </label>
+                <div style={{ fontSize: 12, color: "var(--text-3)" }}>
+                  Set it to the current market price. If it is off, arbitrage moves the pool to the market price at your expense.
+                </div>
+              </div>
+            )}
+
             <div className="row gap-8" style={{ marginBottom: 14 }}>
               {(["full", "safe", "concentrated", "custom"] as Preset[]).map((p) => (
                 <button
@@ -433,7 +481,7 @@ function AddLiquidityV3() {
               />
             ) : (
               <div className="muted" style={{ padding: "40px 0", textAlign: "center", fontSize: 13 }}>
-                {exists ? "Loading pool…" : "This pool is not initialized yet."}
+                {poolLoading ? "Loading pool…" : "Enter a starting price to set the range."}
               </div>
             )}
 
@@ -461,9 +509,9 @@ function AddLiquidityV3() {
 
             <button
               className="btn btn-primary btn-lg"
-              disabled={wallet.connected && (!position || insufficient || busy || !exists)}
+              disabled={wallet.connected && (!position || insufficient || busy || poolLoading)}
               onClick={onSubmit}
-              style={{ width: "100%", marginTop: 16, justifyContent: "center", opacity: wallet.connected && (!position || insufficient || !exists) ? 0.5 : 1 }}
+              style={{ width: "100%", marginTop: 16, justifyContent: "center", opacity: wallet.connected && (!position || insufficient || poolLoading) ? 0.5 : 1 }}
             >
               {cta}
             </button>

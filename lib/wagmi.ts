@@ -1,4 +1,5 @@
 import { http } from "wagmi";
+import { baseAccount, coinbaseWallet } from "wagmi/connectors";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { DEX_CHAIN, getRpcUrl } from "./dex";
 
@@ -13,6 +14,13 @@ export const wagmiAdapter = new WagmiAdapter({
   projectId: WC_PROJECT_ID,
   networks: SUPPORTED_CHAINS,
   ssr: true,
+  // Supplied here so AppKit skips its default Coinbase / Base Account
+  // connectors, which load Coinbase's telemetry script (its blocked requests
+  // show up as console errors).
+  connectors: [
+    coinbaseWallet({ appName: "PrigeeX", preference: { options: "all", telemetry: false } }),
+    baseAccount({ appName: "PrigeeX", preference: { telemetry: false } }),
+  ],
   transports: {
     [DEX_CHAIN.id]: http(getRpcUrl()),
   },

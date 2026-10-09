@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Nav } from "@/components/Nav";
+import { WEB_URL } from "@/lib/web-url";
 
 export const metadata = {
   title: "Perpetuals, PrigeeX",
@@ -44,9 +45,9 @@ export default function Perpetuals() {
                   <path d="M2 6h7M6 3l3 3-3 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
-              <Link href="/" className="btn btn--ghost">
+              <a href={`${WEB_URL}/#mission`} className="btn btn--ghost">
                 Back to the manifest
-              </Link>
+              </a>
             </div>
           </div>
         </div>

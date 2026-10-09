@@ -251,9 +251,20 @@ const RouteArrow = ({ label }: { label: string }) => (
   </div>
 );
 
-const Route = ({ from, to, amount, feePct }: { from: TokenSymbol; to: TokenSymbol; amount: number; feePct: number }) => {
-  const hasIntermediary = from !== "PGX" && to !== "PGX";
-  const hop = hasIntermediary ? ("PGX" as const) : null;
+const Route = ({
+  from,
+  to,
+  amount,
+  feePct,
+  viaWeth,
+}: {
+  from: TokenSymbol;
+  to: TokenSymbol;
+  amount: number;
+  feePct: number;
+  viaWeth: boolean;
+}) => {
+  const hop = viaWeth ? ("WETH" as const) : null;
   const feeLabel = `Pool ${(feePct * 100).toFixed(2)}%`;
   return (
     <div
@@ -530,6 +541,15 @@ export const SwapPage = () => {
   }, [address, nativeEth, dexBalances]);
 
   // Use on-chain balances when real, else 0.
+  // What the route card can honestly claim right now.
+  const routeState: "none" | "loading" | "idle" | "direct" | "viaWeth" = !isReal
+    ? "none"
+    : parsed === 0
+      ? "idle"
+      : quote.loading
+        ? "loading"
+        : quote.route ?? "none";
+
   const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : 0;
   const toBal = isReal && realOutAcct.balance !== undefined ? realOutAcct.balance : 0;
   const toAmt = isReal ? quote.amountOut ?? 0 : 0;
@@ -629,13 +649,16 @@ export const SwapPage = () => {
               <button
                 className="btn btn-ghost btn-sm"
                 onClick={() => setSettings(!settings)}
-                style={{ padding: 8, borderRadius: 6 }}
+                aria-label="Swap settings"
+                aria-expanded={settings}
+                style={{ width: 40, height: 40, padding: 0, justifyContent: "center", borderRadius: 8 }}
               >
                 <Icon.Settings />
               </button>
               <button
                 className="btn btn-ghost btn-sm"
-                style={{ padding: 8, borderRadius: 6 }}
+                aria-label="Clear amount"
+                style={{ width: 40, height: 40, padding: 0, justifyContent: "center", borderRadius: 8 }}
                 onClick={() => setFromAmt("")}
               >
                 <Icon.Refresh />
@@ -798,10 +821,14 @@ export const SwapPage = () => {
 
           <div className="row gap-8" style={{ marginTop: 12, fontSize: 12, color: "var(--text-3)" }}>
             <Icon.Shield size={12} />
-            <span>MEV protection · {(feePct * 100).toFixed(2)}% + routing fee · Settles on-chain</span>
+            <span>Pool fee {(feePct * 100).toFixed(2)}% · Slippage and deadline guarded · Settles on-chain</span>
           </div>
           <div className="row gap-8" style={{ marginTop: 8, fontSize: 11, color: "var(--text-3)" }}>
-            <span>{isReal ? "Live quote from QuoterV2 - settles on-chain via the router." : "This pair has no live pool on this deployment."}</span>
+            <span>
+              {routeState === "none"
+                ? "No pool with liquidity for this pair yet."
+                : "Live quote from QuoterV2 - settles on-chain via the router."}
+            </span>
           </div>
         </div>
 
@@ -811,19 +838,31 @@ export const SwapPage = () => {
               <div className="col gap-4">
                 <span className="caps">Best route</span>
                 <span style={{ fontSize: 14, fontWeight: 500 }}>
-                  {!isReal
-                    ? "No live route"
-                    : quote.route === "viaWeth"
-                      ? "Via 2 pools · WETH hop"
-                      : "Via 1 pool · direct"}
+                  {routeState === "none"
+                    ? "No liquidity yet"
+                    : routeState === "loading"
+                      ? "Finding route…"
+                      : routeState === "idle"
+                        ? "Enter an amount"
+                        : routeState === "viaWeth"
+                          ? "Via 2 pools · WETH hop"
+                          : "Via 1 pool · direct"}
                 </span>
               </div>
-              <span className="chip accent">
-                <Icon.Bolt size={11} />
-                <span>Optimal</span>
-              </span>
+              {(routeState === "direct" || routeState === "viaWeth") && (
+                <span className="chip accent">
+                  <Icon.Bolt size={11} />
+                  <span>Live</span>
+                </span>
+              )}
             </div>
-            <Route from={from} to={to} amount={parsed} feePct={feePct} />
+            {routeState === "none" ? (
+              <div className="muted" style={{ fontSize: 13, lineHeight: 1.5 }}>
+                There is no pool with liquidity between {from} and {to} yet, directly or through WETH.
+              </div>
+            ) : (
+              <Route from={from} to={to} amount={parsed} feePct={feePct} viaWeth={routeState === "viaWeth"} />
+            )}
           </div>
 
           <div className="panel">
