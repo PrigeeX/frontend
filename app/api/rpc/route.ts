@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { serverRpcUrl } from "@/packages/dex-config";
 
-const UPSTREAM = process.env.RPC_URL || "https://arbitrum-sepolia.drpc.org";
+const UPSTREAM = serverRpcUrl();
 
 export async function POST(req: NextRequest) {
   try {

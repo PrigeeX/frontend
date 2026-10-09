@@ -1,23 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const UPSTREAM: Record<string, string | undefined> = {
-  v3: process.env.SUBGRAPH_URL_V3,
-  v2: process.env.SUBGRAPH_URL_V2,
-  protocol: process.env.SUBGRAPH_URL_PROTOCOL,
-};
-
-const LOCALHOST: Record<string, string> = {
-  v3: "http://localhost:8000/subgraphs/name/prigeex-v3-arbitrum-sepolia",
-  v2: "http://localhost:8000/subgraphs/name/prigeex-v2-arbitrum-sepolia",
-  protocol: "http://localhost:8000/subgraphs/name/prigeex-protocol-subgraph",
-};
+import { subgraphUpstream } from "@/packages/dex-config";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ graph: string }> },
 ) {
   const { graph } = await params;
-  const upstream = UPSTREAM[graph] || LOCALHOST[graph];
+  const upstream = subgraphUpstream(graph);
 
   if (!upstream) {
     return NextResponse.json({ errors: [{ message: "unknown subgraph" }] }, { status: 404 });

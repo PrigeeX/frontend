@@ -41,7 +41,7 @@ import {
   v3FactoryAbi,
   v3PoolAbi,
 } from "./contracts";
-import { DEX, DEX_CHAIN } from "./dex";
+import { DEX, DEX_CHAIN, DEX_TOKEN_LIST } from "./dex";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -87,15 +87,11 @@ const FEE_TIERS: FeeAmount[] = [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIU
 
 /**
  * The real, on-chain tokens available for liquidity on the deployment. Address +
- * decimals come from the config so the SDK Token objects are exact. (The mock
- * TOKENS list in lib/tokens.ts is for the not-yet-wired swap demo only.)
+ * decimals come from the per-network config so the SDK Token objects are exact.
  */
-export const DEX_TOKENS: Token[] = [
-  new Token(DEX_CHAIN.id, DEX.PGX, 18, "PGX", "PrigeeX"),
-  new Token(DEX_CHAIN.id, DEX.weth9, 18, "WETH", "Wrapped Ether"),
-  new Token(DEX_CHAIN.id, DEX.tUSDC, 6, "tUSDC", "Test USD Coin"),
-  new Token(DEX_CHAIN.id, DEX.tDAI, 18, "tDAI", "Test Dai"),
-];
+export const DEX_TOKENS: Token[] = DEX_TOKEN_LIST.map(
+  (t) => new Token(DEX_CHAIN.id, t.address, t.decimals, t.symbol, t.name),
+);
 
 export const tokenByAddress = (a: string) =>
   DEX_TOKENS.find((t) => t.address.toLowerCase() === a.toLowerCase());

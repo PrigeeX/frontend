@@ -58,9 +58,9 @@ export type ProtocolStats = {
 };
 
 // ── Analytics aggregator (/api/analytics) ────────────────────────────────────
-// The deployed v3 subgraph is an event stub without factory/pool/swap entities,
-// so DEX-wide analytics come from a server route that combines the stub's pool
-// list with live on-chain reads and raw Swap logs.
+// DEX-wide analytics come from a server route that combines the v3 subgraph's
+// pool list with live on-chain reads and raw Swap logs (works with both the
+// full Arbitrum One subgraph and the testnet event stub).
 
 export type AnalyticsSwap = {
   id: string;

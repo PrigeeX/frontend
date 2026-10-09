@@ -1,29 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPublicClient, http, parseAbi, parseAbiItem, type Log } from "viem";
-import { arbitrumSepolia } from "viem/chains";
-import { ADDRESSES } from "@/packages/dex-config";
+import {
+  ADDRESSES,
+  DEX_CHAIN,
+  STABLECOINS,
+  USD_ANCHOR,
+  V3_START_BLOCK,
+  serverLogsRpcUrl,
+  serverRpcUrl,
+  subgraphUpstream,
+} from "@/packages/dex-config";
 
-// Server-side analytics aggregator. The deployed v3 subgraph is an event stub
-// (only PoolCreated entities), so protocol metrics are assembled here instead:
-// pool discovery from the stub, prices/TVL from on-chain reads, and volume /
-// swap history from raw Swap logs. The client hooks in lib/subgraph.ts consume
+// Server-side analytics aggregator, network-aware via packages/dex-config.
+// Protocol metrics are assembled here: pool discovery from the v3 subgraph
+// (the full PrigeeX schema on Arbitrum One, or the PoolCreated event stub on
+// testnet), prices/TVL from on-chain reads, and volume / swap history from raw
+// Swap logs. The client hooks in lib/subgraph.ts consume
 // this route; nothing here reaches the browser except the aggregated numbers.
 
 export const dynamic = "force-dynamic";
 
-const V3_START_BLOCK = 280_307_048n;
 const FEE_DENOM = 1_000_000;
 
 const client = createPublicClient({
-  chain: arbitrumSepolia,
-  transport: http(process.env.RPC_URL || "http://localhost:8545"),
+  chain: DEX_CHAIN,
+  transport: http(serverRpcUrl()),
 });
 
 // Alchemy's free tier caps eth_getLogs at a 10-block range, so historical log
-// sweeps go through the official public endpoint (which accepts full ranges).
+// sweeps go through RPC_LOGS_URL, defaulting to the network's official public
+// endpoint (which accepts full ranges).
 const logClient = createPublicClient({
-  chain: arbitrumSepolia,
-  transport: http(process.env.RPC_LOGS_URL || "https://sepolia-rollup.arbitrum.io/rpc"),
+  chain: DEX_CHAIN,
+  transport: http(serverLogsRpcUrl()),
 });
 
 const erc20Abi = parseAbi([
@@ -91,18 +100,29 @@ let cache: { at: number; data: Snapshot } | undefined;
 let pending: Promise<Snapshot> | undefined;
 const TTL_MS = 30_000;
 
-async function fetchStubPools(): Promise<StubPool[]> {
-  const url = process.env.SUBGRAPH_URL_V3;
-  if (!url) return [];
+async function subgraphQuery<T>(gql: string): Promise<T | undefined> {
+  const url = subgraphUpstream("v3");
+  if (!url) return undefined;
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (process.env.SUBGRAPH_BEARER_TOKEN) headers.Authorization = `Bearer ${process.env.SUBGRAPH_BEARER_TOKEN}`;
-  const res = await fetch(url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({ query: "{ poolCreateds(first: 100) { token0 token1 fee pool } }" }),
-  });
+  const res = await fetch(url, { method: "POST", headers, body: JSON.stringify({ query: gql }) });
   const json = await res.json();
-  return json.data?.poolCreateds ?? [];
+  return json.errors ? undefined : (json.data as T);
+}
+
+async function fetchStubPools(): Promise<StubPool[]> {
+  // Full PrigeeX v3 schema (Arbitrum One).
+  const full = await subgraphQuery<{
+    pools: { id: string; feeTier: string; token0: { id: string }; token1: { id: string } }[];
+  }>("{ pools(first: 100, orderBy: createdAtBlockNumber) { id feeTier token0 { id } token1 { id } } }");
+  if (full) {
+    return full.pools.map((p) => ({ token0: p.token0.id, token1: p.token1.id, fee: p.feeTier, pool: p.id }));
+  }
+  // Event-stub schema (Arbitrum Sepolia dev subgraph).
+  const stub = await subgraphQuery<{ poolCreateds: StubPool[] }>(
+    "{ poolCreateds(first: 100) { token0 token1 fee pool } }",
+  );
+  return stub?.poolCreateds ?? [];
 }
 
 async function getEventLogs<const TEvent extends typeof swapEvent | typeof mintEvent | typeof burnEvent>(
@@ -112,13 +132,23 @@ async function getEventLogs<const TEvent extends typeof swapEvent | typeof mintE
   try {
     return await logClient.getLogs({ address, event, fromBlock: V3_START_BLOCK, toBlock: "latest" });
   } catch {
-    // Some RPC plans cap the block span per eth_getLogs call - sweep in chunks.
+    // Some RPCs cap the block span per eth_getLogs call (the public Arbitrum
+    // endpoints allow 100k) - sweep in chunks, a few in parallel.
     const latest = await logClient.getBlockNumber();
-    const out: Awaited<ReturnType<typeof client.getLogs<TEvent>>> = [];
-    const STEP = 450_000n;
+    const STEP = 100_000n;
+    const PARALLEL = 8;
+    const ranges: [bigint, bigint][] = [];
     for (let from = V3_START_BLOCK; from <= latest; from += STEP) {
-      const to = from + STEP - 1n > latest ? latest : from + STEP - 1n;
-      out.push(...(await logClient.getLogs({ address, event, fromBlock: from, toBlock: to })));
+      ranges.push([from, from + STEP - 1n > latest ? latest : from + STEP - 1n]);
+    }
+    const out: Awaited<ReturnType<typeof client.getLogs<TEvent>>> = [];
+    for (let i = 0; i < ranges.length; i += PARALLEL) {
+      const batch = await Promise.all(
+        ranges
+          .slice(i, i + PARALLEL)
+          .map(([fromBlock, toBlock]) => logClient.getLogs({ address, event, fromBlock, toBlock })),
+      );
+      for (const logs of batch) out.push(...logs);
     }
     return out;
   }
@@ -129,8 +159,20 @@ const sqrtToPrice = (sqrtPriceX96: bigint, dec0: number, dec1: number) => {
   return ratio * 10 ** (dec0 - dec1);
 };
 
+const EMPTY: Snapshot = {
+  metrics: { totalValueLockedUSD: 0, volumeUSD: 0, feesUSD: 0, poolCount: 0 },
+  pools: [],
+  dayHistory: [],
+  recentSwaps: [],
+  prices: Object.fromEntries(STABLECOINS.map((a) => [a.toLowerCase(), 1])),
+  activity: [],
+};
+
 async function build(): Promise<Snapshot> {
   const stubPools = await fetchStubPools();
+  // No pools yet: skip the log sweep (an empty address filter would match every
+  // contract on the chain).
+  if (stubPools.length === 0) return EMPTY;
   const poolAddrs = stubPools.map((p) => p.pool as `0x${string}`);
 
   // Token metadata, pool balances (TVL), and current prices in one multicall.
@@ -170,16 +212,14 @@ async function build(): Promise<Snapshot> {
     } as PoolData & { _bal0: number; _bal1: number };
   });
 
-  // USD prices: the test stables anchor the system at $1; WETH from the
-  // tUSDC/WETH pool; every other token from its WETH pair.
+  // USD prices: the network's stablecoins anchor the system at $1; WETH from
+  // the deepest USD-anchor/WETH pool; every other token from its WETH pair.
   const weth = ADDRESSES.weth9.toLowerCase();
-  const prices: Record<string, number> = {
-    [ADDRESSES.tUSDC.toLowerCase()]: 1,
-    [ADDRESSES.tDAI.toLowerCase()]: 1,
-  };
-  const stablePool = pools.find(
-    (p) => (p.addr0 === ADDRESSES.tUSDC.toLowerCase() && p.addr1 === weth) || (p.addr1 === ADDRESSES.tUSDC.toLowerCase() && p.addr0 === weth),
-  );
+  const anchor = USD_ANCHOR.toLowerCase();
+  const prices: Record<string, number> = Object.fromEntries(STABLECOINS.map((a) => [a.toLowerCase(), 1]));
+  const stablePool = (pools as (PoolData & { _bal0: number; _bal1: number })[])
+    .filter((p) => (p.addr0 === anchor && p.addr1 === weth) || (p.addr1 === anchor && p.addr0 === weth))
+    .sort((a, b) => (a.addr0 === weth ? b._bal0 - a._bal0 : b._bal1 - a._bal1))[0];
   if (stablePool && stablePool.price > 0) {
     // price = token1 per token0 (human). Whichever side WETH is on, USD/WETH follows.
     prices[weth] = stablePool.addr1 === weth ? 1 / stablePool.price : stablePool.price;

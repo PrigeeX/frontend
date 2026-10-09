@@ -6,13 +6,14 @@ import { useAccount, useBalance, useGasPrice, useWaitForTransactionReceipt } fro
 import { Icon, TokenIcon } from "./icons";
 import { useWallet } from "./wallet";
 import { useToast } from "./toast";
-import { TOKENS, tokenBySymbol, type TokenSymbol } from "@/lib/tokens";
+import { TOKENS, tokenBySymbol, useUsdPrices, type TokenSymbol } from "@/lib/tokens";
 import { fmtNum } from "@/lib/format";
 import { dexConfigured, txUrl } from "@/lib/dex";
 import { fetchAnalytics, type AnalyticsSwap } from "@/lib/subgraph";
 import {
   dexTokenFor,
   useTokenAccount,
+  useTokenBalances,
   useSwapQuote,
   useSwapActions,
   useDebounced,
@@ -93,8 +94,8 @@ const TokenInput = ({
   readOnly?: boolean;
   isInput?: boolean;
 }) => {
-  const tok = tokenBySymbol(symbol);
-  const usd = (parseFloat(amount) || 0) * tok.price;
+  const prices = useUsdPrices();
+  const usd = (parseFloat(amount) || 0) * (prices[symbol] ?? 0);
   return (
     <div style={{ background: "var(--bg-2)", border: "1px solid var(--line)", borderRadius: 10, padding: 16 }}>
       <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
@@ -143,7 +144,7 @@ const TokenInput = ({
       </div>
       <div className="row" style={{ justifyContent: "space-between", marginTop: 8, fontSize: 12, color: "var(--text-3)" }}>
         <span className="mono">≈ ${fmtNum(usd, 2)}</span>
-        <span>{tok.name}</span>
+        <span>{tokenBySymbol(symbol).name}</span>
       </div>
     </div>
   );
@@ -161,6 +162,7 @@ const TokenPicker = ({
   balances: Record<TokenSymbol, number>;
 }) => {
   const [q, setQ] = useState("");
+  const prices = useUsdPrices();
   const filtered = TOKENS.filter(
     (t) =>
       t.symbol !== exclude &&
@@ -205,7 +207,7 @@ const TokenPicker = ({
                 <div className="col gap-4" style={{ alignItems: "flex-end" }}>
                   <span className="num" style={{ fontSize: 14 }}>{fmtNum(bal)}</span>
                   <span className="num" style={{ fontSize: 11, color: "var(--text-3)" }}>
-                    ${fmtNum(bal * t.price, 2)}
+                    ${fmtNum(bal * (prices[t.symbol] ?? 0), 2)}
                   </span>
                 </div>
               </button>
@@ -487,8 +489,6 @@ export const SwapPage = () => {
   const [txStep, setTxStep] = useState<"approve" | "confirm" | "pending" | "success" | null>(null);
   const [swapTxHash, setSwapTxHash] = useState<`0x${string}` | undefined>();
 
-  const fromTok = tokenBySymbol(from);
-  const toTok = tokenBySymbol(to);
 
   // Real on-chain path: active when both sides map to deployed DEX tokens.
   const realIn = dexTokenFor(from);
@@ -507,11 +507,7 @@ export const SwapPage = () => {
   const quote = useSwapQuote(isReal ? realIn : undefined, isReal ? realOut : undefined, debouncedIn, feeTier);
 
   // Always fetch real-token balances for the picker (ETH comes from useBalance).
-  const pgxDexToken = DEX_TOKENS.find((t) => t.symbol === "PGX");
-  const pgxPickerAcct = useTokenAccount(pgxDexToken);
-  const wethPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "WETH"));
-  const tusdcPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "tUSDC"));
-  const tdaiPickerAcct = useTokenAccount(DEX_TOKENS.find((t) => t.symbol === "tDAI"));
+  const dexBalances = useTokenBalances(DEX_TOKENS);
   const { data: nativeEth } = useBalance({
     address,
     query: { enabled: Boolean(address), refetchInterval: 12_000 },
@@ -523,18 +519,15 @@ export const SwapPage = () => {
   // Live pool for real price impact.
   const { pool: livePool } = usePool(isReal ? realIn : undefined, isReal ? realOut : undefined, feeTier);
 
-  // Picker balances: live for ETH and PGX, zero for undeployed tokens.
+  // Picker balances: live for ETH and every listed DEX token.
   const pickerBalances = useMemo<Record<TokenSymbol, number>>(() => {
     const m = Object.fromEntries(TOKENS.map((t) => [t.symbol, 0])) as Record<TokenSymbol, number>;
     if (address) {
+      Object.assign(m, dexBalances);
       m.ETH = nativeEth ? Number(nativeEth.value) / 1e18 : 0;
-      m.PGX = pgxPickerAcct.balance ?? 0;
-      m.WETH = wethPickerAcct.balance ?? 0;
-      m.tUSDC = tusdcPickerAcct.balance ?? 0;
-      m.tDAI = tdaiPickerAcct.balance ?? 0;
     }
     return m;
-  }, [address, nativeEth, pgxPickerAcct.balance, wethPickerAcct.balance, tusdcPickerAcct.balance, tdaiPickerAcct.balance]);
+  }, [address, nativeEth, dexBalances]);
 
   // Use on-chain balances when real, else 0.
   const fromBal = isReal && realInAcct.balance !== undefined ? realInAcct.balance : 0;

@@ -1,6 +1,6 @@
 import { createAppKit } from "@reown/appkit/react";
-import { arbitrum, arbitrumSepolia } from "@reown/appkit/networks";
 import { wagmiAdapter, WC_PROJECT_ID } from "./wagmi";
+import { DEX_CHAIN } from "./dex";
 
 const metadata = {
   name: "PrigeeX",
@@ -14,8 +14,8 @@ const metadata = {
 
 export const appKit = createAppKit({
   adapters: [wagmiAdapter],
-  networks: [arbitrumSepolia, arbitrum],
-  defaultNetwork: arbitrumSepolia,
+  networks: [DEX_CHAIN],
+  defaultNetwork: DEX_CHAIN,
   projectId: WC_PROJECT_ID,
   metadata,
   features: {

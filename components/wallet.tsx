@@ -2,13 +2,11 @@
 
 import React, { createContext, useContext, useEffect } from "react";
 import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
-import { arbitrumSepolia } from "wagmi/chains";
-import { useAppKit, useAppKitNetwork } from "@reown/appkit/react";
+import { useAppKit } from "@reown/appkit/react";
 import { shortAddr } from "@/lib/format";
+import { DEX_CHAIN } from "@/lib/dex";
 import { useToast } from "./toast";
 import "@/lib/appkit";
-
-const SUPPORTED_CHAIN_IDS = new Set([42161, 421614]); // Arbitrum One, Arbitrum Sepolia
 
 type WalletCtxValue = {
   connected: boolean;
@@ -33,7 +31,6 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
   const { open, close } = useAppKit();
-  const { caipNetwork } = useAppKitNetwork();
   const toast = useToast();
 
   const previous = React.useRef(isConnected);
@@ -47,17 +44,12 @@ export const WalletProvider = ({ children }: { children: React.ReactNode }) => {
     previous.current = isConnected;
   }, [isConnected, connector, address, toast]);
 
-  // If the wallet is on an unsupported chain, switch to whatever AppKit
-  // currently has selected (respects the user's testnet/mainnet preference).
+  // If the wallet is on any other chain, switch it to this deployment's network.
   useEffect(() => {
-    if (isConnected && chainId && !SUPPORTED_CHAIN_IDS.has(chainId)) {
-      const targetId =
-        typeof caipNetwork?.id === "number"
-          ? caipNetwork.id
-          : arbitrumSepolia.id;
-      switchChain({ chainId: targetId });
+    if (isConnected && chainId && chainId !== DEX_CHAIN.id) {
+      switchChain({ chainId: DEX_CHAIN.id });
     }
-  }, [isConnected, chainId, caipNetwork, switchChain]);
+  }, [isConnected, chainId, switchChain]);
 
   const value: WalletCtxValue = {
     connected: isConnected,

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
 import { shortAddr } from "@/lib/format";
 import { WEB_URL } from "@/lib/web-url";
+import { IS_TESTNET } from "@/lib/dex";
 import { ThemeToggle } from "./ThemeToggle";
 import { Icon } from "./icons";
 
@@ -84,6 +85,9 @@ export const Nav = () => {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="brand-logo brand-logo--light" src="/brand/logo-horizontal-light.svg" alt="" aria-hidden="true" />
           </a>
+          {IS_TESTNET && (
+            <span className="soon-tag" title="Arbitrum Sepolia testnet build">Testnet</span>
+          )}
 
           <div className="nav-links">
             {LINKS.map((l) =>

@@ -43,6 +43,15 @@ For every pull request:
 - [ ] `grep -R "—"` returns nothing in `app/`, `components/`, `lib/`, `public/theme.css`, and the markdown files.
 - [ ] Design-system primitives used where they apply (instead of inline styles or one-off CSS).
 
+## Networks
+
+One codebase, one network per deployment. `packages/dex-config.ts` holds every address, token list and subgraph default for both networks:
+
+- `app.prigeex.com` serves **Arbitrum One** (the default, `NEXT_PUBLIC_PRIGEEX_NETWORK` unset).
+- `testnet.prigeex.com` serves **Arbitrum Sepolia**: same code, built with `NEXT_PUBLIC_PRIGEEX_NETWORK=arbitrum-sepolia`, plus testnet `RPC_URL` / `SUBGRAPH_URL_*`. The nav shows a "Testnet" tag on that build.
+
+Never hardcode a chain, address or token symbol in a component. Read it from `lib/dex.ts` (`DEX`, `DEX_CHAIN`, `DEX_TOKEN_LIST`, `IS_TESTNET`).
+
 ## Repository layout
 
 ```
@@ -64,7 +73,7 @@ components/
   stake.tsx       dApp stake component, migrated from prigeex-app
   rewards.tsx     dApp rewards component, migrated from prigeex-app
 lib/
-  wagmi.ts        Sepolia config + connectors
+  wagmi.ts        wagmi config for the active network + connectors
   contracts.ts    PGX + Staking addresses + ABIs
   tokens.ts       supported token list
   format.ts       number / address formatters

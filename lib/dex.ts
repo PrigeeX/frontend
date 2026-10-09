@@ -3,14 +3,23 @@
 // use the gate helpers to degrade gracefully when a feature is not deployed
 // (NFR-09) - e.g. analytics falls back to "warming up" when a subgraph is unset.
 
-import { ADDRESSES, SUBGRAPHS, DEX_CHAIN, getRpcUrl, EXPLORER_URL } from "@/packages/dex-config";
+import {
+  ADDRESSES,
+  SUBGRAPHS,
+  DEX_CHAIN,
+  getRpcUrl,
+  EXPLORER_URL,
+  DEX_TOKEN_LIST,
+  NETWORK,
+  IS_TESTNET,
+} from "@/packages/dex-config";
 
 type Hex = `0x${string}`;
 
 /** All on-chain addresses, narrowed to the hex literal type viem expects. */
 export const DEX = ADDRESSES as { [K in keyof typeof ADDRESSES]: Hex };
 
-export { SUBGRAPHS, DEX_CHAIN, getRpcUrl, EXPLORER_URL };
+export { SUBGRAPHS, DEX_CHAIN, getRpcUrl, EXPLORER_URL, DEX_TOKEN_LIST, NETWORK, IS_TESTNET };
 
 const ZERO = "0x0000000000000000000000000000000000000000";
 

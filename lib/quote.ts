@@ -51,6 +51,28 @@ export function useTokenAccount(token?: Token) {
   };
 }
 
+/** Wallet balances (human units, keyed by symbol) for a fixed token list, in one multicall. */
+export function useTokenBalances(tokens: Token[]): Record<string, number> {
+  const { address } = useAccount();
+  const { data } = useReadContracts({
+    contracts: address
+      ? tokens.map((t) => ({
+          address: t.address as `0x${string}`,
+          abi: erc20Abi,
+          functionName: "balanceOf" as const,
+          args: [address] as const,
+        }))
+      : [],
+    query: { enabled: Boolean(address), refetchInterval: 12_000 },
+  });
+  const out: Record<string, number> = {};
+  tokens.forEach((t, i) => {
+    const r = data?.[i];
+    out[t.symbol ?? t.address] = r?.status === "success" ? Number(r.result as bigint) / 10 ** t.decimals : 0;
+  });
+  return out;
+}
+
 /** A swap route: direct single pool, or two pools hopping through WETH. */
 export type SwapRoute = "direct" | "viaWeth";
 
